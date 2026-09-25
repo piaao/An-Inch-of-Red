@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>剖面公寓 · Kenney 家具套件 × Three.js</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232b3441'/%3E%3Cpath d='M6 22V12l10-6 10 6v10' fill='none' stroke='%23e5a066' stroke-width='2.6' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<canvas id="stage"></canvas>
+<div id="labels" class="layer"></div>
+<div id="zone-tip"></div>
+
+<header id="hud">
+  <h1>剖面公寓</h1>
+  <p class="sub">Kenney 家具套件 · 140 个模型 · Three.js</p>
+  <p class="credit">素材 CC0 1.0（公有领域）· <a href="https://kenney.nl" target="_blank" rel="noreferrer">kenney.nl</a></p>
+</header>
+
+<!-- Right-hand HUD as one column: a taller stats panel can no longer end up
+     underneath the FPS pill. -->
+<div id="rstack">
+  <aside id="stats" class="panel"></aside>
+  <div id="perf">— FPS</div>
+</div>
+
+<nav id="views" class="dock"></nav>
+<div id="flags" class="dock vertical"></div>
+
+<p id="hint"><b>左键拖拽</b> 旋转 · <b>滚轮</b> 缩放 · <b>右键拖拽</b> 平移 · <b>点击房间</b> 聚焦</p>
+
+<div id="loading">
+  <div class="box">
+    <div class="spinner"></div>
+    <h2 id="load-title">正在搭建公寓</h2>
+    <p id="load-msg">初始化…</p>
+    <div class="bar"><i id="load-bar"></i></div>
+    <p id="load-pct">0%</p>
+  </div>
+</div>
+
+<!-- Classic script (see js/open-guard.js): the failure it explains is "the module
+     graph never ran", so it cannot itself be a module. Shared with play.html and
+     procgen.html so the next page cannot be written without it. -->
+<script src="js/open-guard.js"
+        data-overlay="loading" data-title="load-title" data-msg="load-msg"
+        data-reveal="hidden" data-fail="failed"
+        data-needle="__viewerBooted" data-page="index.html"
+        data-open="start-viewer.bat" data-cmd="python serve.py --viewer"></script>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "./vendor/three.module.js",
+    "three/addons/": "./vendor/addons/"
+  }
+}
+</script>
+
+<script type="module">
+  import { boot } from './js/app.js';
+  import { fail } from './js/ui.js';
+
+  // Watched by js/open-guard.js. Set the moment the module graph has loaded, so
+  // "still building the scene" is never mistaken for "never ran".
+  window.__viewerBooted = true;
+
+  boot().catch(function (err) {
+    console.error(err);
+    fail('搭建失败：<code>' + (err && err.message ? err.message : String(err)) + '</code>');
+  });
+</script>
+
+</body>
+</html>

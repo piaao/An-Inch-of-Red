@@ -1,0 +1,76 @@
+==============================================================================
+阶段 1 · 全量核查
+==============================================================================
+
+[1a] data/ 与 reports/ 的搬移来源（已搬过的按幂等处理）
+      kit_index.json             已搬
+      kit_index.txt              已搬
+      kit_world.json             已搬
+      kit_world.txt              已搬
+      kit_three.json             已搬
+      model_surfaces.json        已搬
+      wall_gaps.json             已搬
+      passages.json              已搬
+      _play.log                  -> reports/verify_play.log    已搬
+      _shoot4.log                -> reports/verify_viewer.log  已搬
+      _name_verify.txt           -> reports/verify_name.txt    已搬
+      _name_patch.txt            -> reports/patch_name.txt     已搬
+
+[1b] 删除清单必须在 git 里有备份（否则拒绝删）
+      kenney_furniture-kit/**             1546 个文件，全部在 git 里
+      room_scene/work/** (除底账与报告)          324 个文件，全部在 git 里
+      scripts/ 一次性脚本                        94 个文件，全部在 git 里
+      陈旧 ls 转储                               2 个文件，全部在 git 里
+
+[1c] 补丁锚点唯一性
+
+      room_scene/README.md               锚点 1 1
+      scripts/derive_redbox.py           锚点 1 1 1 1
+      scripts/derive_wall_gaps.py        锚点 1 1 1
+      scripts/measure.js                 锚点 1 1
+      scripts/probe_kit.py               锚点 1 1
+      scripts/probe_passages.js          锚点 1
+      scripts/probe_world.py             锚点 1 1 1
+      scripts/snapshot_arena.mjs         锚点 1 1 1 1 1 1 1 1 1 1 1
+      scripts/verify_name.py             锚点 1 1 1
+
+      kenney License.txt -> room_scene/assets/LICENSE-kenney.txt  ok
+
+==============================================================================
+阶段 1 通过：可以动手。
+==============================================================================
+
+==============================================================================
+阶段 2 · 执行
+==============================================================================
+  [move]  0 个实测底账 -> room_scene/data/（8 个此前已就位）
+  [move]  0 份验收报告 -> room_scene/reports/（4 份此前已就位）
+  [copy] Kenney License 原文 -> room_scene/assets/LICENSE-kenney.txt
+  [del ] room_scene/work/ 中间产物 324 个文件（目录保留）
+  [del ] kenney_furniture-kit/ 1546 个文件 / 16.85 MB
+  [del ] scripts/ 一次性脚本 94 个
+  [del ] 陈旧 ls 转储 _ls3.txt / scripts/_ls3.py（空目录一并移除）
+  [patch] 9 个脚本已重指到 data/ 并改为相对定位
+
+==============================================================================
+阶段 3 · 读回复核
+==============================================================================
+      data/kit_index.json             ok   113690 B
+      data/kit_index.txt              ok    13769 B
+      data/kit_world.json             ok    38468 B
+      data/kit_world.txt              ok    10585 B
+      data/kit_three.json             ok    40251 B
+      data/model_surfaces.json        ok    26257 B
+      data/wall_gaps.json             ok     5753 B
+      data/passages.json              ok    10287 B
+      reports/verify_play.log         ok    10744 B
+      reports/verify_viewer.log       ok      956 B
+      reports/verify_name.txt         ok     2676 B
+      reports/patch_name.txt          ok     3139 B
+      kit 已删            True
+      work/ 仅剩          ['.gitkeep']
+      scripts/ 剩余文件数 51
+      scripts/ 残留一次性 无
+      补丁后仍含旧锚点  无
+
+RESULT PASS

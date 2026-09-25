@@ -1,0 +1,46 @@
+[1] room_scene\play.html                  5831 B  eol=LF  (crlf=0 lf=150)
+      ok  anchor x1 (want 1)  '<title>寻红 · 剖面公寓</title>'
+      ok  anchor x1 (want 1)  '    <h1>寻 红</h1>'
+[1] room_scene\css\play.css              14101 B  eol=LF  (crlf=0 lf=493)
+      ok  anchor x1 (want 1)  '.panel .sub b { color: #ff8f85; }'
+[1] room_scene\README.md                 19388 B  eol=LF  (crlf=0 lf=325)
+      ok  anchor x1 (want 1)  '├── play.html             ★ 可玩版本「寻红」入口（自带 importmap / CS'
+      ok  anchor x1 (want 1)  '│   └── VERDICT.md        无头验证结论'
+      ok  anchor x1 (want 1)  '## 可玩版本 · 寻红'
+[1] room_scene\game\package.json           402 B  eol=LF  (crlf=0 lf=7)
+      ok  anchor x1 (want 1)  '  "name": "room-scene-game",'
+      ok  anchor x1 (want 1)  'Portable core for the 寻红 / 守卫 prototype.'
+
+[2] room_scene\play.html                  5831 ->    5897 B  (+66)  eol_kept=True  old_gone=True  backup=room_scene\work\backup\pre_name\play.html
+[2] room_scene\css\play.css              14101 ->   14345 B  (+244)  eol_kept=True  old_gone=False  backup=room_scene\work\backup\pre_name\play.css
+[2] room_scene\README.md                 19388 ->   19809 B  (+421)  eol_kept=True  old_gone=True  backup=room_scene\work\backup\pre_name\README.md
+[2] room_scene\game\package.json           402 ->     422 B  (+20)  eol_kept=True  old_gone=True  backup=room_scene\work\backup\pre_name\package.json
+
+[3] package.json 解析通过  name='an-inch-of-red'
+[3] play.html  <title> = '一寸红 · An Inch of Red · 剖面公寓'
+[3] play.html  <h1>    = '一 寸 红'
+[3] play.html  .sub.en = 1 处
+[3] play.css   .sub.en 规则 = 1 条  大括号 126/126
+[3] README     一寸红 = 3 处,  NAME.md = 2 处
+[3] README     旧标题残留 = 0 (want 0)
+
+RESULT FAIL
+remaining problems:
+  POST-CHECK FAILED room_scene\css\play.css
+
+--- 失效横幅（2026-09-25，补丁写完之后补记）---------------------------------
+上面那条 FAIL 是**判据的错，不是文件的错**，不要据此回滚任何东西。
+
+CSS 那条是**插入型**补丁：新块追加在旧行之后，旧字符串**本来就该留在文件里**。
+而当时的自查问的是「旧字符串是否已消失」—— 这个问题在插入型补丁上
+永远不可能答「是」。文件本身是好的：`.panel .sub.en` 规则恰好 1 条、
+大括号 126/126、EOL 未变（这三条已由独立脚本从磁盘读回验证）。
+
+自查已改为按**补丁形状**判：
+  新串包含旧串  ⇒ insert，要求「旧串仍恰好 1 次 且 新串恰好 1 次」
+  否则          ⇒ replace，要求「旧串 0 次 且 新串 1 次」
+
+判决权在**独立的那把尺子**上：`work/_name_verify.txt`（从磁盘重新读回，24/24 PASS）。
+同一轮里出现两个「尺子坏了」的实例（这里一个，普查脚本的自指一个），
+两个都错在被测对象的**合法多重性**上 —— 详见 `.workbuddy/memory/` 当日记录。
+---------------------------------------------------------------------------

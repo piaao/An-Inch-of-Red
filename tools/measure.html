@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>kit measure</title>
+<style>html,body{margin:0;background:#0a0c10;color:#dfe4ea;font:13px ui-monospace,Menlo,Consolas,monospace}pre{padding:12px;white-space:pre-wrap}</style>
+</head>
+<body>
+<pre id="out">measuring…</pre>
+<script type="importmap">
+{ "imports": { "three": "/vendor/three.module.js", "three/addons/": "/vendor/addons/" } }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+const log = [];
+const box = new THREE.Box3();
+const loader = new GLTFLoader();
+
+function sizeOf(root) {
+  box.setFromObject(root);
+  const s = new THREE.Vector3(); box.getSize(s);
+  const c = new THREE.Vector3(); box.getCenter(c);
+  let tris = 0, meshes = 0, mats = new Set(), verts = 0;
+  root.traverse((o) => {
+    if (!o.isMesh) return;
+    meshes++;
+    const g = o.geometry;
+    verts += g.attributes.position ? g.attributes.position.count : 0;
+    tris += g.index ? g.index.count / 3 : (g.attributes.position ? g.attributes.position.count / 3 : 0);
+    const m = Array.isArray(o.material) ? o.material : [o.material];
+    m.forEach((x) => x && mats.add(x.uuid));
+  });
+  return {
+    size: [+s.x.toFixed(4), +s.y.toFixed(4), +s.z.toFixed(4)],
+    min: [+box.min.x.toFixed(4), +box.min.y.toFixed(4), +box.min.z.toFixed(4)],
+    max: [+box.max.x.toFixed(4), +box.max.y.toFixed(4), +box.max.z.toFixed(4)],
+    center: [+c.x.toFixed(4), +c.y.toFixed(4), +c.z.toFixed(4)],
+    meshes, tris, verts, materials: mats.size,
+  };
+}
+
+async function main() {
+  const man = await (await fetch('/assets/manifest.json')).json();
+  const result = {};
+  const errors = [];
+  let totalTris = 0;
+
+  for (const m of man.models) {
+    try {
+      const gltf = await loader.loadAsync('/assets/models/' + m.file);
+      const info = sizeOf(gltf.scene);
+      result[m.name] = info;
+      totalTris += info.tris;
+    } catch (e) {
+      errors.push(m.name + ': ' + (e && e.message ? e.message : String(e)));
+      log.push('ERR ' + m.name + ' ' + e);
+    }
+  }
+
+  window.__result = {
+    count: Object.keys(result).length,
+    errors,
+    totalTris,
+    models: result,
+  };
+  document.getElementById('out').textContent =
+    'measured ' + Object.keys(result).length + '/' + man.count +
+    '  errors=' + errors.length + '  tris=' + totalTris +
+    (errors.length ? '\n' + errors.join('\n') : '');
+  window.__ready = true;
+}
+
+main().catch((e) => {
+  window.__result = { count: 0, errors: ['FATAL ' + (e && e.stack ? e.stack : e)], models: {} };
+  document.getElementById('out').textContent = 'FATAL ' + e;
+  window.__ready = true;
+});
+</script>
+</body>
+</html>

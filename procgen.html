@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>一寸红 · 户型生成工作台</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232b3441'/%3E%3Crect x='6' y='6' width='9' height='9' fill='%23e5a066'/%3E%3Crect x='17' y='6' width='9' height='9' fill='%23c8102e'/%3E%3Crect x='6' y='17' width='9' height='9' fill='%23c8102e'/%3E%3Crect x='17' y='17' width='9' height='9' fill='%23e5a066'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/procgen.css">
+</head>
+<body>
+
+<header id="top">
+  <div class="brand">
+    <h1>户型生成工作台</h1>
+    <p class="sub">An Inch of Red · <span class="en">procedural floor plans</span></p>
+  </div>
+  <p class="blurb">
+    调参数 → 生成 → 预览。每一套结果都走<strong>与上架公寓完全相同</strong>那条管线
+    （<code>buildLevel</code> → <code>nav</code> → <code>regions</code> → <code>placePrizes</code>），
+    判决是可数事实，不是好看不好看。
+  </p>
+  <div id="status" data-kind="">准备中…</div>
+</header>
+
+<main>
+  <!-- ------------------------------------------------------------ controls -->
+  <section id="panel">
+    <form id="params" autocomplete="off">
+      <fieldset>
+        <legend>参数</legend>
+        <div id="primary" class="grid"></div>
+        <div id="seed-field" class="grid"></div>
+      </fieldset>
+
+      <details id="adv">
+        <summary>高级旋钮 <span class="n">(9)</span></summary>
+        <div id="advanced-fields" class="grid"></div>
+      </details>
+
+      <div class="actions">
+        <button type="submit" id="go">生成</button>
+        <button type="button" id="reroll" title="换一个种子再生成">换个种子</button>
+        <button type="button" id="reset" class="ghost">恢复默认</button>
+      </div>
+      <label class="auto"><input type="checkbox" id="auto" checked> 改动即重算</label>
+    </form>
+
+    <div class="handoff">
+      <button type="button" id="play" disabled>走进去玩 →</button>
+      <p id="handoff">生成一层楼后即可进入。</p>
+    </div>
+  </section>
+
+  <!-- ------------------------------------------------------------- preview -->
+  <section id="stage">
+    <div id="verdict" data-state="pass">—</div>
+    <div id="readings"></div>
+
+    <figure id="planwrap">
+      <div id="plan"></div>
+      <figcaption>
+        <span class="key"><i class="k-wall"></i>挡视线的墙</span>
+        <span class="key"><i class="k-wall2"></i>不挡视线</span>
+        <span class="key"><i class="k-door"></i>可通行的门</span>
+        <span class="key"><i class="k-shut"></i>关着的门</span>
+        <span class="key"><i class="k-red"></i>带红色贴图的家具</span>
+        <span class="key"><i class="k-prize"></i>红包</span>
+        <span class="key"><i class="k-spawn"></i>出生点</span>
+      </figcaption>
+    </figure>
+
+    <ul id="checks"></ul>
+
+    <details class="log">
+      <summary>生成器自述与拒绝原因</summary>
+      <p class="rowline"><span>落位拒绝</span><code id="rejected">—</code></p>
+      <pre id="trace"></pre>
+    </details>
+  </section>
+</main>
+
+<!-- --------------------------------------------------------- 打开方式 -->
+<!-- Shown by js/open-guard.js when this page is opened as a file:// document,
+     where the browser refuses to run any of its modules. The box has to live in
+     static markup because the script that reveals it is the only thing that can
+     run -- and the script has to be CLASSIC for the same reason. -->
+<div id="openhelp" class="hidden" role="alert" aria-live="assertive">
+  <div class="oh">
+    <h2 id="oh-title">需要通过本地服务器打开</h2>
+    <p id="oh-msg"></p>
+    <p class="oh-cmd"><code id="oh-cmd"></code></p>
+    <p class="oh-alt" id="oh-alt"></p>
+  </div>
+</div>
+
+<script src="js/open-guard.js"
+        data-overlay="openhelp" data-title="oh-title" data-msg="oh-msg"
+        data-cmd-id="oh-cmd" data-alt-id="oh-alt"
+        data-reveal="hidden" data-fail=""
+        data-needle="__procgen" data-page="procgen.html"
+        data-open="start-workbench.bat" data-cmd="python serve.py --workbench"></script>
+
+<script type="module" src="game/procgen/playground.js"></script>
+</body>
+</html>

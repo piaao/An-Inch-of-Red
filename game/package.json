@@ -1,0 +1,7 @@
+{
+  "name": "an-inch-of-red",
+  "private": true,
+  "type": "module",
+  "description": "Portable core for 《一寸红》 / An Inch of Red (codename 寻红). type=module makes every .js under game/ an ES module for Node, so scripts/test_core.mjs can import the exact same files the browser runs. Nothing here ships to a bundler.",
+  "comment": "Deliberately no dependencies. The core must run in Node with zero install."
+}

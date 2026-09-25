@@ -1,0 +1,3079 @@
+{
+ "kit": "Kenney Furniture Kit",
+ "license": "CC0 1.0 (public domain)",
+ "source": "kenney.nl",
+ "count": 140,
+ "totalTris": 26737,
+ "models": [
+  {
+   "name": "bathroomCabinet",
+   "file": "bathroomCabinet.glb",
+   "tris": 64,
+   "verts": 156,
+   "materials": 3,
+   "kb": 7.0,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.678,
+     0.456,
+     0.299
+    ],
+    [
+     0.741,
+     0.823,
+     0.84
+    ]
+   ]
+  },
+  {
+   "name": "bathroomCabinetDrawer",
+   "file": "bathroomCabinetDrawer.glb",
+   "tris": 508,
+   "verts": 2496,
+   "materials": 4,
+   "kb": 33.9,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.973,
+     1,
+     1
+    ],
+    [
+     0.306,
+     0.388,
+     0.388
+    ],
+    [
+     0.937,
+     0.98,
+     0.957
+    ]
+   ]
+  },
+  {
+   "name": "bathroomMirror",
+   "file": "bathroomMirror.glb",
+   "tris": 72,
+   "verts": 339,
+   "materials": 3,
+   "kb": 6.6,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.741,
+     0.823,
+     0.84
+    ],
+    [
+     0.698,
+     0.828,
+     0.769
+    ]
+   ]
+  },
+  {
+   "name": "bathroomSink",
+   "file": "bathroomSink.glb",
+   "tris": 316,
+   "verts": 1545,
+   "materials": 3,
+   "kb": 22.0,
+   "colors": [
+    [
+     1,
+     1,
+     1
+    ],
+    [
+     0.937,
+     0.98,
+     0.957
+    ],
+    [
+     0.973,
+     1,
+     1
+    ]
+   ]
+  },
+  {
+   "name": "bathroomSinkSquare",
+   "file": "bathroomSinkSquare.glb",
+   "tris": 234,
+   "verts": 936,
+   "materials": 3,
+   "kb": 14.8,
+   "colors": [
+    [
+     0.973,
+     1,
+     1
+    ],
+    [
+     0.306,
+     0.388,
+     0.388
+    ],
+    [
+     0.937,
+     0.98,
+     0.957
+    ]
+   ]
+  },
+  {
+   "name": "bathtub",
+   "file": "bathtub.glb",
+   "tris": 602,
+   "verts": 2436,
+   "materials": 3,
+   "kb": 34.7,
+   "colors": [
+    [
+     0.973,
+     1,
+     1
+    ],
+    [
+     0.937,
+     0.98,
+     0.957
+    ],
+    [
+     0.306,
+     0.388,
+     0.388
+    ]
+   ]
+  },
+  {
+   "name": "bear",
+   "file": "bear.glb",
+   "tris": 134,
+   "verts": 750,
+   "materials": 3,
+   "kb": 11.6,
+   "colors": [
+    [
+     0.647,
+     0.459,
+     0.298
+    ],
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.306,
+     0.388,
+     0.388
+    ]
+   ]
+  },
+  {
+   "name": "bedBunk",
+   "file": "bedBunk.glb",
+   "tris": 580,
+   "verts": 1512,
+   "materials": 3,
+   "kb": 39.8,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.973,
+     1,
+     1
+    ],
+    [
+     0.943,
+     0.367,
+     0.343
+    ]
+   ]
+  },
+  {
+   "name": "bedDouble",
+   "file": "bedDouble.glb",
+   "tris": 264,
+   "verts": 866,
+   "materials": 4,
+   "kb": 22.8,
+   "colors": [
+    [
+     0.973,
+     1,
+     1
+    ],
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.741,
+     0.823,
+     0.84
+    ],
+    [
+     0.943,
+     0.367,
+     0.343
+    ]
+   ]
+  },
+  {
+   "name": "bedSingle",
+   "file": "bedSingle.glb",
+   "tris": 214,
+   "verts": 768,
+   "materials": 4,
+   "kb": 18.2,
+   "colors": [
+    [
+     0.973,
+     1,
+     1
+    ],
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.741,
+     0.823,
+     0.84
+    ],
+    [
+     0.943,
+     0.367,
+     0.343
+    ]
+   ]
+  },
+  {
+   "name": "bench",
+   "file": "bench.glb",
+   "tris": 170,
+   "verts": 230,
+   "materials": 1,
+   "kb": 10.5,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ]
+   ]
+  },
+  {
+   "name": "benchCushion",
+   "file": "benchCushion.glb",
+   "tris": 196,
+   "verts": 520,
+   "materials": 2,
+   "kb": 12.2,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.943,
+     0.367,
+     0.343
+    ]
+   ]
+  },
+  {
+   "name": "benchCushionLow",
+   "file": "benchCushionLow.glb",
+   "tris": 138,
+   "verts": 594,
+   "materials": 3,
+   "kb": 10.0,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.943,
+     0.367,
+     0.343
+    ],
+    [
+     1,
+     1,
+     1
+    ]
+   ]
+  },
+  {
+   "name": "bookcaseClosed",
+   "file": "bookcaseClosed.glb",
+   "tris": 372,
+   "verts": 540,
+   "materials": 1,
+   "kb": 22.6,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ]
+   ]
+  },
+  {
+   "name": "bookcaseClosedDoors",
+   "file": "bookcaseClosedDoors.glb",
+   "tris": 296,
+   "verts": 568,
+   "materials": 2,
+   "kb": 22.1,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.741,
+     0.823,
+     0.84
+    ]
+   ]
+  },
+  {
+   "name": "bookcaseClosedWide",
+   "file": "bookcaseClosedWide.glb",
+   "tris": 372,
+   "verts": 540,
+   "materials": 1,
+   "kb": 22.6,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ]
+   ]
+  },
+  {
+   "name": "bookcaseOpen",
+   "file": "bookcaseOpen.glb",
+   "tris": 320,
+   "verts": 400,
+   "materials": 1,
+   "kb": 17.6,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ]
+   ]
+  },
+  {
+   "name": "bookcaseOpenLow",
+   "file": "bookcaseOpenLow.glb",
+   "tris": 184,
+   "verts": 248,
+   "materials": 1,
+   "kb": 11.2,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ]
+   ]
+  },
+  {
+   "name": "books",
+   "file": "books.glb",
+   "tris": 62,
+   "verts": 424,
+   "materials": 4,
+   "kb": 6.7,
+   "colors": [
+    [
+     0.608,
+     0.298,
+     0.285
+    ],
+    [
+     0.973,
+     1,
+     1
+    ],
+    [
+     0.182,
+     0.821,
+     0.576
+    ],
+    [
+     0.741,
+     0.823,
+     0.84
+    ]
+   ]
+  },
+  {
+   "name": "cabinetBed",
+   "file": "cabinetBed.glb",
+   "tris": 72,
+   "verts": 168,
+   "materials": 2,
+   "kb": 7.3,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.741,
+     0.823,
+     0.84
+    ]
+   ]
+  },
+  {
+   "name": "cabinetBedDrawer",
+   "file": "cabinetBedDrawer.glb",
+   "tris": 182,
+   "verts": 588,
+   "materials": 3,
+   "kb": 15.7,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     1,
+     1,
+     1
+    ],
+    [
+     0.741,
+     0.823,
+     0.84
+    ]
+   ]
+  },
+  {
+   "name": "cabinetBedDrawerTable",
+   "file": "cabinetBedDrawerTable.glb",
+   "tris": 140,
+   "verts": 452,
+   "materials": 3,
+   "kb": 11.9,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     1,
+     1,
+     1
+    ],
+    [
+     0.741,
+     0.823,
+     0.84
+    ]
+   ]
+  },
+  {
+   "name": "cabinetTelevision",
+   "file": "cabinetTelevision.glb",
+   "tris": 154,
+   "verts": 228,
+   "materials": 1,
+   "kb": 10.3,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ]
+   ]
+  },
+  {
+   "name": "cabinetTelevisionDoors",
+   "file": "cabinetTelevisionDoors.glb",
+   "tris": 210,
+   "verts": 420,
+   "materials": 2,
+   "kb": 16.5,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.741,
+     0.823,
+     0.84
+    ]
+   ]
+  },
+  {
+   "name": "cardboardBoxClosed",
+   "file": "cardboardBoxClosed.glb",
+   "tris": 60,
+   "verts": 176,
+   "materials": 2,
+   "kb": 5.3,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.678,
+     0.456,
+     0.299
+    ]
+   ]
+  },
+  {
+   "name": "cardboardBoxOpen",
+   "file": "cardboardBoxOpen.glb",
+   "tris": 60,
+   "verts": 176,
+   "materials": 2,
+   "kb": 5.3,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.678,
+     0.456,
+     0.299
+    ]
+   ]
+  },
+  {
+   "name": "ceilingFan",
+   "file": "ceilingFan.glb",
+   "tris": 214,
+   "verts": 975,
+   "materials": 3,
+   "kb": 14.9,
+   "colors": [
+    [
+     0.937,
+     0.98,
+     0.957
+    ],
+    [
+     1,
+     0.914,
+     0.588
+    ],
+    [
+     0.896,
+     0.602,
+     0.393
+    ]
+   ]
+  },
+  {
+   "name": "chair",
+   "file": "chair.glb",
+   "tris": 170,
+   "verts": 230,
+   "materials": 1,
+   "kb": 10.5,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ]
+   ]
+  },
+  {
+   "name": "chairCushion",
+   "file": "chairCushion.glb",
+   "tris": 198,
+   "verts": 524,
+   "materials": 2,
+   "kb": 12.3,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.943,
+     0.367,
+     0.343
+    ]
+   ]
+  },
+  {
+   "name": "chairDesk",
+   "file": "chairDesk.glb",
+   "tris": 588,
+   "verts": 1698,
+   "materials": 2,
+   "kb": 38.1,
+   "colors": [
+    [
+     0.369,
+     0.467,
+     0.467
+    ],
+    [
+     0.943,
+     0.367,
+     0.343
+    ]
+   ]
+  },
+  {
+   "name": "chairModernCushion",
+   "file": "chairModernCushion.glb",
+   "tris": 92,
+   "verts": 276,
+   "materials": 2,
+   "kb": 7.2,
+   "colors": [
+    [
+     0.741,
+     0.823,
+     0.84
+    ],
+    [
+     0.356,
+     0.517,
+     0.868
+    ]
+   ]
+  },
+  {
+   "name": "chairModernFrameCushion",
+   "file": "chairModernFrameCushion.glb",
+   "tris": 284,
+   "verts": 832,
+   "materials": 2,
+   "kb": 18.2,
+   "colors": [
+    [
+     0.741,
+     0.823,
+     0.84
+    ],
+    [
+     0.356,
+     0.517,
+     0.868
+    ]
+   ]
+  },
+  {
+   "name": "chairRounded",
+   "file": "chairRounded.glb",
+   "tris": 280,
+   "verts": 388,
+   "materials": 1,
+   "kb": 16.8,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ]
+   ]
+  },
+  {
+   "name": "coatRack",
+   "file": "coatRack.glb",
+   "tris": 132,
+   "verts": 408,
+   "materials": 2,
+   "kb": 9.7,
+   "colors": [
+    [
+     0.369,
+     0.467,
+     0.467
+    ],
+    [
+     0.896,
+     0.602,
+     0.393
+    ]
+   ]
+  },
+  {
+   "name": "coatRackStanding",
+   "file": "coatRackStanding.glb",
+   "tris": 190,
+   "verts": 300,
+   "materials": 1,
+   "kb": 13.0,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ]
+   ]
+  },
+  {
+   "name": "computerKeyboard",
+   "file": "computerKeyboard.glb",
+   "tris": 32,
+   "verts": 76,
+   "materials": 2,
+   "kb": 3.4,
+   "colors": [
+    [
+     0.306,
+     0.388,
+     0.388
+    ],
+    [
+     0.369,
+     0.467,
+     0.467
+    ]
+   ]
+  },
+  {
+   "name": "computerMouse",
+   "file": "computerMouse.glb",
+   "tris": 71,
+   "verts": 113,
+   "materials": 1,
+   "kb": 5.7,
+   "colors": [
+    [
+     0.306,
+     0.388,
+     0.388
+    ]
+   ]
+  },
+  {
+   "name": "computerScreen",
+   "file": "computerScreen.glb",
+   "tris": 72,
+   "verts": 228,
+   "materials": 2,
+   "kb": 6.3,
+   "colors": [
+    [
+     0.306,
+     0.388,
+     0.388
+    ],
+    [
+     0.741,
+     0.823,
+     0.84
+    ]
+   ]
+  },
+  {
+   "name": "desk",
+   "file": "desk.glb",
+   "tris": 198,
+   "verts": 380,
+   "materials": 2,
+   "kb": 14.7,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.741,
+     0.823,
+     0.84
+    ]
+   ]
+  },
+  {
+   "name": "deskCorner",
+   "file": "deskCorner.glb",
+   "tris": 250,
+   "verts": 452,
+   "materials": 2,
+   "kb": 17.6,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.741,
+     0.823,
+     0.84
+    ]
+   ]
+  },
+  {
+   "name": "doorway",
+   "file": "doorway.glb",
+   "tris": 188,
+   "verts": 544,
+   "materials": 2,
+   "kb": 14.2,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.741,
+     0.823,
+     0.84
+    ]
+   ]
+  },
+  {
+   "name": "doorwayFront",
+   "file": "doorwayFront.glb",
+   "tris": 156,
+   "verts": 624,
+   "materials": 4,
+   "kb": 12.7,
+   "colors": [
+    [
+     0.973,
+     1,
+     1
+    ],
+    [
+     0.741,
+     0.823,
+     0.84
+    ],
+    [
+     0.306,
+     0.388,
+     0.388
+    ],
+    [
+     0.698,
+     0.828,
+     0.769
+    ]
+   ]
+  },
+  {
+   "name": "doorwayOpen",
+   "file": "doorwayOpen.glb",
+   "tris": 28,
+   "verts": 48,
+   "materials": 1,
+   "kb": 3.2,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ]
+   ]
+  },
+  {
+   "name": "dryer",
+   "file": "dryer.glb",
+   "tris": 262,
+   "verts": 817,
+   "materials": 3,
+   "kb": 17.3,
+   "colors": [
+    [
+     0.937,
+     0.98,
+     0.957
+    ],
+    [
+     0.369,
+     0.467,
+     0.467
+    ],
+    [
+     0.306,
+     0.388,
+     0.388
+    ]
+   ]
+  },
+  {
+   "name": "floorCorner",
+   "file": "floorCorner.glb",
+   "tris": 16,
+   "verts": 30,
+   "materials": 1,
+   "kb": 2.5,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ]
+   ]
+  },
+  {
+   "name": "floorCornerRound",
+   "file": "floorCornerRound.glb",
+   "tris": 60,
+   "verts": 96,
+   "materials": 1,
+   "kb": 5.0,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ]
+   ]
+  },
+  {
+   "name": "floorFull",
+   "file": "floorFull.glb",
+   "tris": 12,
+   "verts": 24,
+   "materials": 1,
+   "kb": 2.2,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ]
+   ]
+  },
+  {
+   "name": "floorHalf",
+   "file": "floorHalf.glb",
+   "tris": 12,
+   "verts": 24,
+   "materials": 1,
+   "kb": 2.2,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ]
+   ]
+  },
+  {
+   "name": "hoodLarge",
+   "file": "hoodLarge.glb",
+   "tris": 36,
+   "verts": 150,
+   "materials": 2,
+   "kb": 4.5,
+   "colors": [
+    [
+     0.306,
+     0.388,
+     0.388
+    ],
+    [
+     1,
+     1,
+     1
+    ]
+   ]
+  },
+  {
+   "name": "hoodModern",
+   "file": "hoodModern.glb",
+   "tris": 28,
+   "verts": 112,
+   "materials": 2,
+   "kb": 3.9,
+   "colors": [
+    [
+     0.369,
+     0.467,
+     0.467
+    ],
+    [
+     1,
+     1,
+     1
+    ]
+   ]
+  },
+  {
+   "name": "kitchenBar",
+   "file": "kitchenBar.glb",
+   "tris": 76,
+   "verts": 264,
+   "materials": 3,
+   "kb": 5.9,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.741,
+     0.823,
+     0.84
+    ],
+    [
+     0.678,
+     0.456,
+     0.299
+    ]
+   ]
+  },
+  {
+   "name": "kitchenBarEnd",
+   "file": "kitchenBarEnd.glb",
+   "tris": 152,
+   "verts": 464,
+   "materials": 2,
+   "kb": 10.8,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.741,
+     0.823,
+     0.84
+    ]
+   ]
+  },
+  {
+   "name": "kitchenBlender",
+   "file": "kitchenBlender.glb",
+   "tris": 246,
+   "verts": 418,
+   "materials": 3,
+   "kb": 18.3,
+   "colors": [
+    [
+     0.369,
+     0.467,
+     0.467
+    ],
+    [
+     0.741,
+     0.823,
+     0.84
+    ],
+    [
+     0.698,
+     0.828,
+     0.769
+    ]
+   ]
+  },
+  {
+   "name": "kitchenCabinet",
+   "file": "kitchenCabinet.glb",
+   "tris": 114,
+   "verts": 406,
+   "materials": 3,
+   "kb": 10.2,
+   "colors": [
+    [
+     0.741,
+     0.823,
+     0.84
+    ],
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.678,
+     0.456,
+     0.299
+    ]
+   ]
+  },
+  {
+   "name": "kitchenCabinetCornerInner",
+   "file": "kitchenCabinetCornerInner.glb",
+   "tris": 54,
+   "verts": 168,
+   "materials": 2,
+   "kb": 5.1,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.741,
+     0.823,
+     0.84
+    ]
+   ]
+  },
+  {
+   "name": "kitchenCabinetCornerRound",
+   "file": "kitchenCabinetCornerRound.glb",
+   "tris": 194,
+   "verts": 592,
+   "materials": 2,
+   "kb": 13.3,
+   "colors": [
+    [
+     0.741,
+     0.823,
+     0.84
+    ],
+    [
+     0.896,
+     0.602,
+     0.393
+    ]
+   ]
+  },
+  {
+   "name": "kitchenCabinetDrawer",
+   "file": "kitchenCabinetDrawer.glb",
+   "tris": 174,
+   "verts": 660,
+   "materials": 3,
+   "kb": 15.0,
+   "colors": [
+    [
+     0.741,
+     0.823,
+     0.84
+    ],
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.678,
+     0.456,
+     0.299
+    ]
+   ]
+  },
+  {
+   "name": "kitchenCabinetUpper",
+   "file": "kitchenCabinetUpper.glb",
+   "tris": 80,
+   "verts": 228,
+   "materials": 3,
+   "kb": 8.0,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.678,
+     0.456,
+     0.299
+    ],
+    [
+     0.741,
+     0.823,
+     0.84
+    ]
+   ]
+  },
+  {
+   "name": "kitchenCabinetUpperCorner",
+   "file": "kitchenCabinetUpperCorner.glb",
+   "tris": 204,
+   "verts": 308,
+   "materials": 1,
+   "kb": 13.4,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ]
+   ]
+  },
+  {
+   "name": "kitchenCabinetUpperDouble",
+   "file": "kitchenCabinetUpperDouble.glb",
+   "tris": 234,
+   "verts": 540,
+   "materials": 3,
+   "kb": 17.8,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.678,
+     0.456,
+     0.299
+    ],
+    [
+     0.741,
+     0.823,
+     0.84
+    ]
+   ]
+  },
+  {
+   "name": "kitchenCabinetUpperLow",
+   "file": "kitchenCabinetUpperLow.glb",
+   "tris": 64,
+   "verts": 204,
+   "materials": 3,
+   "kb": 7.0,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.678,
+     0.456,
+     0.299
+    ],
+    [
+     0.741,
+     0.823,
+     0.84
+    ]
+   ]
+  },
+  {
+   "name": "kitchenCoffeeMachine",
+   "file": "kitchenCoffeeMachine.glb",
+   "tris": 166,
+   "verts": 420,
+   "materials": 3,
+   "kb": 13.0,
+   "colors": [
+    [
+     0.369,
+     0.467,
+     0.467
+    ],
+    [
+     0.741,
+     0.823,
+     0.84
+    ],
+    [
+     0.973,
+     1,
+     1
+    ]
+   ]
+  },
+  {
+   "name": "kitchenFridge",
+   "file": "kitchenFridge.glb",
+   "tris": 250,
+   "verts": 976,
+   "materials": 4,
+   "kb": 19.6,
+   "colors": [
+    [
+     0.937,
+     0.98,
+     0.957
+    ],
+    [
+     0.306,
+     0.388,
+     0.388
+    ],
+    [
+     0.741,
+     0.823,
+     0.84
+    ],
+    [
+     0.698,
+     0.828,
+     0.769
+    ]
+   ]
+  },
+  {
+   "name": "kitchenFridgeBuiltIn",
+   "file": "kitchenFridgeBuiltIn.glb",
+   "tris": 268,
+   "verts": 1476,
+   "materials": 5,
+   "kb": 22.1,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.937,
+     0.98,
+     0.957
+    ],
+    [
+     0.678,
+     0.456,
+     0.299
+    ],
+    [
+     0.741,
+     0.823,
+     0.84
+    ],
+    [
+     0.698,
+     0.828,
+     0.769
+    ]
+   ]
+  },
+  {
+   "name": "kitchenFridgeLarge",
+   "file": "kitchenFridgeLarge.glb",
+   "tris": 436,
+   "verts": 1104,
+   "materials": 2,
+   "kb": 29.9,
+   "colors": [
+    [
+     0.937,
+     0.98,
+     0.957
+    ],
+    [
+     0.369,
+     0.467,
+     0.467
+    ]
+   ]
+  },
+  {
+   "name": "kitchenFridgeSmall",
+   "file": "kitchenFridgeSmall.glb",
+   "tris": 152,
+   "verts": 632,
+   "materials": 4,
+   "kb": 12.7,
+   "colors": [
+    [
+     0.937,
+     0.98,
+     0.957
+    ],
+    [
+     0.306,
+     0.388,
+     0.388
+    ],
+    [
+     0.698,
+     0.828,
+     0.769
+    ],
+    [
+     0.741,
+     0.823,
+     0.84
+    ]
+   ]
+  },
+  {
+   "name": "kitchenMicrowave",
+   "file": "kitchenMicrowave.glb",
+   "tris": 152,
+   "verts": 510,
+   "materials": 4,
+   "kb": 11.0,
+   "colors": [
+    [
+     0.369,
+     0.467,
+     0.467
+    ],
+    [
+     0.973,
+     1,
+     1
+    ],
+    [
+     0.306,
+     0.388,
+     0.388
+    ],
+    [
+     0.698,
+     0.828,
+     0.769
+    ]
+   ]
+  },
+  {
+   "name": "kitchenSink",
+   "file": "kitchenSink.glb",
+   "tris": 318,
+   "verts": 2194,
+   "materials": 6,
+   "kb": 22.9,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.741,
+     0.823,
+     0.84
+    ],
+    [
+     0.306,
+     0.388,
+     0.388
+    ],
+    [
+     0.937,
+     0.98,
+     0.957
+    ],
+    [
+     1,
+     1,
+     1
+    ],
+    [
+     0.678,
+     0.456,
+     0.299
+    ]
+   ]
+  },
+  {
+   "name": "kitchenStove",
+   "file": "kitchenStove.glb",
+   "tris": 830,
+   "verts": 4860,
+   "materials": 5,
+   "kb": 53.1,
+   "colors": [
+    [
+     0.741,
+     0.823,
+     0.84
+    ],
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.306,
+     0.388,
+     0.388
+    ],
+    [
+     0.973,
+     1,
+     1
+    ],
+    [
+     0.698,
+     0.828,
+     0.769
+    ]
+   ]
+  },
+  {
+   "name": "kitchenStoveElectric",
+   "file": "kitchenStoveElectric.glb",
+   "tris": 338,
+   "verts": 2040,
+   "materials": 6,
+   "kb": 18.2,
+   "colors": [
+    [
+     0.741,
+     0.823,
+     0.84
+    ],
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.306,
+     0.388,
+     0.388
+    ],
+    [
+     0.973,
+     1,
+     1
+    ],
+    [
+     0.698,
+     0.828,
+     0.769
+    ],
+    [
+     0.369,
+     0.467,
+     0.467
+    ]
+   ]
+  },
+  {
+   "name": "lampRoundFloor",
+   "file": "lampRoundFloor.glb",
+   "tris": 76,
+   "verts": 240,
+   "materials": 2,
+   "kb": 6.4,
+   "colors": [
+    [
+     0.741,
+     0.823,
+     0.84
+    ],
+    [
+     1,
+     0.914,
+     0.588
+    ]
+   ]
+  },
+  {
+   "name": "lampRoundTable",
+   "file": "lampRoundTable.glb",
+   "tris": 76,
+   "verts": 240,
+   "materials": 2,
+   "kb": 6.4,
+   "colors": [
+    [
+     0.741,
+     0.823,
+     0.84
+    ],
+    [
+     1,
+     0.914,
+     0.588
+    ]
+   ]
+  },
+  {
+   "name": "lampSquareCeiling",
+   "file": "lampSquareCeiling.glb",
+   "tris": 60,
+   "verts": 192,
+   "materials": 2,
+   "kb": 5.5,
+   "colors": [
+    [
+     1,
+     0.914,
+     0.588
+    ],
+    [
+     0.741,
+     0.823,
+     0.84
+    ]
+   ]
+  },
+  {
+   "name": "lampSquareFloor",
+   "file": "lampSquareFloor.glb",
+   "tris": 60,
+   "verts": 192,
+   "materials": 2,
+   "kb": 5.5,
+   "colors": [
+    [
+     1,
+     0.914,
+     0.588
+    ],
+    [
+     0.741,
+     0.823,
+     0.84
+    ]
+   ]
+  },
+  {
+   "name": "lampSquareTable",
+   "file": "lampSquareTable.glb",
+   "tris": 60,
+   "verts": 192,
+   "materials": 2,
+   "kb": 5.5,
+   "colors": [
+    [
+     1,
+     0.914,
+     0.588
+    ],
+    [
+     0.741,
+     0.823,
+     0.84
+    ]
+   ]
+  },
+  {
+   "name": "lampWall",
+   "file": "lampWall.glb",
+   "tris": 42,
+   "verts": 156,
+   "materials": 2,
+   "kb": 4.7,
+   "colors": [
+    [
+     0.741,
+     0.823,
+     0.84
+    ],
+    [
+     1,
+     0.914,
+     0.588
+    ]
+   ]
+  },
+  {
+   "name": "laptop",
+   "file": "laptop.glb",
+   "tris": 68,
+   "verts": 228,
+   "materials": 3,
+   "kb": 5.4,
+   "colors": [
+    [
+     0.306,
+     0.388,
+     0.388
+    ],
+    [
+     0.741,
+     0.823,
+     0.84
+    ],
+    [
+     0.369,
+     0.467,
+     0.467
+    ]
+   ]
+  },
+  {
+   "name": "loungeChair",
+   "file": "loungeChair.glb",
+   "tris": 128,
+   "verts": 392,
+   "materials": 2,
+   "kb": 9.4,
+   "colors": [
+    [
+     0.943,
+     0.367,
+     0.343
+    ],
+    [
+     0.896,
+     0.602,
+     0.393
+    ]
+   ]
+  },
+  {
+   "name": "loungeChairRelax",
+   "file": "loungeChairRelax.glb",
+   "tris": 188,
+   "verts": 876,
+   "materials": 3,
+   "kb": 13.6,
+   "colors": [
+    [
+     0.741,
+     0.823,
+     0.84
+    ],
+    [
+     0.943,
+     0.367,
+     0.343
+    ],
+    [
+     0.896,
+     0.602,
+     0.393
+    ]
+   ]
+  },
+  {
+   "name": "loungeDesignChair",
+   "file": "loungeDesignChair.glb",
+   "tris": 116,
+   "verts": 368,
+   "materials": 2,
+   "kb": 8.9,
+   "colors": [
+    [
+     0.356,
+     0.517,
+     0.868
+    ],
+    [
+     0.741,
+     0.823,
+     0.84
+    ]
+   ]
+  },
+  {
+   "name": "loungeDesignSofa",
+   "file": "loungeDesignSofa.glb",
+   "tris": 116,
+   "verts": 368,
+   "materials": 2,
+   "kb": 8.9,
+   "colors": [
+    [
+     0.356,
+     0.517,
+     0.868
+    ],
+    [
+     0.741,
+     0.823,
+     0.84
+    ]
+   ]
+  },
+  {
+   "name": "loungeDesignSofaCorner",
+   "file": "loungeDesignSofaCorner.glb",
+   "tris": 176,
+   "verts": 528,
+   "materials": 2,
+   "kb": 13.4,
+   "colors": [
+    [
+     0.356,
+     0.517,
+     0.868
+    ],
+    [
+     0.741,
+     0.823,
+     0.84
+    ]
+   ]
+  },
+  {
+   "name": "loungeSofa",
+   "file": "loungeSofa.glb",
+   "tris": 128,
+   "verts": 392,
+   "materials": 2,
+   "kb": 9.4,
+   "colors": [
+    [
+     0.943,
+     0.367,
+     0.343
+    ],
+    [
+     0.896,
+     0.602,
+     0.393
+    ]
+   ]
+  },
+  {
+   "name": "loungeSofaCorner",
+   "file": "loungeSofaCorner.glb",
+   "tris": 190,
+   "verts": 580,
+   "materials": 2,
+   "kb": 13.1,
+   "colors": [
+    [
+     0.943,
+     0.367,
+     0.343
+    ],
+    [
+     0.896,
+     0.602,
+     0.393
+    ]
+   ]
+  },
+  {
+   "name": "loungeSofaLong",
+   "file": "loungeSofaLong.glb",
+   "tris": 186,
+   "verts": 564,
+   "materials": 2,
+   "kb": 12.8,
+   "colors": [
+    [
+     0.943,
+     0.367,
+     0.343
+    ],
+    [
+     0.896,
+     0.602,
+     0.393
+    ]
+   ]
+  },
+  {
+   "name": "loungeSofaOttoman",
+   "file": "loungeSofaOttoman.glb",
+   "tris": 84,
+   "verts": 256,
+   "materials": 2,
+   "kb": 6.8,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.943,
+     0.367,
+     0.343
+    ]
+   ]
+  },
+  {
+   "name": "paneling",
+   "file": "paneling.glb",
+   "tris": 40,
+   "verts": 66,
+   "materials": 1,
+   "kb": 3.9,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ]
+   ]
+  },
+  {
+   "name": "pillow",
+   "file": "pillow.glb",
+   "tris": 50,
+   "verts": 96,
+   "materials": 1,
+   "kb": 4.9,
+   "colors": [
+    [
+     0.943,
+     0.367,
+     0.343
+    ]
+   ]
+  },
+  {
+   "name": "pillowBlue",
+   "file": "pillowBlue.glb",
+   "tris": 50,
+   "verts": 96,
+   "materials": 1,
+   "kb": 4.9,
+   "colors": [
+    [
+     0.356,
+     0.517,
+     0.868
+    ]
+   ]
+  },
+  {
+   "name": "pillowBlueLong",
+   "file": "pillowBlueLong.glb",
+   "tris": 50,
+   "verts": 96,
+   "materials": 1,
+   "kb": 5.0,
+   "colors": [
+    [
+     0.356,
+     0.517,
+     0.868
+    ]
+   ]
+  },
+  {
+   "name": "pillowLong",
+   "file": "pillowLong.glb",
+   "tris": 50,
+   "verts": 96,
+   "materials": 1,
+   "kb": 5.0,
+   "colors": [
+    [
+     0.943,
+     0.367,
+     0.343
+    ]
+   ]
+  },
+  {
+   "name": "plantSmall1",
+   "file": "plantSmall1.glb",
+   "tris": 102,
+   "verts": 320,
+   "materials": 2,
+   "kb": 8.0,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.182,
+     0.821,
+     0.576
+    ]
+   ]
+  },
+  {
+   "name": "plantSmall2",
+   "file": "plantSmall2.glb",
+   "tris": 158,
+   "verts": 576,
+   "materials": 2,
+   "kb": 12.7,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.182,
+     0.821,
+     0.576
+    ]
+   ]
+  },
+  {
+   "name": "plantSmall3",
+   "file": "plantSmall3.glb",
+   "tris": 98,
+   "verts": 336,
+   "materials": 2,
+   "kb": 8.2,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.182,
+     0.821,
+     0.576
+    ]
+   ]
+  },
+  {
+   "name": "pottedPlant",
+   "file": "pottedPlant.glb",
+   "tris": 60,
+   "verts": 192,
+   "materials": 3,
+   "kb": 7.4,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.678,
+     0.456,
+     0.299
+    ],
+    [
+     0.182,
+     0.821,
+     0.576
+    ]
+   ]
+  },
+  {
+   "name": "radio",
+   "file": "radio.glb",
+   "tris": 432,
+   "verts": 1644,
+   "materials": 3,
+   "kb": 24.4,
+   "colors": [
+    [
+     0.369,
+     0.467,
+     0.467
+    ],
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.741,
+     0.823,
+     0.84
+    ]
+   ]
+  },
+  {
+   "name": "rugDoormat",
+   "file": "rugDoormat.glb",
+   "tris": 204,
+   "verts": 312,
+   "materials": 1,
+   "kb": 13.5,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ]
+   ]
+  },
+  {
+   "name": "rugRectangle",
+   "file": "rugRectangle.glb",
+   "tris": 28,
+   "verts": 64,
+   "materials": 2,
+   "kb": 3.1,
+   "colors": [
+    [
+     0.943,
+     0.367,
+     0.343
+    ],
+    [
+     0.608,
+     0.298,
+     0.285
+    ]
+   ]
+  },
+  {
+   "name": "rugRound",
+   "file": "rugRound.glb",
+   "tris": 188,
+   "verts": 380,
+   "materials": 2,
+   "kb": 9.9,
+   "colors": [
+    [
+     0.943,
+     0.367,
+     0.343
+    ],
+    [
+     0.608,
+     0.298,
+     0.285
+    ]
+   ]
+  },
+  {
+   "name": "rugRounded",
+   "file": "rugRounded.glb",
+   "tris": 204,
+   "verts": 412,
+   "materials": 2,
+   "kb": 10.6,
+   "colors": [
+    [
+     0.608,
+     0.298,
+     0.285
+    ],
+    [
+     0.943,
+     0.367,
+     0.343
+    ]
+   ]
+  },
+  {
+   "name": "rugSquare",
+   "file": "rugSquare.glb",
+   "tris": 28,
+   "verts": 64,
+   "materials": 2,
+   "kb": 3.1,
+   "colors": [
+    [
+     0.943,
+     0.367,
+     0.343
+    ],
+    [
+     0.608,
+     0.298,
+     0.285
+    ]
+   ]
+  },
+  {
+   "name": "shower",
+   "file": "shower.glb",
+   "tris": 810,
+   "verts": 3483,
+   "materials": 4,
+   "kb": 50.8,
+   "colors": [
+    [
+     0.973,
+     1,
+     1
+    ],
+    [
+     0.306,
+     0.388,
+     0.388
+    ],
+    [
+     0.698,
+     0.828,
+     0.769
+    ],
+    [
+     0.741,
+     0.823,
+     0.84
+    ]
+   ]
+  },
+  {
+   "name": "showerRound",
+   "file": "showerRound.glb",
+   "tris": 960,
+   "verts": 2400,
+   "materials": 4,
+   "kb": 70.4,
+   "colors": [
+    [
+     1,
+     1,
+     1
+    ],
+    [
+     0.306,
+     0.388,
+     0.388
+    ],
+    [
+     0.698,
+     0.828,
+     0.769
+    ],
+    [
+     0.973,
+     1,
+     1
+    ]
+   ]
+  },
+  {
+   "name": "sideTable",
+   "file": "sideTable.glb",
+   "tris": 118,
+   "verts": 348,
+   "materials": 2,
+   "kb": 8.6,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     1,
+     1,
+     1
+    ]
+   ]
+  },
+  {
+   "name": "sideTableDrawers",
+   "file": "sideTableDrawers.glb",
+   "tris": 238,
+   "verts": 732,
+   "materials": 3,
+   "kb": 18.6,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     1,
+     1,
+     1
+    ],
+    [
+     0.741,
+     0.823,
+     0.84
+    ]
+   ]
+  },
+  {
+   "name": "speaker",
+   "file": "speaker.glb",
+   "tris": 228,
+   "verts": 696,
+   "materials": 2,
+   "kb": 15.4,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.369,
+     0.467,
+     0.467
+    ]
+   ]
+  },
+  {
+   "name": "speakerSmall",
+   "file": "speakerSmall.glb",
+   "tris": 220,
+   "verts": 672,
+   "materials": 2,
+   "kb": 14.9,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.369,
+     0.467,
+     0.467
+    ]
+   ]
+  },
+  {
+   "name": "stairs",
+   "file": "stairs.glb",
+   "tris": 308,
+   "verts": 1004,
+   "materials": 2,
+   "kb": 21.1,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.678,
+     0.456,
+     0.299
+    ]
+   ]
+  },
+  {
+   "name": "stairsCorner",
+   "file": "stairsCorner.glb",
+   "tris": 312,
+   "verts": 998,
+   "materials": 2,
+   "kb": 21.1,
+   "colors": [
+    [
+     0.678,
+     0.456,
+     0.299
+    ],
+    [
+     0.896,
+     0.602,
+     0.393
+    ]
+   ]
+  },
+  {
+   "name": "stairsOpen",
+   "file": "stairsOpen.glb",
+   "tris": 558,
+   "verts": 1506,
+   "materials": 3,
+   "kb": 39.0,
+   "colors": [
+    [
+     0.678,
+     0.456,
+     0.299
+    ],
+    [
+     0.741,
+     0.823,
+     0.84
+    ],
+    [
+     0.896,
+     0.602,
+     0.393
+    ]
+   ]
+  },
+  {
+   "name": "stairsOpenSingle",
+   "file": "stairsOpenSingle.glb",
+   "tris": 326,
+   "verts": 566,
+   "materials": 2,
+   "kb": 24.0,
+   "colors": [
+    [
+     0.741,
+     0.823,
+     0.84
+    ],
+    [
+     0.896,
+     0.602,
+     0.393
+    ]
+   ]
+  },
+  {
+   "name": "stoolBar",
+   "file": "stoolBar.glb",
+   "tris": 176,
+   "verts": 492,
+   "materials": 2,
+   "kb": 11.5,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.943,
+     0.367,
+     0.343
+    ]
+   ]
+  },
+  {
+   "name": "stoolBarSquare",
+   "file": "stoolBarSquare.glb",
+   "tris": 142,
+   "verts": 388,
+   "materials": 2,
+   "kb": 9.6,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.943,
+     0.367,
+     0.343
+    ]
+   ]
+  },
+  {
+   "name": "table",
+   "file": "table.glb",
+   "tris": 120,
+   "verts": 168,
+   "materials": 1,
+   "kb": 8.0,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ]
+   ]
+  },
+  {
+   "name": "tableCloth",
+   "file": "tableCloth.glb",
+   "tris": 144,
+   "verts": 396,
+   "materials": 2,
+   "kb": 9.7,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.943,
+     0.367,
+     0.343
+    ]
+   ]
+  },
+  {
+   "name": "tableCoffee",
+   "file": "tableCoffee.glb",
+   "tris": 124,
+   "verts": 168,
+   "materials": 1,
+   "kb": 8.1,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ]
+   ]
+  },
+  {
+   "name": "tableCoffeeGlass",
+   "file": "tableCoffeeGlass.glb",
+   "tris": 140,
+   "verts": 368,
+   "materials": 2,
+   "kb": 9.2,
+   "colors": [
+    [
+     0.741,
+     0.823,
+     0.84
+    ],
+    [
+     0.698,
+     0.828,
+     0.769
+    ]
+   ]
+  },
+  {
+   "name": "tableCoffeeGlassSquare",
+   "file": "tableCoffeeGlassSquare.glb",
+   "tris": 140,
+   "verts": 368,
+   "materials": 2,
+   "kb": 9.2,
+   "colors": [
+    [
+     0.741,
+     0.823,
+     0.84
+    ],
+    [
+     0.698,
+     0.828,
+     0.769
+    ]
+   ]
+  },
+  {
+   "name": "tableCoffeeSquare",
+   "file": "tableCoffeeSquare.glb",
+   "tris": 124,
+   "verts": 168,
+   "materials": 1,
+   "kb": 8.1,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ]
+   ]
+  },
+  {
+   "name": "tableCross",
+   "file": "tableCross.glb",
+   "tris": 178,
+   "verts": 269,
+   "materials": 1,
+   "kb": 11.9,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ]
+   ]
+  },
+  {
+   "name": "tableCrossCloth",
+   "file": "tableCrossCloth.glb",
+   "tris": 202,
+   "verts": 598,
+   "materials": 2,
+   "kb": 13.5,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.943,
+     0.367,
+     0.343
+    ]
+   ]
+  },
+  {
+   "name": "tableGlass",
+   "file": "tableGlass.glb",
+   "tris": 144,
+   "verts": 392,
+   "materials": 2,
+   "kb": 9.6,
+   "colors": [
+    [
+     0.741,
+     0.823,
+     0.84
+    ],
+    [
+     0.698,
+     0.828,
+     0.769
+    ]
+   ]
+  },
+  {
+   "name": "tableRound",
+   "file": "tableRound.glb",
+   "tris": 80,
+   "verts": 128,
+   "materials": 1,
+   "kb": 6.3,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ]
+   ]
+  },
+  {
+   "name": "televisionAntenna",
+   "file": "televisionAntenna.glb",
+   "tris": 44,
+   "verts": 80,
+   "materials": 1,
+   "kb": 4.4,
+   "colors": [
+    [
+     0.369,
+     0.467,
+     0.467
+    ]
+   ]
+  },
+  {
+   "name": "televisionModern",
+   "file": "televisionModern.glb",
+   "tris": 72,
+   "verts": 228,
+   "materials": 2,
+   "kb": 6.2,
+   "colors": [
+    [
+     0.306,
+     0.388,
+     0.388
+    ],
+    [
+     0.741,
+     0.823,
+     0.84
+    ]
+   ]
+  },
+  {
+   "name": "televisionVintage",
+   "file": "televisionVintage.glb",
+   "tris": 280,
+   "verts": 1656,
+   "materials": 4,
+   "kb": 18.9,
+   "colors": [
+    [
+     0.741,
+     0.823,
+     0.84
+    ],
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.369,
+     0.467,
+     0.467
+    ],
+    [
+     0.306,
+     0.388,
+     0.388
+    ]
+   ]
+  },
+  {
+   "name": "toaster",
+   "file": "toaster.glb",
+   "tris": 220,
+   "verts": 652,
+   "materials": 2,
+   "kb": 14.6,
+   "colors": [
+    [
+     0.369,
+     0.467,
+     0.467
+    ],
+    [
+     0.741,
+     0.823,
+     0.84
+    ]
+   ]
+  },
+  {
+   "name": "toilet",
+   "file": "toilet.glb",
+   "tris": 230,
+   "verts": 1062,
+   "materials": 4,
+   "kb": 17.7,
+   "colors": [
+    [
+     0.973,
+     1,
+     1
+    ],
+    [
+     0.937,
+     0.98,
+     0.957
+    ],
+    [
+     0.306,
+     0.388,
+     0.388
+    ],
+    [
+     1,
+     1,
+     1
+    ]
+   ]
+  },
+  {
+   "name": "toiletSquare",
+   "file": "toiletSquare.glb",
+   "tris": 228,
+   "verts": 700,
+   "materials": 2,
+   "kb": 17.1,
+   "colors": [
+    [
+     0.973,
+     1,
+     1
+    ],
+    [
+     0.937,
+     0.98,
+     0.957
+    ]
+   ]
+  },
+  {
+   "name": "trashcan",
+   "file": "trashcan.glb",
+   "tris": 68,
+   "verts": 232,
+   "materials": 2,
+   "kb": 6.3,
+   "colors": [
+    [
+     0.741,
+     0.823,
+     0.84
+    ],
+    [
+     0.306,
+     0.388,
+     0.388
+    ]
+   ]
+  },
+  {
+   "name": "wall",
+   "file": "wall.glb",
+   "tris": 12,
+   "verts": 90,
+   "materials": 3,
+   "kb": 3.3,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     1,
+     1,
+     1
+    ],
+    [
+     0.306,
+     0.388,
+     0.388
+    ]
+   ]
+  },
+  {
+   "name": "wallCorner",
+   "file": "wallCorner.glb",
+   "tris": 28,
+   "verts": 174,
+   "materials": 3,
+   "kb": 4.4,
+   "colors": [
+    [
+     0.306,
+     0.388,
+     0.388
+    ],
+    [
+     1,
+     1,
+     1
+    ],
+    [
+     0.896,
+     0.602,
+     0.393
+    ]
+   ]
+  },
+  {
+   "name": "wallCornerRond",
+   "file": "wallCornerRond.glb",
+   "tris": 116,
+   "verts": 636,
+   "materials": 3,
+   "kb": 10.2,
+   "colors": [
+    [
+     0.306,
+     0.388,
+     0.388
+    ],
+    [
+     1,
+     1,
+     1
+    ],
+    [
+     0.896,
+     0.602,
+     0.393
+    ]
+   ]
+  },
+  {
+   "name": "wallDoorway",
+   "file": "wallDoorway.glb",
+   "tris": 60,
+   "verts": 324,
+   "materials": 3,
+   "kb": 6.3,
+   "colors": [
+    [
+     1,
+     1,
+     1
+    ],
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.306,
+     0.388,
+     0.388
+    ]
+   ]
+  },
+  {
+   "name": "wallDoorwayWide",
+   "file": "wallDoorwayWide.glb",
+   "tris": 60,
+   "verts": 324,
+   "materials": 3,
+   "kb": 6.3,
+   "colors": [
+    [
+     1,
+     1,
+     1
+    ],
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.306,
+     0.388,
+     0.388
+    ]
+   ]
+  },
+  {
+   "name": "wallHalf",
+   "file": "wallHalf.glb",
+   "tris": 12,
+   "verts": 90,
+   "materials": 3,
+   "kb": 3.3,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     1,
+     1,
+     1
+    ],
+    [
+     0.306,
+     0.388,
+     0.388
+    ]
+   ]
+  },
+  {
+   "name": "wallWindow",
+   "file": "wallWindow.glb",
+   "tris": 108,
+   "verts": 476,
+   "materials": 4,
+   "kb": 10.5,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.306,
+     0.388,
+     0.388
+    ],
+    [
+     1,
+     1,
+     1
+    ],
+    [
+     0.698,
+     0.828,
+     0.769
+    ]
+   ]
+  },
+  {
+   "name": "wallWindowSlide",
+   "file": "wallWindowSlide.glb",
+   "tris": 152,
+   "verts": 604,
+   "materials": 4,
+   "kb": 14.2,
+   "colors": [
+    [
+     0.896,
+     0.602,
+     0.393
+    ],
+    [
+     0.306,
+     0.388,
+     0.388
+    ],
+    [
+     1,
+     1,
+     1
+    ],
+    [
+     0.698,
+     0.828,
+     0.769
+    ]
+   ]
+  },
+  {
+   "name": "washer",
+   "file": "washer.glb",
+   "tris": 720,
+   "verts": 3288,
+   "materials": 6,
+   "kb": 47.0,
+   "colors": [
+    [
+     0.937,
+     0.98,
+     0.957
+    ],
+    [
+     0.369,
+     0.467,
+     0.467
+    ],
+    [
+     0.306,
+     0.388,
+     0.388
+    ],
+    [
+     0.741,
+     0.823,
+     0.84
+    ],
+    [
+     0.698,
+     0.828,
+     0.769
+    ],
+    [
+     1,
+     1,
+     1
+    ]
+   ]
+  },
+  {
+   "name": "washerDryerStacked",
+   "file": "washerDryerStacked.glb",
+   "tris": 992,
+   "verts": 4135,
+   "materials": 6,
+   "kb": 62.6,
+   "colors": [
+    [
+     0.369,
+     0.467,
+     0.467
+    ],
+    [
+     0.937,
+     0.98,
+     0.957
+    ],
+    [
+     0.306,
+     0.388,
+     0.388
+    ],
+    [
+     0.741,
+     0.823,
+     0.84
+    ],
+    [
+     0.698,
+     0.828,
+     0.769
+    ],
+    [
+     1,
+     1,
+     1
+    ]
+   ]
+  }
+ ]
+}

@@ -1,0 +1,54 @@
+-- 1. the floors under test ---------------------------------------------
+   PASS  a third floor was generated, at a size of its own — 9x9, 5 rooms, 55 items
+   shipped 10x8m  ·  generated 16x14m  ·  small 9x9m
+   decoy  work/_world_nolayout.json (the 9x9 floor, no layout)
+   PASS  the three floors have three different plans, none of them the shipped default — 10x8 · 16x14 · 9x9
+   PASS  the shipped snapshot carries its own layout — 6 rooms
+   PASS  and that layout is byte-for-byte js/layout.js — if this fails: re-run node scripts/snapshot_arena.mjs
+   PASS  and the provenance hash still matches the file on disk — recorded 2550732773, file 2550732773
+   GL ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 SUPER (0x000021C4) Direct3D11 vs_5_0 ps_5_0, D3D11)
+
+-- 2.1 shipped: game/arenas/room_scene.json ------------------------------
+   plan 10x8 m, 6 rooms   ·   world 10.14x8.15 m, 6 rooms, height 1.50 m
+   PASS  shipped: the world is as wide as the plan it plays — plan 10x8 -> world 10.14x8.15 (+0.14, +0.15 of wall)
+   PASS  shipped: the rooms drawn are the rooms of the level — 6 drawn, 6 in the level, 6 expected
+   PASS  shipped: floor tiles, doors and furniture are 1:1 with the level — tiles 80/80, doors 5/5, furniture 119/119
+   PASS  shipped: the spawn stands on the flat's own floor — spawn (4.592, 7.281) -> floor/structure at y=0, 1 hit(s), floor found
+
+-- 2.2 generated: game/arenas/gen.json ------------------------------
+   plan 16x14 m, 10 rooms   ·   world 16.14x14.15 m, 10 rooms, height 1.50 m
+   PASS  generated: the world is as wide as the plan it plays — plan 16x14 -> world 16.14x14.15 (+0.14, +0.15 of wall)
+   PASS  generated: the rooms drawn are the rooms of the level — 10 drawn, 10 in the level, 10 expected
+   PASS  generated: floor tiles, doors and furniture are 1:1 with the level — tiles 224/224, doors 12/12, furniture 153/153
+   PASS  generated: the spawn stands on the flat's own floor — spawn (9.343, 13.292) -> floor/structure at y=0, 1 hit(s), floor found
+
+-- 2.3 small: work/_world_small.json ------------------------------
+   plan 9x9 m, 5 rooms   ·   world 9.14x9.13 m, 5 rooms, height 1.34 m
+   PASS  small: the world is as wide as the plan it plays — plan 9x9 -> world 9.14x9.13 (+0.14, +0.13 of wall)
+   PASS  small: the rooms drawn are the rooms of the level — 5 drawn, 5 in the level, 5 expected
+   PASS  small: floor tiles, doors and furniture are 1:1 with the level — tiles 81/81, doors 5/5, furniture 50/50
+   PASS  small: the spawn stands on the flat's own floor — spawn (1.914, 8.4) -> floor/structure at y=0, 1 hit(s), floor found
+
+-- 3. a snapshot with no layout is refused, not guessed -----------------
+   the page says: arena "procgen" carries no `layout`: nothing says what to build. A snapshot written before this became part of the level needs regenerating 
+   PASS  the boot FAILED rather than falling back — no __ready
+   PASS  and it says why, by name — arena "procgen" carries no `layout`: nothing says what to build. A snapshot written before this became part of the level needs regenerating -- scripts/procgen.m
+   PASS  and the player is told, on screen, instead of a loading bar that hangs — {"failed":true,"visible":true,"title":"启动失败"}
+
+-- 4. artifacts ---------------------------------------------------------
+   shipped    418889 B  renders/world/01-shipped-eye.png
+   shipped top 260146 B  renders/world/00-shipped-top.png
+   PASS  shipped: both frames of this floor were written — 418889 B / 260146 B
+   generated  162992 B  renders/world/01-generated-eye.png
+   generated top 264011 B  renders/world/00-generated-top.png
+   PASS  generated: both frames of this floor were written — 162992 B / 264011 B
+   small      127420 B  renders/world/01-small-eye.png
+   small top  186704 B  renders/world/00-small-top.png
+   PASS  small: both frames of this floor were written — 127420 B / 186704 B
+   PASS  no unexpected exceptions across the whole session — 1 expected (the decoy being refused), 0 others
+   PASS  and every model the layouts asked for exists in the kit — shipped 81 models, generated 54 models, small 40 models
+
+==============================================================================
+  25/25 checks passed
+==============================================================================
+  VERDICT: PASS

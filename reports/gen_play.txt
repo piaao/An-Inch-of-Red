@@ -1,0 +1,55 @@
+-- 1. generate ---------------------------------------------------------
+   PASS  16x14 10r 160i             rooms 10  items 153/160  climbTops 110  free 81%  prizes 6/6
+   generated 1 layouts in 1.9 s   1/1 PASS
+   wrote work/_gen_procgen.svg
+   wrote work/_gen_layout.js
+   wrote game/arenas/gen.json  107 KB
+   PASS  the generator produced a layout for these parameters — exit 0
+
+   generated 10 rooms, nav 68667 walkable cells, 1 component(s), 6 prizes
+   shipped   6 rooms, nav 21378 walkable cells
+   PASS  the ROOM COUNT is the one the parameter asked for — 10 vs --rooms 10
+   PASS  the generated floor is NOT the shipped apartment — nav 68667 vs shipped 21378; rooms 10 vs shipped 6
+
+-- 2. boot the generated floor ----------------------------------------
+   http://127.0.0.1:8782/play.html?arena=./game/arenas/gen.json
+   ready=true in 1.9 s   GL ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 SUPER (0x000021C4) Direct3D11 vs_5_0 ps_5_0, D3D11)
+   PASS  the page booted on the generated floor — 2.1 s
+   PASS  no exceptions / console errors
+   PASS  no HTTP 4xx / 5xx
+   PASS  no real failed requests
+
+-- 3. is this the generated floor? ------------------------------------
+   browser nav 68667 cells (320x280), 1 region, 6 prizes, 23 waypoints
+   PASS  the browser nav grid is the generated one, cell for cell — 68667/68667 walkable, 320x280
+   PASS  and it is NOT the shipped fallback — 68667 vs shipped 21378
+
+-- 4. the floor is a single connected space ---------------------------
+   PASS  the generated floor has ONE walkable region — 1 region(s) in the browser, 1 in Node
+   node    hb1(11.36,0.27) hb2(10.43,1.69) hb3(5.96,0.56) hb4(6.77,0.59) hb5(9.10,13.12) hb6(7.37,11.15)
+   browser hb1(11.36,0.27) hb2(10.43,1.69) hb3(5.96,0.56) hb4(6.77,0.59) hb5(9.10,13.12) hb6(7.37,11.15)
+   PASS  the six 红包 are placed, prize for prize, exactly as Node placed them — 6 prizes, 6 distinct ids, worst coordinate drift 0.0e+0 m
+   PASS  the guard has a patrol to walk — 23 waypoints, 0 dropped
+   PASS  every generated room has a patrol stop the guard can reach — 23 waypoints for 10 rooms, 0 dropped
+
+-- 5. can you walk in it? ---------------------------------------------
+   spawn (9.34, 13.29) clear=true, walked 1.67 m, 0 illegal frames
+   PASS  the spawn point is on legal ground — nav.clear at the spawn = true
+   PASS  the player can actually move through the generated rooms — 1.67 m in 3 s
+   PASS  and never leaves legal ground while doing it — 0 illegal frames
+
+-- 6. does it render? -------------------------------------------------
+   PASS  the whole generated floor renders as lit space from above the walls — mean 195.6, sd 13.9, dark 0.0%, 180 colours
+   inside sweep: 82/92 stances read as a lit room (best mean 213.5, sd 3.5)
+   PASS  the generated rooms render as lit space from inside — best of 92 stances: mean 213.5, sd 3.5, dark 0.0%, 10 colours
+
+-- 7. artifact --------------------------------------------------------
+   00-generated-genA-top      214322 B
+   01-generated-genA-eye      120568 B
+   PASS  both screenshots of the generated floor were written — 00-generated-genA-top 214322 B, 01-generated-genA-eye 120568 B
+   PASS  still no exceptions after the whole session
+
+==============================================================================
+  20/20 checks passed
+==============================================================================
+  VERDICT: PASS

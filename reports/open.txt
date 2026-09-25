@@ -1,0 +1,66 @@
+-- 1. the double-click doors (start*.bat hygiene) -----------------------
+   PASS  start.bat: CRLF and pure ASCII — 1748 B · CRLF 54/54 · ASCII true
+   PASS  start-workbench.bat: CRLF and pure ASCII — 482 B · CRLF 10/10 · ASCII true
+   PASS  start-viewer.bat: CRLF and pure ASCII — 230 B · CRLF 6/6 · ASCII true
+   PASS  start-workbench.bat actually passes the workbench keyword — call "%~dp0start.bat" workbench
+   PASS  start-viewer.bat actually passes the viewer keyword — call "%~dp0start.bat" viewer
+
+   http base: http://127.0.0.1:8796  (started by this suite)
+   GL ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 SUPER (0x000021C4) Direct3D11 vs_5_0 ps_5_0, D3D11)
+
+-- 2.1 工作台  procgen.html ------------------------
+   file://  file:  说明框 显示 · 内容(控件+平面图) 0 · booted false
+   PASS  procgen.html file:// — 屏幕上说明了打开方式 — heading "需要通过本地服务器打开"
+   PASS  procgen.html file:// — 标题就是「需要通过本地服务器打开」 — "需要通过本地服务器打开"
+   PASS  procgen.html file:// — 点名了该双击的 start-workbench.bat — 
+  
+    需要通过本地服务器打开
+    你是双击打开的这个文件。浏览器禁止 file:// 下的 ES 模块与 fetch，所以这一页的代码一行都没执行 —— 界面看着是好
+   PASS  procgen.html file:// — 给了命令行等价物 — serve.py --workbench
+   PASS  procgen.html file:// — 说清了「代码一行都没执行」，不是「加载慢」 — 你是双击打开的这个文件。浏览器禁止 file:// 下的 ES 模块与 fetch，所以这一页的代码一行都没执行 —— 
+   PASS  procgen.html file:// — 真实内容确实是 0（空壳） — 控件+平面图 0 · booted false
+   http://  http:  说明框 不显示 · 内容(控件+平面图) 15 · booted true
+   PASS  procgen.html http:// — 说明框必须消失（否则「永远显示警告」也会全绿） — visible=false
+   PASS  procgen.html http:// — 页面真的跑起来了 — 控件+平面图 15 >= 15 · booted true
+
+-- 2.2 游戏  play.html ------------------------
+   file://  file:  说明框 显示 · 内容(启动标志) 0 · booted false
+   PASS  play.html file:// — 屏幕上说明了打开方式 — heading "需要通过本地服务器打开"
+   PASS  play.html file:// — 标题就是「需要通过本地服务器打开」 — "需要通过本地服务器打开"
+   PASS  play.html file:// — 点名了该双击的 start.bat — 
+  
+    
+    需要通过本地服务器打开
+    你是双击打开的这个文件。浏览器禁止 file:// 下的 ES 模块与 fetch，所以这一页的代码一行都没执行 —— 界
+   PASS  play.html file:// — 给了命令行等价物 — serve.py
+   PASS  play.html file:// — 说清了「代码一行都没执行」，不是「加载慢」 — 你是双击打开的这个文件。浏览器禁止 file:// 下的 ES 模块与 fetch，所以这一页的代码一行都没执行 —— 
+   PASS  play.html file:// — 真实内容确实是 0（空壳） — 启动标志 0 · booted false
+   http://  http:  说明框 不显示 · 内容(启动标志) 1 · booted true
+   PASS  play.html http:// — 说明框必须消失（否则「永远显示警告」也会全绿） — visible=false
+   PASS  play.html http:// — 页面真的跑起来了 — 启动标志 1 >= 1 · booted true
+
+-- 2.3 场景查看器  index.html ------------------------
+   file://  file:  说明框 显示 · 内容(启动标志) 0 · booted false
+   PASS  index.html file:// — 屏幕上说明了打开方式 — heading "需要通过本地服务器打开"
+   PASS  index.html file:// — 标题就是「需要通过本地服务器打开」 — "需要通过本地服务器打开"
+   PASS  index.html file:// — 点名了该双击的 start-viewer.bat — 
+  
+    
+    需要通过本地服务器打开
+    你是双击打开的这个文件。浏览器禁止 file:// 下的 ES 模块与 fetch，所以这一页的代码一行都没执行 —— 界
+   PASS  index.html file:// — 给了命令行等价物 — serve.py --viewer
+   PASS  index.html file:// — 说清了「代码一行都没执行」，不是「加载慢」 — 你是双击打开的这个文件。浏览器禁止 file:// 下的 ES 模块与 fetch，所以这一页的代码一行都没执行 —— 
+   PASS  index.html file:// — 真实内容确实是 0（空壳） — 启动标志 0 · booted false
+   http://  http:  说明框 不显示 · 内容(启动标志) 1 · booted true
+   PASS  index.html http:// — 说明框必须消失（否则「永远显示警告」也会全绿） — visible=false
+   PASS  index.html http:// — 页面真的跑起来了 — 启动标志 1 >= 1 · booted true
+
+-- 3. session-wide ------------------------------------------------------
+   PASS  file:// 下浏览器确实拒绝加载模块（复现，不是猜测） — 8 条 / 3 页：Access to script at 'file:///G:/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91/% | Failed to load resource: net::ERR_FAILED @ file:///G:/%E6%B8%B8%E6%88%
+   PASS  served route: 零异常、零非 2xx/3xx 请求 — clean
+   PASS  6 张日志截图都写出来了 — 6/6 -> renders/open/
+
+==============================================================================
+  32/32 checks passed
+==============================================================================
+  VERDICT: PASS

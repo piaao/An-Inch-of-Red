@@ -1,0 +1,164 @@
+models parsed : 140   (failures: 0)
+total tris    : 26737
+total verts   : 87462
+any embedded image: False
+distinct baseColors used: 15
+
+== distinct material colors (rgb -> usage) ==
+   [0.896, 0.602, 0.393]              89
+   [0.741, 0.823, 0.84]               59
+   [0.306, 0.388, 0.388]              33
+   [0.943, 0.367, 0.343]              23
+   [1, 1, 1]                          21
+   [0.369, 0.467, 0.467]              19
+   [0.698, 0.828, 0.769]              18
+   [0.973, 1, 1]                      17
+   [0.678, 0.456, 0.299]              15
+   [0.937, 0.98, 0.957]               15
+   [1, 0.914, 0.588]                  7
+   [0.356, 0.517, 0.868]              7
+   [0.608, 0.298, 0.285]              5
+   [0.182, 0.821, 0.576]              5
+   [0.647, 0.459, 0.298]              1
+
+== per-model (name | kb | tris | verts | mats | size XYZ in glb units) ==
+  bathroomCabinet                   7.0 KB  t64    v156   m3     0.430 x   0.390 x   0.220
+  bathroomCabinetDrawer            33.9 KB  t508   v2496  m4     0.430 x   0.530 x   0.470
+  bathroomMirror                    6.6 KB  t72    v339   m3     0.301 x   0.435 x   0.144
+  bathroomSink                     22.0 KB  t316   v1545  m3     0.340 x   0.560 x   0.290
+  bathroomSinkSquare               14.8 KB  t234   v936   m3     0.430 x   0.580 x   0.300
+  bathtub                          34.7 KB  t602   v2436  m3     1.190 x   0.420 x   0.560
+  bear                             11.6 KB  t134   v750   m3     0.390 x   0.450 x   0.247
+  bedBunk                          39.8 KB  t580   v1512  m3     1.623 x   0.980 x   1.892
+  bedDouble                        22.8 KB  t264   v866   m4     1.623 x   0.505 x   1.912
+  bedSingle                        18.2 KB  t214   v768   m4     1.623 x   0.505 x   1.892
+  bench                            10.5 KB  t170   v230   m1     0.400 x   0.470 x   0.200
+  benchCushion                     12.2 KB  t196   v520   m2     0.400 x   0.460 x   0.200
+  benchCushionLow                  10.0 KB  t138   v594   m3     0.420 x   0.200 x   0.220
+  bookcaseClosed                   22.6 KB  t372   v540   m1     0.400 x   0.850 x   0.250
+  bookcaseClosedDoors              22.1 KB  t296   v568   m2     0.560 x   0.850 x   0.270
+  bookcaseClosedWide               22.6 KB  t372   v540   m1     0.800 x   0.790 x   0.250
+  bookcaseOpen                     17.6 KB  t320   v400   m1     0.400 x   0.880 x   0.250
+  bookcaseOpenLow                  11.2 KB  t184   v248   m1     0.400 x   0.400 x   0.250
+  books                             6.7 KB  t62    v424   m4     0.150 x   0.104 x   0.095
+  cabinetBed                        7.3 KB  t72    v168   m2     0.266 x   0.233 x   0.217
+  cabinetBedDrawer                 15.7 KB  t182   v588   m3     0.266 x   0.263 x   0.381
+  cabinetBedDrawerTable            11.9 KB  t140   v452   m3     0.266 x   0.263 x   0.381
+  cabinetTelevision                10.3 KB  t154   v228   m1     0.800 x   0.310 x   0.250
+  cabinetTelevisionDoors           16.5 KB  t210   v420   m2     1.160 x   0.310 x   0.280
+  cardboardBoxClosed                5.3 KB  t60    v176   m2     0.212 x   0.281 x   0.212
+  cardboardBoxOpen                  5.3 KB  t60    v176   m2     0.372 x   0.281 x   0.212
+  ceilingFan                       14.9 KB  t214   v975   m3     0.455 x   0.134 x   0.525
+  chair                            10.5 KB  t170   v230   m1     0.200 x   0.470 x   0.200
+  chairCushion                     12.3 KB  t198   v524   m2     0.200 x   0.460 x   0.200
+  chairDesk                        38.1 KB  t588   v1698  m2     0.479 x   0.418 x   0.443
+  chairModernCushion                7.2 KB  t92    v276   m2     0.200 x   0.460 x   0.200
+  chairModernFrameCushion          18.2 KB  t284   v832   m2     0.200 x   0.460 x   0.200
+  chairRounded                     16.8 KB  t280   v388   m1     0.200 x   0.455 x   0.200
+  coatRack                          9.7 KB  t132   v408   m2     0.448 x   0.280 x   0.134
+  coatRackStanding                 13.0 KB  t190   v300   m1     0.273 x   0.770 x   0.273
+  computerKeyboard                  3.4 KB  t32    v76    m2     0.282 x   0.028 x   0.118
+  computerMouse                     5.7 KB  t71    v113   m1     0.050 x   0.024 x   0.085
+  computerScreen                    6.3 KB  t72    v228   m2     0.393 x   0.294 x   0.104
+  desk                             14.7 KB  t198   v380   m2     0.735 x   0.384 x   0.556
+  deskCorner                       17.6 KB  t250   v452   m2     0.975 x   0.384 x   1.151
+  doorway                          14.2 KB  t188   v544   m2     0.486 x   1.010 x   0.146
+  doorwayFront                     12.7 KB  t156   v624   m4     0.486 x   1.010 x   0.146
+  doorwayOpen                       3.2 KB  t28    v48    m1     0.486 x   1.010 x   0.089
+  dryer                            17.3 KB  t262   v817   m3     0.390 x   0.600 x   0.380
+  floorCorner                       2.5 KB  t16    v30    m1     0.550 x   0.050 x   0.550
+  floorCornerRound                  5.0 KB  t60    v96    m1     0.550 x   0.050 x   0.550
+  floorFull                         2.2 KB  t12    v24    m1     1.000 x   0.050 x   1.000
+  floorHalf                         2.2 KB  t12    v24    m1     0.500 x   0.050 x   1.000
+  hoodLarge                         4.5 KB  t36    v150   m2     0.430 x   0.369 x   0.285
+  hoodModern                        3.9 KB  t28    v112   m2     0.430 x   0.400 x   0.285
+  kitchenBar                        5.9 KB  t76    v264   m3     0.430 x   0.420 x   0.210
+  kitchenBarEnd                    10.8 KB  t152   v464   m2     0.102 x   0.420 x   0.210
+  kitchenBlender                   18.3 KB  t246   v418   m3     0.172 x   0.160 x   0.132
+  kitchenCabinet                   10.2 KB  t114   v406   m3     0.430 x   0.450 x   0.480
+  kitchenCabinetCornerInner         5.1 KB  t54    v168   m2     0.460 x   0.450 x   0.460
+  kitchenCabinetCornerRound        13.3 KB  t194   v592   m2     0.450 x   0.450 x   0.450
+  kitchenCabinetDrawer             15.0 KB  t174   v660   m3     0.430 x   0.450 x   0.480
+  kitchenCabinetUpper               8.0 KB  t80    v228   m3     0.430 x   0.390 x   0.230
+  kitchenCabinetUpperCorner        13.4 KB  t204   v308   m1     0.215 x   0.390 x   0.210
+  kitchenCabinetUpperDouble        17.8 KB  t234   v540   m3     0.618 x   0.390 x   0.230
+  kitchenCabinetUpperLow            7.0 KB  t64    v204   m3     0.430 x   0.336 x   0.230
+  kitchenCoffeeMachine             13.0 KB  t166   v420   m3     0.274 x   0.303 x   0.330
+  kitchenFridge                    19.6 KB  t250   v976   m4     0.430 x   0.920 x   0.317
+  kitchenFridgeBuiltIn             22.1 KB  t268   v1476  m5     0.430 x   0.869 x   0.485
+  kitchenFridgeLarge               29.9 KB  t436   v1104  m2     0.793 x   1.323 x   0.386
+  kitchenFridgeSmall               12.7 KB  t152   v632   m4     0.430 x   0.600 x   0.317
+  kitchenMicrowave                 11.0 KB  t152   v510   m4     0.290 x   0.180 x   0.230
+  kitchenSink                      22.9 KB  t318   v2194  m6     0.430 x   0.490 x   0.480
+  kitchenStove                     53.1 KB  t830   v4860  m5     0.430 x   0.450 x   0.480
+  kitchenStoveElectric             18.2 KB  t338   v2040  m6     0.430 x   0.450 x   0.450
+  lampRoundFloor                    6.4 KB  t76    v240   m2     0.152 x   0.860 x   0.176
+  lampRoundTable                    6.4 KB  t76    v240   m2     0.152 x   0.314 x   0.176
+  lampSquareCeiling                 5.5 KB  t60    v192   m2     0.120 x   0.230 x   0.120
+  lampSquareFloor                   5.5 KB  t60    v192   m2     0.120 x   0.860 x   0.120
+  lampSquareTable                   5.5 KB  t60    v192   m2     0.120 x   0.290 x   0.120
+  lampWall                          4.7 KB  t42    v156   m2     0.391 x   0.160 x   0.259
+  laptop                            5.4 KB  t68    v228   m3     0.600 x   0.368 x   0.546
+  loungeChair                       9.4 KB  t128   v392   m2     0.490 x   0.460 x   0.410
+  loungeChairRelax                 13.6 KB  t188   v876   m3     0.490 x   0.630 x   0.675
+  loungeDesignChair                 8.9 KB  t116   v368   m2     0.730 x   0.400 x   0.410
+  loungeDesignSofa                  8.9 KB  t116   v368   m2     1.120 x   0.400 x   0.410
+  loungeDesignSofaCorner           13.4 KB  t176   v528   m2     1.350 x   0.400 x   1.350
+  loungeSofa                        9.4 KB  t128   v392   m2     0.980 x   0.460 x   0.410
+  loungeSofaCorner                 13.1 KB  t190   v580   m2     0.980 x   0.460 x   0.980
+  loungeSofaLong                   12.8 KB  t186   v564   m2     0.980 x   0.460 x   0.820
+  loungeSofaOttoman                 6.8 KB  t84    v256   m2     0.440 x   0.230 x   0.450
+  paneling                          3.9 KB  t40    v66    m1     0.500 x   0.595 x   0.030
+  pillow                            4.9 KB  t50    v96    m1     0.230 x   0.222 x   0.088
+  pillowBlue                        4.9 KB  t50    v96    m1     0.230 x   0.129 x   0.063
+  pillowBlueLong                    5.0 KB  t50    v96    m1     0.517 x   0.222 x   0.088
+  pillowLong                        5.0 KB  t50    v96    m1     0.387 x   0.222 x   0.088
+  plantSmall1                       8.0 KB  t102   v320   m2     0.189 x   0.280 x   0.189
+  plantSmall2                      12.7 KB  t158   v576   m2     0.189 x   0.280 x   0.189
+  plantSmall3                       8.2 KB  t98    v336   m2     0.170 x   0.290 x   0.196
+  pottedPlant                       7.4 KB  t60    v192   m3     0.255 x   0.536 x   0.291
+  radio                            24.4 KB  t432   v1644  m3     0.315 x   0.228 x   0.098
+  rugDoormat                       13.5 KB  t204   v312   m1     0.429 x   0.010 x   0.237
+  rugRectangle                      3.1 KB  t28    v64    m2     1.570 x   0.010 x   0.920
+  rugRound                          9.9 KB  t188   v380   m2     0.920 x   0.010 x   0.920
+  rugRounded                       10.6 KB  t204   v412   m2     1.570 x   0.010 x   0.920
+  rugSquare                         3.1 KB  t28    v64    m2     0.904 x   0.010 x   0.920
+  shower                           50.8 KB  t810   v3483  m4     1.300 x   2.493 x   1.280
+  showerRound                      70.4 KB  t960   v2400  m4     0.940 x   1.094 x   0.940
+  sideTable                         8.6 KB  t118   v348   m2     0.534 x   0.384 x   0.220
+  sideTableDrawers                 18.6 KB  t238   v732   m3     0.534 x   0.384 x   0.386
+  speaker                          15.4 KB  t228   v696   m2     0.148 x   0.636 x   0.148
+  speakerSmall                     14.9 KB  t220   v672   m2     0.148 x   0.298 x   0.133
+  stairs                           21.1 KB  t308   v1004  m2     1.823 x   1.339 x   0.790
+  stairsCorner                     21.1 KB  t312   v998   m2     1.774 x   1.339 x   1.426
+  stairsOpen                       39.0 KB  t558   v1506  m3     1.823 x   1.339 x   0.790
+  stairsOpenSingle                 24.0 KB  t326   v566   m2     1.823 x   1.339 x   0.790
+  stoolBar                         11.5 KB  t176   v492   m2     0.265 x   0.435 x   0.230
+  stoolBarSquare                    9.6 KB  t142   v388   m2     0.153 x   0.405 x   0.148
+  table                             8.0 KB  t120   v168   m1     0.842 x   0.327 x   0.447
+  tableCloth                        9.7 KB  t144   v396   m2     0.842 x   0.327 x   0.447
+  tableCoffee                       8.1 KB  t124   v168   m1     0.661 x   0.230 x   0.400
+  tableCoffeeGlass                  9.2 KB  t140   v368   m2     0.661 x   0.230 x   0.400
+  tableCoffeeGlassSquare            9.2 KB  t140   v368   m2     0.400 x   0.230 x   0.400
+  tableCoffeeSquare                 8.1 KB  t124   v168   m1     0.400 x   0.230 x   0.400
+  tableCross                       11.9 KB  t178   v269   m1     2.029 x   0.827 x   1.065
+  tableCrossCloth                  13.5 KB  t202   v598   m2     2.029 x   0.827 x   1.065
+  tableGlass                        9.6 KB  t144   v392   m2     0.842 x   0.327 x   0.447
+  tableRound                        6.3 KB  t80    v128   m1     0.693 x   0.367 x   0.800
+  televisionAntenna                 4.4 KB  t44    v80    m1     0.265 x   0.103 x   0.080
+  televisionModern                  6.2 KB  t72    v228   m2     0.685 x   0.455 x   0.128
+  televisionVintage                18.9 KB  t280   v1656  m4     0.410 x   0.270 x   0.270
+  toaster                          14.6 KB  t220   v652   m2     0.188 x   0.130 x   0.100
+  toilet                           17.7 KB  t230   v1062  m4     1.005 x   0.949 x   0.790
+  toiletSquare                     17.1 KB  t228   v700   m2     0.547 x   0.451 x   0.485
+  trashcan                          6.3 KB  t68    v232   m2     0.496 x   0.906 x   0.440
+  wall                              3.3 KB  t12    v90    m3     1.000 x   1.290 x   0.050
+  wallCorner                        4.4 KB  t28    v174   m3     0.550 x   1.290 x   0.550
+  wallCornerRond                   10.2 KB  t116   v636   m3     0.550 x   1.290 x   0.550
+  wallDoorway                       6.3 KB  t60    v324   m3     1.000 x   1.290 x   0.089
+  wallDoorwayWide                   6.3 KB  t60    v324   m3     1.000 x   1.290 x   0.089
+  wallHalf                          3.3 KB  t12    v90    m3     0.500 x   1.290 x   0.050
+  wallWindow                       10.5 KB  t108   v476   m4     1.000 x   1.290 x   0.089
+  wallWindowSlide                  14.2 KB  t152   v604   m4     1.000 x   1.290 x   0.089
+  washer                           47.0 KB  t720   v3288  m6     0.390 x   0.500 x   0.480
+  washerDryerStacked               62.6 KB  t992   v4135  m6     0.390 x   1.070 x   0.480

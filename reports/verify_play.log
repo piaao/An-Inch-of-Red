@@ -1,0 +1,130 @@
+========================================================================
+  寻红 · playable build — headless verification
+========================================================================
+  arena   game\arenas\room_scene.json  61 KB
+  seed    2026-09-25
+
+-- Node reference ----------------------------------------------------
+   buildCore()          440 ms   nav 23248 cells, 1 region, 6 prizes, 13 waypoints
+   PASS  boot.js agrees with an independently-typed derivation — nav 23248, 6 prizes, 13 waypoints
+
+   placement (Node):
+     hb1  dining   partial   (9.87, 4.50, 0.40)  cover 7.3%
+     hb2  bath     partial   (4.30, 0.66, 0.42)  cover 9.2%
+     hb3  study    concealed (9.30, 7.72, 0.45)  cover 6.5%
+     hb4  living   open      (3.40, 3.30, 0.28)  cover 36.7%
+     hb5  kitchen  concealed (9.24, 0.23, 0.45)  cover 3.6%
+     hb6  kitchen  inside    (7.96, 0.23, 0.12)  cover 2.9%
+
+-- boot --------------------------------------------------------------
+   ready=true  in 1.6 s
+   GL  ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 SUPER (0x000021C4) Direct3D11 vs_5_0 ps_5_0, D3D11)
+   PASS  no exceptions / console errors
+   PASS  no HTTP 4xx or 5xx
+   PASS  no real failed requests
+
+-- 1. same core, two runtimes ----------------------------------------
+   browser  nav 23248 cells @ 0.05 m (200x160, 1 region), 13 waypoints, build 362 ms
+   PASS  nav grid identical — 23248/23248
+   PASS  placement identical, prize for prize — 6 prizes, worst coordinate drift 0.0e+0 m
+   PASS  patrol identical — 13 vs 13
+   PASS  both runtimes draw the same rooms, and it is a proper subset — 5 of 6 rooms: bath, dining, kitchen, living, study; empty: bedroom
+   PASS  same seed -> byte-identical placement (twice in one page) — 6 prizes
+   PASS  an unpinned run hides the 红包 somewhere new every time — 20260925-0lyzlll vs 20260925-0r0wvpe, 6 prizes, policy pinned
+   PASS  the seed a run prints rebuilds that exact run — configure({seed: 20260925-0lyzlll}) reproduced the same 6 placements
+
+-- 2. collision + movement -------------------------------------------
+   PASS  3672 steps of walking never put the body inside a solid — nav.clear() true at every step
+   PASS  input actually moves the player — distance field 74.4 m
+   PASS  a full 60 s of walking stays inside one run — phase playing, ended in null
+     walked 74.4 m over 60 s of game time (top speed 1.5 m/s => 90 m if never blocked)
+
+-- 3. pickup ----------------------------------------------------------
+   PASS  every 红包 is taken by a body that walks and climbs to it — 6/6 hb1:0hop->0m hb2:1hop->0.42m hb3:0hop->0m hb4:0hop->0m hb5:1hop->0.58m hb6:1hop->0m
+   PASS  collecting every 红包 wins the run — phase won, collected 6
+   PASS  a 红包 above the floor's arm reach is taken by climbing to it — none this seed — all 6 packets sit inside a floor body's 0.55 m reach; climbs the drive did run: hb2 stand 0.42 peak 0.42, hb5 stand 0.45 peak 0.58, hb6 stand 0.45 peak 0
+
+-- 4. red census (the mechanic itself) -------------------------------
+   Node sweep  59/90 cells see a red, 25 see a 红包; best 3 reds @ (2.78, 1.18)
+   PASS  the census is alive on this floor — red things get noticed — 59/90 cells see a red, best 3 at (2.78, 1.18) from a 0.36 m eye
+   PASS  the 红包 is noticed by the same channel — 26/90 cells see a 红包, best 1 at (8.43, 1.23)
+   PASS  a red in view is actually drawn, packet or no packet — 3 sprites visible where the census listed 3 reds and 0 prizes
+   PASS  the sweep itself never ended the run — phase playing after 90 vantage points
+
+-- 5. guard -----------------------------------------------------------
+   PASS  guard walks its patrol when the player is out of its cone — 50.61 m, 6 rooms (bath,bedroom,dining,kitchen,living,study) in 60 s; player parked 5.67 m from the nearest 红包, 0 restarts
+   PASS  guard enters alert when it sees you
+   PASS  guard catches you inside its cone — mode chase, penalty 15 s
+   PASS  being caught costs the designed penalty seconds — 15 s (GUARD_MODES.patrol.penalty = 15)
+   PASS  the guard is drawn in the frame, where it stands — 30186 px changed (2.10% of frame), 5 meshes, centroid 772,430 vs projected 733,487 -> 69.3 px off
+   PASS  running out of clock ends the run — phase lost after 185.4 s against the card's own 180 s budget
+
+-- 7. controls --------------------------------------------------------
+   PASS  space launches an arc the config actually promises — peak 0.422 m vs v^2/2g = 0.441 m (v 2.3, g 6); integration loses 4.3 % to the 1/60 s step
+   PASS  a hop clears the sofa back and still cannot see over a wall — eye 0.36 + peak 0.422 = 0.782 m against sofa 0.46 m and wall 1.29 m
+   PASS  the hop lands back on the floor it left — landed, hop 0, feet-vs-ground 0.0e+0 m
+   PASS  a hop does not move the body in the plan — dx 0.0e+0 m, dz 0.0e+0 m
+   PASS  the body stays on legal ground while airborne — 0 illegal frames of 21 airborne
+
+-- 7b. 速度 -----------------------------------------------------------
+   PASS  the renderer and the matrix walk at the same speed — MOVE.speed 1.5 === WALKER.speed 1.5
+   PASS  and it is slower than the 2.1 the old matrix was measured at — 1.5 m/s = 3.57 body-heights/s (old 2.1 = 5.00)
+   PASS  one jump plus one foot of footing reaches the climb rung — rung 0.701 m >= peak 0.441 + step 0.26 m
+
+-- 8. 跳上家具 --------------------------------------------------------
+   PASS  jumped onto the bathtub — the body ends standing on it — top 0.420 m, groundY 0.420 m, peak 0.417 m, on the footprint true
+   PASS  jumped onto the desk — the body ends standing on it — top 0.384 m, groundY 0.384 m, peak 0.362 m, on the footprint true
+   PASS  jumped onto the kitchenCabinetDrawer — the body ends standing on it — top 0.450 m, groundY 0.450 m, peak 0.422 m, on the footprint true
+   PASS  the fridge is NOT reachable in one jump — 0.92 m needs a rung — groundY 0.000 m after one hop, fridge top 0.920 m, one hop reaches 0.441 m
+   PASS  standing up on the furniture never lifts the eye over a wall — bravest eye 0.810 m vs wall 1.29 m
+   PASS  a wall is not a surface, even asked from 2 m up — with the ceiling 0.000 m, without it 1.290 m, wall top 1.29 m, ceiling 0.930 m
+
+-- 9. 红包藏匿 --------------------------------------------------------
+   PASS  no 红包 is lying on the floor — 6 packets, on the floor: 0
+   PASS  not every room has to hold one; the drawing is what varies — 5 of 6 rooms hold a 红包 — bath, dining, kitchen, living, study; empty: bedroom
+   PASS  every 红包 is takeable (a standpoint exists) — 6 / 6 have one
+   PASS  every raised 红包 names the pad its climb starts from — 3 packets need a climb, all with a pad: true
+   PASS  no 红包 is stored where only a two-rung climb could reach it — 6 standpoints, every one a floor launch or nothing
+   PASS  no 红包 is unfindable (none came back `hidden`) — concealed, inside, open, partial
+   PASS  Q/E and the arrows no longer turn the camera — yaw drift 0.0e+0 rad while held, 0.0e+0 rad after release
+   PASS  the mouse is the steering it was replaced with — 120 px -> -0.2520 rad (mouseSens 0.0021)
+   PASS  the mouse turns you the way the pointer moves, not the other way — forward.right before the turn 0.00000000 (basis orthonormal), +240 px -> 0.4829, then -480 px -> -0.4829  [positive = turned toward screen-right]
+   PASS  the thumbnail is a floor plan of all six rooms — 44453 px of plan painted, 6 rooms, 6 doors, canvas 260x211 device px
+   PASS  the thumbnail draws YOU where you stand — 29 px changed in a 9.0 px blob, centroid 119.5,184.7 vs project() 120.1,185.6 -> 1.07 px off
+   PASS  the thumbnail draws the GUARD where it stands — 32 px changed in a 9.0 px blob (mode patrol), centroid 72.6,190.9 vs project() 73.4,191.7 -> 1.13 px off
+   PASS  the room names are legible and no room lost its label — 12 px font, 6/6 rooms labelled on a 260x211 px canvas
+
+-- 7b. the dials on the difficulty cards --------------------------------
+   PASS  the harder the preset, the more floor the guard watches — solo 0.0 m2  <  patrol 11.4 m2  <  tight 19.2 m2  <  hunter 30.2 m2
+   PASS  ... and the smaller the 红包 — solo 18.4x11.5 cm  >  patrol 16.0x10.0 cm  >  tight 13.6x8.5 cm  >  hunter 11.2x7.0 cm
+   PASS  the packet on screen is the packet the census gates on — worst axis error 0.0000 m over solo mesh 18.4 cm, patrol mesh 16.0 cm, tight mesh 13.6 cm, hunter mesh 11.2 cm
+   PASS  a smaller packet does not shorten the reach — pickup 0.42 / 0.42 / 0.42 / 0.42 m, arena 0.42 m
+   PASS  the guard carries a light on the same cone and throw as the fan — patrol fan 74deg x 4.2 m = light 74.0deg x 4.2 m @ i 5.00 | tight fan 88deg x 5.0 m = light 88.1deg x 5.0 m @ i 5.00 | hunter fan 96deg x 6.0 m = light 96.0deg x 6.0 m @ i 5.00
+   PASS  the light points where the guard points — worst alignment 1.00000 (1.000 = dead ahead)
+   PASS  every difficulty card prints both dials — 4 cards carry a spec line for 4 presets
+   PASS  the surveillance area lights the floor it claims — 5482/96000 px changed with the light on vs off (5.7 % of the frame, max delta 67) from a 96.0deg x 6.0 m light at i 5.00, looking down on the guard at (3.125, 7.975)
+
+-- 8. the view renders ------------------------------------------------
+   PASS  first-person view is a lit room, not a black frame — mean 188.5, sd 46.9, dark 0.0%, 162 colours
+   PASS  dollhouse camera sees a different, brighter scene — mean 97.0 vs 188.5
+   PASS  the render loop is running — frames 113 -> 216
+
+-- 9. screenshots -----------------------------------------------------
+   00-menu                441478 B
+   PASS  the start card is a screen, not a leftover frame — overlay up true, 4 difficulty cards, 4 of them printing their two dials, seed box "verify-glow" against the live seed "verify-glow", note "已固定：这一局就用这个种子。清空..."
+   01-spawn               135576 B
+   02-living-red          403537 B
+   03-prize-closeup       132028 B
+   04-guard-cone          216782 B
+   05-dollhouse           155492 B
+   06-prizes-top          119204 B
+   PASS  every screenshot wrote bytes — 441478 135576 403537 132028 216782 155492 119204
+   PASS  screenshots differ from each other — 7 distinct sizes for 7 shots
+   PASS  still no exceptions after the whole session
+
+   final phase playing, stats {"frames":694,"fps":147,"stepMs":0.09999999776482582,"censusMs":0.3999999985098839,"coneMs":0.19999999925494194}
+
+========================================================================
+  69/69 checks passed
+========================================================================
+  VERDICT: PASS

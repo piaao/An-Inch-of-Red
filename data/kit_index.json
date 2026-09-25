@@ -1,0 +1,8276 @@
+{
+ "bathroomCabinet": {
+  "file": "bathroomCabinet.glb",
+  "kb": 7.0,
+  "nodes": 2,
+  "meshes": 2,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "woodDark",
+    "base": [
+     0.678,
+     0.4559,
+     0.299,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 64,
+  "verts": 156,
+  "bbox_min": [
+   0,
+   0,
+   -0.21
+  ],
+  "bbox_max": [
+   0.43,
+   0.39,
+   0.01
+  ],
+  "size": [
+   0.43,
+   0.39,
+   0.22
+  ],
+  "node_names": [
+   "bathroomCabinet(Clone)",
+   "door"
+  ]
+ },
+ "bathroomCabinetDrawer": {
+  "file": "bathroomCabinetDrawer.glb",
+  "kb": 33.9,
+  "nodes": 3,
+  "meshes": 3,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "carpetWhite",
+    "base": [
+     0.9725,
+     1,
+     1,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metalDark",
+    "base": [
+     0.3059,
+     0.3882,
+     0.3882,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metalLight",
+    "base": [
+     0.9373,
+     0.9804,
+     0.9569,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 508,
+  "verts": 2496,
+  "bbox_min": [
+   0,
+   0,
+   -0.45
+  ],
+  "bbox_max": [
+   0.43,
+   0.53,
+   0.02
+  ],
+  "size": [
+   0.43,
+   0.53,
+   0.47
+  ],
+  "node_names": [
+   "bathroomCabinetDrawer(Clone)",
+   "drawerBottom",
+   "drawerTop"
+  ]
+ },
+ "bathroomMirror": {
+  "file": "bathroomMirror.glb",
+  "kb": 6.6,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "glass",
+    "base": [
+     0.698,
+     0.8275,
+     0.7686,
+     0.5
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 72,
+  "verts": 339,
+  "bbox_min": [
+   0,
+   0.0,
+   -0.0488
+  ],
+  "bbox_max": [
+   0.3013,
+   0.4346,
+   0.0956
+  ],
+  "size": [
+   0.3013,
+   0.4346,
+   0.1444
+  ],
+  "node_names": [
+   "bathroomMirror(Clone)"
+  ]
+ },
+ "bathroomSink": {
+  "file": "bathroomSink.glb",
+  "kb": 22.0,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "_defaultMat",
+    "base": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metalLight",
+    "base": [
+     0.9373,
+     0.9804,
+     0.9569,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "carpetWhite",
+    "base": [
+     0.9725,
+     1,
+     1,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 316,
+  "verts": 1545,
+  "bbox_min": [
+   0,
+   -0.4,
+   -0.29
+  ],
+  "bbox_max": [
+   0.34,
+   0.16,
+   0
+  ],
+  "size": [
+   0.34,
+   0.56,
+   0.29
+  ],
+  "node_names": [
+   "bathroomSink(Clone)"
+  ]
+ },
+ "bathroomSinkSquare": {
+  "file": "bathroomSinkSquare.glb",
+  "kb": 14.8,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "carpetWhite",
+    "base": [
+     0.9725,
+     1,
+     1,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metalDark",
+    "base": [
+     0.3059,
+     0.3882,
+     0.3882,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metalLight",
+    "base": [
+     0.9373,
+     0.9804,
+     0.9569,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 234,
+  "verts": 936,
+  "bbox_min": [
+   0,
+   0.0568,
+   -0.45
+  ],
+  "bbox_max": [
+   0.43,
+   0.6368,
+   -0.15
+  ],
+  "size": [
+   0.43,
+   0.58,
+   0.3
+  ],
+  "node_names": [
+   "bathroomSinkSquare(Clone)"
+  ]
+ },
+ "bathtub": {
+  "file": "bathtub.glb",
+  "kb": 34.7,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "carpetWhite",
+    "base": [
+     0.9725,
+     1,
+     1,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metalLight",
+    "base": [
+     0.9373,
+     0.9804,
+     0.9569,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metalDark",
+    "base": [
+     0.3059,
+     0.3882,
+     0.3882,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 602,
+  "verts": 2436,
+  "bbox_min": [
+   0,
+   -0.0,
+   -0.56
+  ],
+  "bbox_max": [
+   1.19,
+   0.42,
+   0
+  ],
+  "size": [
+   1.19,
+   0.42,
+   0.56
+  ],
+  "node_names": [
+   "bathtub(Clone)"
+  ]
+ },
+ "bear": {
+  "file": "bear.glb",
+  "kb": 11.6,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "fur",
+    "base": [
+     0.6471,
+     0.4588,
+     0.298,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metalDark",
+    "base": [
+     0.3059,
+     0.3882,
+     0.3882,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 134,
+  "verts": 750,
+  "bbox_min": [
+   0,
+   0,
+   -0.2475
+  ],
+  "bbox_max": [
+   0.3897,
+   0.45,
+   0
+  ],
+  "size": [
+   0.3897,
+   0.45,
+   0.2475
+  ],
+  "node_names": [
+   "bear(Clone)"
+  ]
+ },
+ "bedBunk": {
+  "file": "bedBunk.glb",
+  "kb": 39.8,
+  "nodes": 5,
+  "meshes": 5,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "carpetWhite",
+    "base": [
+     0.9725,
+     1,
+     1,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "carpet",
+    "base": [
+     0.9434,
+     0.3672,
+     0.3426,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 580,
+  "verts": 1512,
+  "bbox_min": [
+   -0.0586,
+   -0.13,
+   -1.892
+  ],
+  "bbox_max": [
+   1.5647,
+   0.85,
+   0
+  ],
+  "size": [
+   1.6232,
+   0.98,
+   1.892
+  ],
+  "node_names": [
+   "bedBunk(Clone)",
+   "coverBottom",
+   "coverTop",
+   "pillowBottom",
+   "pillowTop"
+  ]
+ },
+ "bedDouble": {
+  "file": "bedDouble.glb",
+  "kb": 22.8,
+  "nodes": 4,
+  "meshes": 4,
+  "materials": [
+   {
+    "name": "carpetWhite",
+    "base": [
+     0.9725,
+     1,
+     1,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "carpet",
+    "base": [
+     0.9434,
+     0.3672,
+     0.3426,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 264,
+  "verts": 866,
+  "bbox_min": [
+   -0.0586,
+   -0.13,
+   -1.892
+  ],
+  "bbox_max": [
+   1.5647,
+   0.375,
+   0.02
+  ],
+  "size": [
+   1.6232,
+   0.505,
+   1.912
+  ],
+  "node_names": [
+   "bedDouble(Clone)",
+   "cover",
+   "pillowLeft",
+   "pillowRight"
+  ]
+ },
+ "bedSingle": {
+  "file": "bedSingle.glb",
+  "kb": 18.2,
+  "nodes": 3,
+  "meshes": 3,
+  "materials": [
+   {
+    "name": "carpetWhite",
+    "base": [
+     0.9725,
+     1,
+     1,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "carpet",
+    "base": [
+     0.9434,
+     0.3672,
+     0.3426,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 214,
+  "verts": 768,
+  "bbox_min": [
+   -0.0586,
+   -0.13,
+   -1.892
+  ],
+  "bbox_max": [
+   1.5647,
+   0.375,
+   0
+  ],
+  "size": [
+   1.6232,
+   0.505,
+   1.892
+  ],
+  "node_names": [
+   "bedSingle(Clone)",
+   "cover",
+   "pillow"
+  ]
+ },
+ "bench": {
+  "file": "bench.glb",
+  "kb": 10.5,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 170,
+  "verts": 230,
+  "bbox_min": [
+   0,
+   0,
+   -0.2
+  ],
+  "bbox_max": [
+   0.4,
+   0.47,
+   0
+  ],
+  "size": [
+   0.4,
+   0.47,
+   0.2
+  ],
+  "node_names": [
+   "bench(Clone)"
+  ]
+ },
+ "benchCushion": {
+  "file": "benchCushion.glb",
+  "kb": 12.2,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "carpet",
+    "base": [
+     0.9434,
+     0.3672,
+     0.3426,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 196,
+  "verts": 520,
+  "bbox_min": [
+   0,
+   0,
+   -0.2
+  ],
+  "bbox_max": [
+   0.4,
+   0.46,
+   0
+  ],
+  "size": [
+   0.4,
+   0.46,
+   0.2
+  ],
+  "node_names": [
+   "benchCushion(Clone)"
+  ]
+ },
+ "benchCushionLow": {
+  "file": "benchCushionLow.glb",
+  "kb": 10.0,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "carpet",
+    "base": [
+     0.9434,
+     0.3672,
+     0.3426,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "_defaultMat",
+    "base": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 138,
+  "verts": 594,
+  "bbox_min": [
+   -0.01,
+   0,
+   -0.21
+  ],
+  "bbox_max": [
+   0.41,
+   0.2,
+   0.01
+  ],
+  "size": [
+   0.42,
+   0.2,
+   0.22
+  ],
+  "node_names": [
+   "benchCushionLow(Clone)"
+  ]
+ },
+ "bookcaseClosed": {
+  "file": "bookcaseClosed.glb",
+  "kb": 22.6,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 372,
+  "verts": 540,
+  "bbox_min": [
+   0,
+   0,
+   -0.25
+  ],
+  "bbox_max": [
+   0.4,
+   0.85,
+   0
+  ],
+  "size": [
+   0.4,
+   0.85,
+   0.25
+  ],
+  "node_names": [
+   "bookcaseClosed(Clone)"
+  ]
+ },
+ "bookcaseClosedDoors": {
+  "file": "bookcaseClosedDoors.glb",
+  "kb": 22.1,
+  "nodes": 3,
+  "meshes": 3,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 296,
+  "verts": 568,
+  "bbox_min": [
+   -0.16,
+   0,
+   -0.25
+  ],
+  "bbox_max": [
+   0.4,
+   0.85,
+   0.02
+  ],
+  "size": [
+   0.56,
+   0.85,
+   0.27
+  ],
+  "node_names": [
+   "bookcaseClosedDoors(Clone)",
+   "doorLeft",
+   "doorRight"
+  ]
+ },
+ "bookcaseClosedWide": {
+  "file": "bookcaseClosedWide.glb",
+  "kb": 22.6,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 372,
+  "verts": 540,
+  "bbox_min": [
+   0,
+   0,
+   -0.25
+  ],
+  "bbox_max": [
+   0.8,
+   0.79,
+   0
+  ],
+  "size": [
+   0.8,
+   0.79,
+   0.25
+  ],
+  "node_names": [
+   "bookcaseClosedWide(Clone)"
+  ]
+ },
+ "bookcaseOpen": {
+  "file": "bookcaseOpen.glb",
+  "kb": 17.6,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 320,
+  "verts": 400,
+  "bbox_min": [
+   0,
+   0,
+   -0.25
+  ],
+  "bbox_max": [
+   0.4,
+   0.88,
+   0
+  ],
+  "size": [
+   0.4,
+   0.88,
+   0.25
+  ],
+  "node_names": [
+   "bookcaseOpen(Clone)"
+  ]
+ },
+ "bookcaseOpenLow": {
+  "file": "bookcaseOpenLow.glb",
+  "kb": 11.2,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 184,
+  "verts": 248,
+  "bbox_min": [
+   0,
+   0,
+   -0.25
+  ],
+  "bbox_max": [
+   0.4,
+   0.4,
+   0
+  ],
+  "size": [
+   0.4,
+   0.4,
+   0.25
+  ],
+  "node_names": [
+   "bookcaseOpenLow(Clone)"
+  ]
+ },
+ "books": {
+  "file": "books.glb",
+  "kb": 6.7,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "carpetDarker",
+    "base": [
+     0.608,
+     0.2978,
+     0.2852,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "carpetWhite",
+    "base": [
+     0.9725,
+     1,
+     1,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "plant",
+    "base": [
+     0.182,
+     0.8208,
+     0.5758,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 62,
+  "verts": 424,
+  "bbox_min": [
+   0,
+   0,
+   -0.0945
+  ],
+  "bbox_max": [
+   0.1504,
+   0.1039,
+   0
+  ],
+  "size": [
+   0.1504,
+   0.1039,
+   0.0945
+  ],
+  "node_names": [
+   "books(Clone)"
+  ]
+ },
+ "cabinetBed": {
+  "file": "cabinetBed.glb",
+  "kb": 7.3,
+  "nodes": 2,
+  "meshes": 2,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 72,
+  "verts": 168,
+  "bbox_min": [
+   -0.01,
+   -0.0,
+   -0.205
+  ],
+  "bbox_max": [
+   0.256,
+   0.2332,
+   0.0123
+  ],
+  "size": [
+   0.266,
+   0.2332,
+   0.2173
+  ],
+  "node_names": [
+   "cabinetBed(Clone)",
+   "door"
+  ]
+ },
+ "cabinetBedDrawer": {
+  "file": "cabinetBedDrawer.glb",
+  "kb": 15.7,
+  "nodes": 3,
+  "meshes": 3,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "_defaultMat",
+    "base": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 182,
+  "verts": 588,
+  "bbox_min": [
+   -0.01,
+   -0.0,
+   -0.205
+  ],
+  "bbox_max": [
+   0.256,
+   0.2632,
+   0.1763
+  ],
+  "size": [
+   0.266,
+   0.2632,
+   0.3813
+  ],
+  "node_names": [
+   "cabinetBedDrawer(Clone)",
+   "door",
+   "drawer"
+  ]
+ },
+ "cabinetBedDrawerTable": {
+  "file": "cabinetBedDrawerTable.glb",
+  "kb": 11.9,
+  "nodes": 2,
+  "meshes": 2,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "_defaultMat",
+    "base": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 140,
+  "verts": 452,
+  "bbox_min": [
+   -0.01,
+   0,
+   -0.205
+  ],
+  "bbox_max": [
+   0.256,
+   0.2632,
+   0.1763
+  ],
+  "size": [
+   0.266,
+   0.2632,
+   0.3813
+  ],
+  "node_names": [
+   "cabinetBedDrawerTable(Clone)",
+   "drawer"
+  ]
+ },
+ "cabinetTelevision": {
+  "file": "cabinetTelevision.glb",
+  "kb": 10.3,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 154,
+  "verts": 228,
+  "bbox_min": [
+   0,
+   0,
+   -0.25
+  ],
+  "bbox_max": [
+   0.8,
+   0.31,
+   0
+  ],
+  "size": [
+   0.8,
+   0.31,
+   0.25
+  ],
+  "node_names": [
+   "cabinetTelevision(Clone)"
+  ]
+ },
+ "cabinetTelevisionDoors": {
+  "file": "cabinetTelevisionDoors.glb",
+  "kb": 16.5,
+  "nodes": 3,
+  "meshes": 3,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 210,
+  "verts": 420,
+  "bbox_min": [
+   -0.36,
+   0,
+   -0.25
+  ],
+  "bbox_max": [
+   0.8,
+   0.31,
+   0.03
+  ],
+  "size": [
+   1.16,
+   0.31,
+   0.28
+  ],
+  "node_names": [
+   "cabinetTelevisionDoors(Clone)",
+   "doorLeft",
+   "doorRight"
+  ]
+ },
+ "cardboardBoxClosed": {
+  "file": "cardboardBoxClosed.glb",
+  "kb": 5.3,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "woodDark",
+    "base": [
+     0.678,
+     0.4559,
+     0.299,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 60,
+  "verts": 176,
+  "bbox_min": [
+   0,
+   0,
+   -0.2125
+  ],
+  "bbox_max": [
+   0.2125,
+   0.281,
+   0.0
+  ],
+  "size": [
+   0.2125,
+   0.281,
+   0.2125
+  ],
+  "node_names": [
+   "cardboardBoxClosed(Clone)"
+  ]
+ },
+ "cardboardBoxOpen": {
+  "file": "cardboardBoxOpen.glb",
+  "kb": 5.3,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "woodDark",
+    "base": [
+     0.678,
+     0.4559,
+     0.299,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 60,
+  "verts": 176,
+  "bbox_min": [
+   -0.0797,
+   0,
+   -0.2125
+  ],
+  "bbox_max": [
+   0.2922,
+   0.281,
+   0.0
+  ],
+  "size": [
+   0.3719,
+   0.281,
+   0.2125
+  ],
+  "node_names": [
+   "cardboardBoxOpen(Clone)"
+  ]
+ },
+ "ceilingFan": {
+  "file": "ceilingFan.glb",
+  "kb": 14.9,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "metalLight",
+    "base": [
+     0.9373,
+     0.9804,
+     0.9569,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "lamp",
+    "base": [
+     1,
+     0.9137,
+     0.5882,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 214,
+  "verts": 975,
+  "bbox_min": [
+   -0.1719,
+   -0.1337,
+   -0.2637
+  ],
+  "bbox_max": [
+   0.2828,
+   0,
+   0.2613
+  ],
+  "size": [
+   0.4547,
+   0.1337,
+   0.5251
+  ],
+  "node_names": [
+   "ceilingFan(Clone)"
+  ]
+ },
+ "chair": {
+  "file": "chair.glb",
+  "kb": 10.5,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 170,
+  "verts": 230,
+  "bbox_min": [
+   0,
+   0,
+   -0.2
+  ],
+  "bbox_max": [
+   0.2,
+   0.47,
+   0
+  ],
+  "size": [
+   0.2,
+   0.47,
+   0.2
+  ],
+  "node_names": [
+   "chair(Clone)"
+  ]
+ },
+ "chairCushion": {
+  "file": "chairCushion.glb",
+  "kb": 12.3,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "carpet",
+    "base": [
+     0.9434,
+     0.3672,
+     0.3426,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 198,
+  "verts": 524,
+  "bbox_min": [
+   0,
+   0,
+   -0.2
+  ],
+  "bbox_max": [
+   0.2,
+   0.46,
+   0
+  ],
+  "size": [
+   0.2,
+   0.46,
+   0.2
+  ],
+  "node_names": [
+   "chairCushion(Clone)"
+  ]
+ },
+ "chairDesk": {
+  "file": "chairDesk.glb",
+  "kb": 38.1,
+  "nodes": 2,
+  "meshes": 2,
+  "materials": [
+   {
+    "name": "metalMedium",
+    "base": [
+     0.3686,
+     0.4667,
+     0.4667,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "carpet",
+    "base": [
+     0.9434,
+     0.3672,
+     0.3426,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 588,
+  "verts": 1698,
+  "bbox_min": [
+   -0.1675,
+   0,
+   -0.2832
+  ],
+  "bbox_max": [
+   0.3113,
+   0.4176,
+   0.16
+  ],
+  "size": [
+   0.4787,
+   0.4176,
+   0.4432
+  ],
+  "node_names": [
+   "chairDesk(Clone)",
+   "chair"
+  ]
+ },
+ "chairModernCushion": {
+  "file": "chairModernCushion.glb",
+  "kb": 7.2,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "carpetBlue",
+    "base": [
+     0.3562,
+     0.5166,
+     0.8679,
+     1
+    ],
+    "metallic": 0.5,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 92,
+  "verts": 276,
+  "bbox_min": [
+   0,
+   -0.0,
+   -0.2
+  ],
+  "bbox_max": [
+   0.2,
+   0.46,
+   0
+  ],
+  "size": [
+   0.2,
+   0.46,
+   0.2
+  ],
+  "node_names": [
+   "chairModernCushion(Clone)"
+  ]
+ },
+ "chairModernFrameCushion": {
+  "file": "chairModernFrameCushion.glb",
+  "kb": 18.2,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "carpetBlue",
+    "base": [
+     0.3562,
+     0.5166,
+     0.8679,
+     1
+    ],
+    "metallic": 0.5,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 284,
+  "verts": 832,
+  "bbox_min": [
+   0,
+   -0.0,
+   -0.2
+  ],
+  "bbox_max": [
+   0.2,
+   0.46,
+   0
+  ],
+  "size": [
+   0.2,
+   0.46,
+   0.2
+  ],
+  "node_names": [
+   "chairModernFrameCushion(Clone)"
+  ]
+ },
+ "chairRounded": {
+  "file": "chairRounded.glb",
+  "kb": 16.8,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 280,
+  "verts": 388,
+  "bbox_min": [
+   0,
+   0,
+   -0.2
+  ],
+  "bbox_max": [
+   0.2,
+   0.455,
+   0
+  ],
+  "size": [
+   0.2,
+   0.455,
+   0.2
+  ],
+  "node_names": [
+   "chairRounded(Clone)"
+  ]
+ },
+ "coatRack": {
+  "file": "coatRack.glb",
+  "kb": 9.7,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "metalMedium",
+    "base": [
+     0.3686,
+     0.4667,
+     0.4667,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 132,
+  "verts": 408,
+  "bbox_min": [
+   0,
+   0,
+   -0.1344
+  ],
+  "bbox_max": [
+   0.448,
+   0.28,
+   0
+  ],
+  "size": [
+   0.448,
+   0.28,
+   0.1344
+  ],
+  "node_names": [
+   "coatRack(Clone)"
+  ]
+ },
+ "coatRackStanding": {
+  "file": "coatRackStanding.glb",
+  "kb": 13.0,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 190,
+  "verts": 300,
+  "bbox_min": [
+   -0.1364,
+   0.0,
+   -0.1364
+  ],
+  "bbox_max": [
+   0.1364,
+   0.77,
+   0.1364
+  ],
+  "size": [
+   0.2728,
+   0.77,
+   0.2728
+  ],
+  "node_names": [
+   "coatRackStanding(Clone)"
+  ]
+ },
+ "computerKeyboard": {
+  "file": "computerKeyboard.glb",
+  "kb": 3.4,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "metalDark",
+    "base": [
+     0.3059,
+     0.3882,
+     0.3882,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metalMedium",
+    "base": [
+     0.3686,
+     0.4667,
+     0.4667,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 32,
+  "verts": 76,
+  "bbox_min": [
+   0,
+   0.0,
+   -0.1182
+  ],
+  "bbox_max": [
+   0.2822,
+   0.0276,
+   -0.0
+  ],
+  "size": [
+   0.2822,
+   0.0276,
+   0.1182
+  ],
+  "node_names": [
+   "computerKeyboard(Clone)"
+  ]
+ },
+ "computerMouse": {
+  "file": "computerMouse.glb",
+  "kb": 5.7,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "metalDark",
+    "base": [
+     0.3059,
+     0.3882,
+     0.3882,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 71,
+  "verts": 113,
+  "bbox_min": [
+   -0.0249,
+   0,
+   -0.0851
+  ],
+  "bbox_max": [
+   0.0249,
+   0.0236,
+   0
+  ],
+  "size": [
+   0.0497,
+   0.0236,
+   0.0851
+  ],
+  "node_names": [
+   "computerMouse(Clone)"
+  ]
+ },
+ "computerScreen": {
+  "file": "computerScreen.glb",
+  "kb": 6.3,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "metalDark",
+    "base": [
+     0.3059,
+     0.3882,
+     0.3882,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 72,
+  "verts": 228,
+  "bbox_min": [
+   -0.0,
+   -0.0,
+   -0.104
+  ],
+  "bbox_max": [
+   0.3927,
+   0.2943,
+   -0.0
+  ],
+  "size": [
+   0.3927,
+   0.2943,
+   0.104
+  ],
+  "node_names": [
+   "computerScreen(Clone)"
+  ]
+ },
+ "desk": {
+  "file": "desk.glb",
+  "kb": 14.7,
+  "nodes": 2,
+  "meshes": 2,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 198,
+  "verts": 380,
+  "bbox_min": [
+   -0.01,
+   0,
+   -0.38
+  ],
+  "bbox_max": [
+   0.7245,
+   0.3844,
+   0.1763
+  ],
+  "size": [
+   0.7345,
+   0.3844,
+   0.5563
+  ],
+  "node_names": [
+   "desk(Clone)",
+   "drawer"
+  ]
+ },
+ "deskCorner": {
+  "file": "deskCorner.glb",
+  "kb": 17.6,
+  "nodes": 2,
+  "meshes": 2,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 250,
+  "verts": 452,
+  "bbox_min": [
+   0,
+   0,
+   -0.9745
+  ],
+  "bbox_max": [
+   0.9745,
+   0.3844,
+   0.1763
+  ],
+  "size": [
+   0.9745,
+   0.3844,
+   1.1508
+  ],
+  "node_names": [
+   "deskCorner(Clone)",
+   "drawer"
+  ]
+ },
+ "doorway": {
+  "file": "doorway.glb",
+  "kb": 14.2,
+  "nodes": 2,
+  "meshes": 2,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 188,
+  "verts": 544,
+  "bbox_min": [
+   -0.0,
+   0,
+   -0.0891
+  ],
+  "bbox_max": [
+   0.486,
+   1.0095,
+   0.0567
+  ],
+  "size": [
+   0.486,
+   1.0095,
+   0.1458
+  ],
+  "node_names": [
+   "doorway(Clone)",
+   "door"
+  ]
+ },
+ "doorwayFront": {
+  "file": "doorwayFront.glb",
+  "kb": 12.7,
+  "nodes": 2,
+  "meshes": 2,
+  "materials": [
+   {
+    "name": "carpetWhite",
+    "base": [
+     0.9725,
+     1,
+     1,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metalDark",
+    "base": [
+     0.3059,
+     0.3882,
+     0.3882,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "glass",
+    "base": [
+     0.698,
+     0.8275,
+     0.7686,
+     0.5
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 156,
+  "verts": 624,
+  "bbox_min": [
+   -0.0,
+   0,
+   -0.0891
+  ],
+  "bbox_max": [
+   0.486,
+   1.0095,
+   0.0567
+  ],
+  "size": [
+   0.486,
+   1.0095,
+   0.1458
+  ],
+  "node_names": [
+   "doorwayFront(Clone)",
+   "door"
+  ]
+ },
+ "doorwayOpen": {
+  "file": "doorwayOpen.glb",
+  "kb": 3.2,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 28,
+  "verts": 48,
+  "bbox_min": [
+   0,
+   0,
+   -0.0891
+  ],
+  "bbox_max": [
+   0.486,
+   1.0095,
+   0
+  ],
+  "size": [
+   0.486,
+   1.0095,
+   0.0891
+  ],
+  "node_names": [
+   "doorwayOpen(Clone)"
+  ]
+ },
+ "dryer": {
+  "file": "dryer.glb",
+  "kb": 17.3,
+  "nodes": 2,
+  "meshes": 2,
+  "materials": [
+   {
+    "name": "metalLight",
+    "base": [
+     0.9373,
+     0.9804,
+     0.9569,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metalMedium",
+    "base": [
+     0.3686,
+     0.4667,
+     0.4667,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metalDark",
+    "base": [
+     0.3059,
+     0.3882,
+     0.3882,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 262,
+  "verts": 817,
+  "bbox_min": [
+   0,
+   -0.13,
+   -0.35
+  ],
+  "bbox_max": [
+   0.39,
+   0.47,
+   0.03
+  ],
+  "size": [
+   0.39,
+   0.6,
+   0.38
+  ],
+  "node_names": [
+   "dryer(Clone)",
+   "dryerDoor"
+  ]
+ },
+ "floorCorner": {
+  "file": "floorCorner.glb",
+  "kb": 2.5,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 16,
+  "verts": 30,
+  "bbox_min": [
+   0,
+   -0.0,
+   -0.55
+  ],
+  "bbox_max": [
+   0.55,
+   0.05,
+   0
+  ],
+  "size": [
+   0.55,
+   0.05,
+   0.55
+  ],
+  "node_names": [
+   "floorCorner(Clone)"
+  ]
+ },
+ "floorCornerRound": {
+  "file": "floorCornerRound.glb",
+  "kb": 5.0,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 60,
+  "verts": 96,
+  "bbox_min": [
+   0,
+   0,
+   -0.55
+  ],
+  "bbox_max": [
+   0.55,
+   0.05,
+   0
+  ],
+  "size": [
+   0.55,
+   0.05,
+   0.55
+  ],
+  "node_names": [
+   "floorCornerRound(Clone)"
+  ]
+ },
+ "floorFull": {
+  "file": "floorFull.glb",
+  "kb": 2.2,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 12,
+  "verts": 24,
+  "bbox_min": [
+   0,
+   0,
+   -1
+  ],
+  "bbox_max": [
+   1,
+   0.05,
+   0
+  ],
+  "size": [
+   1,
+   0.05,
+   1
+  ],
+  "node_names": [
+   "floorFull(Clone)"
+  ]
+ },
+ "floorHalf": {
+  "file": "floorHalf.glb",
+  "kb": 2.2,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 12,
+  "verts": 24,
+  "bbox_min": [
+   0,
+   0,
+   -1
+  ],
+  "bbox_max": [
+   0.5,
+   0.05,
+   0
+  ],
+  "size": [
+   0.5,
+   0.05,
+   1
+  ],
+  "node_names": [
+   "floorHalf(Clone)"
+  ]
+ },
+ "hoodLarge": {
+  "file": "hoodLarge.glb",
+  "kb": 4.5,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "metalDark",
+    "base": [
+     0.3059,
+     0.3882,
+     0.3882,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "_defaultMat",
+    "base": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 36,
+  "verts": 150,
+  "bbox_min": [
+   -0.0,
+   0,
+   -0.2849
+  ],
+  "bbox_max": [
+   0.43,
+   0.3695,
+   0
+  ],
+  "size": [
+   0.43,
+   0.3695,
+   0.2849
+  ],
+  "node_names": [
+   "hoodLarge(Clone)"
+  ]
+ },
+ "hoodModern": {
+  "file": "hoodModern.glb",
+  "kb": 3.9,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "metalMedium",
+    "base": [
+     0.3686,
+     0.4667,
+     0.4667,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "_defaultMat",
+    "base": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 28,
+  "verts": 112,
+  "bbox_min": [
+   -0.0,
+   -0.03,
+   -0.2849
+  ],
+  "bbox_max": [
+   0.43,
+   0.3695,
+   0
+  ],
+  "size": [
+   0.43,
+   0.3995,
+   0.2849
+  ],
+  "node_names": [
+   "hoodModern(Clone)"
+  ]
+ },
+ "kitchenBar": {
+  "file": "kitchenBar.glb",
+  "kb": 5.9,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "woodDark",
+    "base": [
+     0.678,
+     0.4559,
+     0.299,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 76,
+  "verts": 264,
+  "bbox_min": [
+   0,
+   0,
+   -0.21
+  ],
+  "bbox_max": [
+   0.43,
+   0.42,
+   0
+  ],
+  "size": [
+   0.43,
+   0.42,
+   0.21
+  ],
+  "node_names": [
+   "kitchenBar(Clone)"
+  ]
+ },
+ "kitchenBarEnd": {
+  "file": "kitchenBarEnd.glb",
+  "kb": 10.8,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 152,
+  "verts": 464,
+  "bbox_min": [
+   0,
+   0,
+   -0.21
+  ],
+  "bbox_max": [
+   0.1016,
+   0.42,
+   0
+  ],
+  "size": [
+   0.1016,
+   0.42,
+   0.21
+  ],
+  "node_names": [
+   "kitchenBarEnd(Clone)"
+  ]
+ },
+ "kitchenBlender": {
+  "file": "kitchenBlender.glb",
+  "kb": 18.3,
+  "nodes": 3,
+  "meshes": 3,
+  "materials": [
+   {
+    "name": "metalMedium",
+    "base": [
+     0.3686,
+     0.4667,
+     0.4667,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "glass",
+    "base": [
+     0.698,
+     0.8275,
+     0.7686,
+     0.5
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 246,
+  "verts": 418,
+  "bbox_min": [
+   -0.02,
+   0,
+   -0.1323
+  ],
+  "bbox_max": [
+   0.1519,
+   0.16,
+   0
+  ],
+  "size": [
+   0.1719,
+   0.16,
+   0.1323
+  ],
+  "node_names": [
+   "kitchenBlender(Clone)",
+   "blenderCup",
+   "blenderTop"
+  ]
+ },
+ "kitchenCabinet": {
+  "file": "kitchenCabinet.glb",
+  "kb": 10.2,
+  "nodes": 2,
+  "meshes": 2,
+  "materials": [
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "woodDark",
+    "base": [
+     0.678,
+     0.4559,
+     0.299,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 114,
+  "verts": 406,
+  "bbox_min": [
+   0,
+   0,
+   -0.45
+  ],
+  "bbox_max": [
+   0.43,
+   0.45,
+   0.03
+  ],
+  "size": [
+   0.43,
+   0.45,
+   0.48
+  ],
+  "node_names": [
+   "kitchenCabinet(Clone)",
+   "door"
+  ]
+ },
+ "kitchenCabinetCornerInner": {
+  "file": "kitchenCabinetCornerInner.glb",
+  "kb": 5.1,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 54,
+  "verts": 168,
+  "bbox_min": [
+   0,
+   0,
+   -0.46
+  ],
+  "bbox_max": [
+   0.46,
+   0.45,
+   0
+  ],
+  "size": [
+   0.46,
+   0.45,
+   0.46
+  ],
+  "node_names": [
+   "kitchenCabinetCornerInner(Clone)"
+  ]
+ },
+ "kitchenCabinetCornerRound": {
+  "file": "kitchenCabinetCornerRound.glb",
+  "kb": 13.3,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 194,
+  "verts": 592,
+  "bbox_min": [
+   0,
+   0,
+   -0.45
+  ],
+  "bbox_max": [
+   0.45,
+   0.45,
+   0
+  ],
+  "size": [
+   0.45,
+   0.45,
+   0.45
+  ],
+  "node_names": [
+   "kitchenCabinetCornerRound(Clone)"
+  ]
+ },
+ "kitchenCabinetDrawer": {
+  "file": "kitchenCabinetDrawer.glb",
+  "kb": 15.0,
+  "nodes": 3,
+  "meshes": 3,
+  "materials": [
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "woodDark",
+    "base": [
+     0.678,
+     0.4559,
+     0.299,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 174,
+  "verts": 660,
+  "bbox_min": [
+   0,
+   0,
+   -0.45
+  ],
+  "bbox_max": [
+   0.43,
+   0.45,
+   0.03
+  ],
+  "size": [
+   0.43,
+   0.45,
+   0.48
+  ],
+  "node_names": [
+   "kitchenCabinetDrawer(Clone)",
+   "door",
+   "drawer"
+  ]
+ },
+ "kitchenCabinetUpper": {
+  "file": "kitchenCabinetUpper.glb",
+  "kb": 8.0,
+  "nodes": 2,
+  "meshes": 2,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "woodDark",
+    "base": [
+     0.678,
+     0.4559,
+     0.299,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 80,
+  "verts": 228,
+  "bbox_min": [
+   0,
+   0,
+   -0.21
+  ],
+  "bbox_max": [
+   0.43,
+   0.39,
+   0.02
+  ],
+  "size": [
+   0.43,
+   0.39,
+   0.23
+  ],
+  "node_names": [
+   "kitchenCabinetUpper(Clone)",
+   "door"
+  ]
+ },
+ "kitchenCabinetUpperCorner": {
+  "file": "kitchenCabinetUpperCorner.glb",
+  "kb": 13.4,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 204,
+  "verts": 308,
+  "bbox_min": [
+   0,
+   0,
+   -0.21
+  ],
+  "bbox_max": [
+   0.215,
+   0.39,
+   0
+  ],
+  "size": [
+   0.215,
+   0.39,
+   0.21
+  ],
+  "node_names": [
+   "kitchenCabinetUpperCorner(Clone)"
+  ]
+ },
+ "kitchenCabinetUpperDouble": {
+  "file": "kitchenCabinetUpperDouble.glb",
+  "kb": 17.8,
+  "nodes": 3,
+  "meshes": 3,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "woodDark",
+    "base": [
+     0.678,
+     0.4559,
+     0.299,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 234,
+  "verts": 540,
+  "bbox_min": [
+   -0.1882,
+   0,
+   -0.21
+  ],
+  "bbox_max": [
+   0.43,
+   0.39,
+   0.02
+  ],
+  "size": [
+   0.6182,
+   0.39,
+   0.23
+  ],
+  "node_names": [
+   "kitchenCabinetUpperDouble(Clone)",
+   "doorLeft",
+   "doorRight"
+  ]
+ },
+ "kitchenCabinetUpperLow": {
+  "file": "kitchenCabinetUpperLow.glb",
+  "kb": 7.0,
+  "nodes": 2,
+  "meshes": 2,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "woodDark",
+    "base": [
+     0.678,
+     0.4559,
+     0.299,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 64,
+  "verts": 204,
+  "bbox_min": [
+   0,
+   -0.1413,
+   -0.21
+  ],
+  "bbox_max": [
+   0.43,
+   0.195,
+   0.02
+  ],
+  "size": [
+   0.43,
+   0.3363,
+   0.23
+  ],
+  "node_names": [
+   "kitchenCabinetUpperLow(Clone)",
+   "door"
+  ]
+ },
+ "kitchenCoffeeMachine": {
+  "file": "kitchenCoffeeMachine.glb",
+  "kb": 13.0,
+  "nodes": 2,
+  "meshes": 2,
+  "materials": [
+   {
+    "name": "metalMedium",
+    "base": [
+     0.3686,
+     0.4667,
+     0.4667,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "carpetWhite",
+    "base": [
+     0.9725,
+     1,
+     1,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 166,
+  "verts": 420,
+  "bbox_min": [
+   -0.0338,
+   0,
+   -0.3041
+  ],
+  "bbox_max": [
+   0.24,
+   0.3034,
+   0.026
+  ],
+  "size": [
+   0.2738,
+   0.3034,
+   0.3301
+  ],
+  "node_names": [
+   "kitchenCoffeeMachine(Clone)",
+   "mug"
+  ]
+ },
+ "kitchenFridge": {
+  "file": "kitchenFridge.glb",
+  "kb": 19.6,
+  "nodes": 3,
+  "meshes": 3,
+  "materials": [
+   {
+    "name": "metalLight",
+    "base": [
+     0.9373,
+     0.9804,
+     0.9569,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metalDark",
+    "base": [
+     0.3059,
+     0.3882,
+     0.3882,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "glass",
+    "base": [
+     0.698,
+     0.8275,
+     0.7686,
+     0.5
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 250,
+  "verts": 976,
+  "bbox_min": [
+   0,
+   0,
+   -0.2819
+  ],
+  "bbox_max": [
+   0.43,
+   0.92,
+   0.035
+  ],
+  "size": [
+   0.43,
+   0.92,
+   0.3169
+  ],
+  "node_names": [
+   "kitchenFridge(Clone)",
+   "doorFreezer",
+   "doorFridge"
+  ]
+ },
+ "kitchenFridgeBuiltIn": {
+  "file": "kitchenFridgeBuiltIn.glb",
+  "kb": 22.1,
+  "nodes": 3,
+  "meshes": 3,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metalLight",
+    "base": [
+     0.9373,
+     0.9804,
+     0.9569,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "woodDark",
+    "base": [
+     0.678,
+     0.4559,
+     0.299,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "glass",
+    "base": [
+     0.698,
+     0.8275,
+     0.7686,
+     0.5
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 268,
+  "verts": 1476,
+  "bbox_min": [
+   0,
+   0,
+   -0.45
+  ],
+  "bbox_max": [
+   0.43,
+   0.8687,
+   0.035
+  ],
+  "size": [
+   0.43,
+   0.8687,
+   0.485
+  ],
+  "node_names": [
+   "kitchenFridgeBuiltIn(Clone)",
+   "doorFreezer",
+   "doorFridge"
+  ]
+ },
+ "kitchenFridgeLarge": {
+  "file": "kitchenFridgeLarge.glb",
+  "kb": 29.9,
+  "nodes": 3,
+  "meshes": 3,
+  "materials": [
+   {
+    "name": "metalLight",
+    "base": [
+     0.9373,
+     0.9804,
+     0.9569,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metalMedium",
+    "base": [
+     0.3686,
+     0.4667,
+     0.4667,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 436,
+  "verts": 1104,
+  "bbox_min": [
+   -0.2732,
+   -0.4032,
+   -0.3419
+  ],
+  "bbox_max": [
+   0.52,
+   0.92,
+   0.0436
+  ],
+  "size": [
+   0.7932,
+   1.3232,
+   0.3855
+  ],
+  "node_names": [
+   "kitchenFridgeLarge(Clone)",
+   "doorLeft",
+   "doorRight"
+  ]
+ },
+ "kitchenFridgeSmall": {
+  "file": "kitchenFridgeSmall.glb",
+  "kb": 12.7,
+  "nodes": 2,
+  "meshes": 2,
+  "materials": [
+   {
+    "name": "metalLight",
+    "base": [
+     0.9373,
+     0.9804,
+     0.9569,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metalDark",
+    "base": [
+     0.3059,
+     0.3882,
+     0.3882,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "glass",
+    "base": [
+     0.698,
+     0.8275,
+     0.7686,
+     0.5
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 152,
+  "verts": 632,
+  "bbox_min": [
+   0,
+   0,
+   -0.2819
+  ],
+  "bbox_max": [
+   0.43,
+   0.6002,
+   0.035
+  ],
+  "size": [
+   0.43,
+   0.6002,
+   0.3169
+  ],
+  "node_names": [
+   "kitchenFridgeSmall(Clone)",
+   "doorFridge"
+  ]
+ },
+ "kitchenMicrowave": {
+  "file": "kitchenMicrowave.glb",
+  "kb": 11.0,
+  "nodes": 2,
+  "meshes": 2,
+  "materials": [
+   {
+    "name": "metalMedium",
+    "base": [
+     0.3686,
+     0.4667,
+     0.4667,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "carpetWhite",
+    "base": [
+     0.9725,
+     1,
+     1,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metalDark",
+    "base": [
+     0.3059,
+     0.3882,
+     0.3882,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "glass",
+    "base": [
+     0.698,
+     0.8275,
+     0.7686,
+     0.5
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 152,
+  "verts": 510,
+  "bbox_min": [
+   0,
+   0,
+   -0.22
+  ],
+  "bbox_max": [
+   0.29,
+   0.18,
+   0.01
+  ],
+  "size": [
+   0.29,
+   0.18,
+   0.23
+  ],
+  "node_names": [
+   "kitchenMicrowave(Clone)",
+   "Group"
+  ]
+ },
+ "kitchenSink": {
+  "file": "kitchenSink.glb",
+  "kb": 22.9,
+  "nodes": 2,
+  "meshes": 2,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metalDark",
+    "base": [
+     0.3059,
+     0.3882,
+     0.3882,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metalLight",
+    "base": [
+     0.9373,
+     0.9804,
+     0.9569,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "_defaultMat",
+    "base": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "woodDark",
+    "base": [
+     0.678,
+     0.4559,
+     0.299,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 318,
+  "verts": 2194,
+  "bbox_min": [
+   0,
+   0,
+   -0.45
+  ],
+  "bbox_max": [
+   0.43,
+   0.49,
+   0.03
+  ],
+  "size": [
+   0.43,
+   0.49,
+   0.48
+  ],
+  "node_names": [
+   "kitchenSink(Clone)",
+   "door"
+  ]
+ },
+ "kitchenStove": {
+  "file": "kitchenStove.glb",
+  "kb": 53.1,
+  "nodes": 2,
+  "meshes": 2,
+  "materials": [
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metalDark",
+    "base": [
+     0.3059,
+     0.3882,
+     0.3882,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "carpetWhite",
+    "base": [
+     0.9725,
+     1,
+     1,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "glass",
+    "base": [
+     0.698,
+     0.8275,
+     0.7686,
+     0.5
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 830,
+  "verts": 4860,
+  "bbox_min": [
+   0,
+   0,
+   -0.45
+  ],
+  "bbox_max": [
+   0.43,
+   0.45,
+   0.03
+  ],
+  "size": [
+   0.43,
+   0.45,
+   0.48
+  ],
+  "node_names": [
+   "kitchenStove(Clone)",
+   "door"
+  ]
+ },
+ "kitchenStoveElectric": {
+  "file": "kitchenStoveElectric.glb",
+  "kb": 18.2,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metalDark",
+    "base": [
+     0.3059,
+     0.3882,
+     0.3882,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "carpetWhite",
+    "base": [
+     0.9725,
+     1,
+     1,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "glass",
+    "base": [
+     0.698,
+     0.8275,
+     0.7686,
+     0.5
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metalMedium",
+    "base": [
+     0.3686,
+     0.4667,
+     0.4667,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 338,
+  "verts": 2040,
+  "bbox_min": [
+   0,
+   0,
+   -0.45
+  ],
+  "bbox_max": [
+   0.43,
+   0.45,
+   0
+  ],
+  "size": [
+   0.43,
+   0.45,
+   0.45
+  ],
+  "node_names": [
+   "kitchenStoveElectric(Clone)"
+  ]
+ },
+ "lampRoundFloor": {
+  "file": "lampRoundFloor.glb",
+  "kb": 6.4,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "lamp",
+    "base": [
+     1,
+     0.9137,
+     0.5882,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 76,
+  "verts": 240,
+  "bbox_min": [
+   -0.016,
+   0,
+   -0.1478
+  ],
+  "bbox_max": [
+   0.136,
+   0.86,
+   0.0278
+  ],
+  "size": [
+   0.152,
+   0.86,
+   0.1756
+  ],
+  "node_names": [
+   "lampRoundFloor(Clone)"
+  ]
+ },
+ "lampRoundTable": {
+  "file": "lampRoundTable.glb",
+  "kb": 6.4,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "lamp",
+    "base": [
+     1,
+     0.9137,
+     0.5882,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 76,
+  "verts": 240,
+  "bbox_min": [
+   -0.016,
+   0,
+   -0.1478
+  ],
+  "bbox_max": [
+   0.136,
+   0.3142,
+   0.0278
+  ],
+  "size": [
+   0.152,
+   0.3142,
+   0.1756
+  ],
+  "node_names": [
+   "lampRoundTable(Clone)"
+  ]
+ },
+ "lampSquareCeiling": {
+  "file": "lampSquareCeiling.glb",
+  "kb": 5.5,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "lamp",
+    "base": [
+     1,
+     0.9137,
+     0.5882,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 60,
+  "verts": 192,
+  "bbox_min": [
+   0,
+   0,
+   -0.12
+  ],
+  "bbox_max": [
+   0.12,
+   0.23,
+   0
+  ],
+  "size": [
+   0.12,
+   0.23,
+   0.12
+  ],
+  "node_names": [
+   "lampSquareCeiling(Clone)"
+  ]
+ },
+ "lampSquareFloor": {
+  "file": "lampSquareFloor.glb",
+  "kb": 5.5,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "lamp",
+    "base": [
+     1,
+     0.9137,
+     0.5882,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 60,
+  "verts": 192,
+  "bbox_min": [
+   0,
+   0,
+   -0.12
+  ],
+  "bbox_max": [
+   0.12,
+   0.86,
+   0
+  ],
+  "size": [
+   0.12,
+   0.86,
+   0.12
+  ],
+  "node_names": [
+   "lampSquareFloor(Clone)"
+  ]
+ },
+ "lampSquareTable": {
+  "file": "lampSquareTable.glb",
+  "kb": 5.5,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "lamp",
+    "base": [
+     1,
+     0.9137,
+     0.5882,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 60,
+  "verts": 192,
+  "bbox_min": [
+   0,
+   0,
+   -0.12
+  ],
+  "bbox_max": [
+   0.12,
+   0.29,
+   0
+  ],
+  "size": [
+   0.12,
+   0.29,
+   0.12
+  ],
+  "node_names": [
+   "lampSquareTable(Clone)"
+  ]
+ },
+ "lampWall": {
+  "file": "lampWall.glb",
+  "kb": 4.7,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "lamp",
+    "base": [
+     1,
+     0.9137,
+     0.5882,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 42,
+  "verts": 156,
+  "bbox_min": [
+   -0.1954,
+   0,
+   0
+  ],
+  "bbox_max": [
+   0.1954,
+   0.16,
+   0.2592
+  ],
+  "size": [
+   0.3908,
+   0.16,
+   0.2592
+  ],
+  "node_names": [
+   "lampWall(Clone)"
+  ]
+ },
+ "laptop": {
+  "file": "laptop.glb",
+  "kb": 5.4,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "metalDark",
+    "base": [
+     0.3059,
+     0.3882,
+     0.3882,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metalMedium",
+    "base": [
+     0.3686,
+     0.4667,
+     0.4667,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 68,
+  "verts": 228,
+  "bbox_min": [
+   0,
+   0,
+   -0.5456
+  ],
+  "bbox_max": [
+   0.6,
+   0.3677,
+   0
+  ],
+  "size": [
+   0.6,
+   0.3677,
+   0.5456
+  ],
+  "node_names": [
+   "laptop(Clone)"
+  ]
+ },
+ "loungeChair": {
+  "file": "loungeChair.glb",
+  "kb": 9.4,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "carpet",
+    "base": [
+     0.9434,
+     0.3672,
+     0.3426,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 128,
+  "verts": 392,
+  "bbox_min": [
+   0,
+   0,
+   -0.41
+  ],
+  "bbox_max": [
+   0.49,
+   0.46,
+   0
+  ],
+  "size": [
+   0.49,
+   0.46,
+   0.41
+  ],
+  "node_names": [
+   "loungeChair(Clone)"
+  ]
+ },
+ "loungeChairRelax": {
+  "file": "loungeChairRelax.glb",
+  "kb": 13.6,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "carpet",
+    "base": [
+     0.9434,
+     0.3672,
+     0.3426,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 188,
+  "verts": 876,
+  "bbox_min": [
+   0,
+   0,
+   -0.6747
+  ],
+  "bbox_max": [
+   0.49,
+   0.63,
+   0
+  ],
+  "size": [
+   0.49,
+   0.63,
+   0.6747
+  ],
+  "node_names": [
+   "loungeChairRelax(Clone)"
+  ]
+ },
+ "loungeDesignChair": {
+  "file": "loungeDesignChair.glb",
+  "kb": 8.9,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "carpetBlue",
+    "base": [
+     0.3562,
+     0.5166,
+     0.8679,
+     1
+    ],
+    "metallic": 0.5,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 116,
+  "verts": 368,
+  "bbox_min": [
+   0,
+   0,
+   -0.41
+  ],
+  "bbox_max": [
+   0.7296,
+   0.4,
+   0
+  ],
+  "size": [
+   0.7296,
+   0.4,
+   0.41
+  ],
+  "node_names": [
+   "loungeDesignChair(Clone)"
+  ]
+ },
+ "loungeDesignSofa": {
+  "file": "loungeDesignSofa.glb",
+  "kb": 8.9,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "carpetBlue",
+    "base": [
+     0.3562,
+     0.5166,
+     0.8679,
+     1
+    ],
+    "metallic": 0.5,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 116,
+  "verts": 368,
+  "bbox_min": [
+   0,
+   0,
+   -0.41
+  ],
+  "bbox_max": [
+   1.12,
+   0.4,
+   0
+  ],
+  "size": [
+   1.12,
+   0.4,
+   0.41
+  ],
+  "node_names": [
+   "loungeDesignSofa(Clone)"
+  ]
+ },
+ "loungeDesignSofaCorner": {
+  "file": "loungeDesignSofaCorner.glb",
+  "kb": 13.4,
+  "nodes": 2,
+  "meshes": 2,
+  "materials": [
+   {
+    "name": "carpetBlue",
+    "base": [
+     0.3562,
+     0.5166,
+     0.8679,
+     1
+    ],
+    "metallic": 0.5,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 176,
+  "verts": 528,
+  "bbox_min": [
+   0,
+   -0.0,
+   -1.3498
+  ],
+  "bbox_max": [
+   1.3498,
+   0.4,
+   0
+  ],
+  "size": [
+   1.3498,
+   0.4,
+   1.3498
+  ],
+  "node_names": [
+   "loungeDesignSofaCorner(Clone)",
+   "Group"
+  ]
+ },
+ "loungeSofa": {
+  "file": "loungeSofa.glb",
+  "kb": 9.4,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "carpet",
+    "base": [
+     0.9434,
+     0.3672,
+     0.3426,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 128,
+  "verts": 392,
+  "bbox_min": [
+   0,
+   0,
+   -0.41
+  ],
+  "bbox_max": [
+   0.98,
+   0.46,
+   0
+  ],
+  "size": [
+   0.98,
+   0.46,
+   0.41
+  ],
+  "node_names": [
+   "loungeSofa(Clone)"
+  ]
+ },
+ "loungeSofaCorner": {
+  "file": "loungeSofaCorner.glb",
+  "kb": 13.1,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "carpet",
+    "base": [
+     0.9434,
+     0.3672,
+     0.3426,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 190,
+  "verts": 580,
+  "bbox_min": [
+   0,
+   0,
+   -0.98
+  ],
+  "bbox_max": [
+   0.98,
+   0.46,
+   0
+  ],
+  "size": [
+   0.98,
+   0.46,
+   0.98
+  ],
+  "node_names": [
+   "loungeSofaCorner(Clone)"
+  ]
+ },
+ "loungeSofaLong": {
+  "file": "loungeSofaLong.glb",
+  "kb": 12.8,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "carpet",
+    "base": [
+     0.9434,
+     0.3672,
+     0.3426,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 186,
+  "verts": 564,
+  "bbox_min": [
+   0,
+   0,
+   -0.41
+  ],
+  "bbox_max": [
+   0.98,
+   0.46,
+   0.41
+  ],
+  "size": [
+   0.98,
+   0.46,
+   0.82
+  ],
+  "node_names": [
+   "loungeSofaLong(Clone)"
+  ]
+ },
+ "loungeSofaOttoman": {
+  "file": "loungeSofaOttoman.glb",
+  "kb": 6.8,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "carpet",
+    "base": [
+     0.9434,
+     0.3672,
+     0.3426,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 84,
+  "verts": 256,
+  "bbox_min": [
+   0.47,
+   0,
+   -0.04
+  ],
+  "bbox_max": [
+   0.9098,
+   0.23,
+   0.41
+  ],
+  "size": [
+   0.4398,
+   0.23,
+   0.45
+  ],
+  "node_names": [
+   "loungeSofaOttoman(Clone)"
+  ]
+ },
+ "paneling": {
+  "file": "paneling.glb",
+  "kb": 3.9,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 40,
+  "verts": 66,
+  "bbox_min": [
+   0,
+   0,
+   0
+  ],
+  "bbox_max": [
+   0.5,
+   0.5948,
+   0.03
+  ],
+  "size": [
+   0.5,
+   0.5948,
+   0.03
+  ],
+  "node_names": [
+   "paneling(Clone)"
+  ]
+ },
+ "pillow": {
+  "file": "pillow.glb",
+  "kb": 4.9,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "carpet",
+    "base": [
+     0.9434,
+     0.3672,
+     0.3426,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 50,
+  "verts": 96,
+  "bbox_min": [
+   0,
+   0,
+   -0.0885
+  ],
+  "bbox_max": [
+   0.23,
+   0.2222,
+   0
+  ],
+  "size": [
+   0.23,
+   0.2222,
+   0.0885
+  ],
+  "node_names": [
+   "pillow(Clone)"
+  ]
+ },
+ "pillowBlue": {
+  "file": "pillowBlue.glb",
+  "kb": 4.9,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "carpetBlue",
+    "base": [
+     0.3562,
+     0.5166,
+     0.8679,
+     1
+    ],
+    "metallic": 0.5,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 50,
+  "verts": 96,
+  "bbox_min": [
+   0,
+   0,
+   -0.0634
+  ],
+  "bbox_max": [
+   0.23,
+   0.1285,
+   0
+  ],
+  "size": [
+   0.23,
+   0.1285,
+   0.0634
+  ],
+  "node_names": [
+   "pillowBlue(Clone)"
+  ]
+ },
+ "pillowBlueLong": {
+  "file": "pillowBlueLong.glb",
+  "kb": 5.0,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "carpetBlue",
+    "base": [
+     0.3562,
+     0.5166,
+     0.8679,
+     1
+    ],
+    "metallic": 0.5,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 50,
+  "verts": 96,
+  "bbox_min": [
+   -0.13,
+   -0.0,
+   -0.0885
+  ],
+  "bbox_max": [
+   0.3866,
+   0.2222,
+   0
+  ],
+  "size": [
+   0.5166,
+   0.2222,
+   0.0885
+  ],
+  "node_names": [
+   "pillowBlueLong(Clone)"
+  ]
+ },
+ "pillowLong": {
+  "file": "pillowLong.glb",
+  "kb": 5.0,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "carpet",
+    "base": [
+     0.9434,
+     0.3672,
+     0.3426,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 50,
+  "verts": 96,
+  "bbox_min": [
+   0,
+   -0.0,
+   -0.0885
+  ],
+  "bbox_max": [
+   0.3866,
+   0.2222,
+   0
+  ],
+  "size": [
+   0.3866,
+   0.2222,
+   0.0885
+  ],
+  "node_names": [
+   "pillowLong(Clone)"
+  ]
+ },
+ "plantSmall1": {
+  "file": "plantSmall1.glb",
+  "kb": 8.0,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "plant",
+    "base": [
+     0.182,
+     0.8208,
+     0.5758,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 102,
+  "verts": 320,
+  "bbox_min": [
+   -0.0947,
+   0,
+   -0.0947
+  ],
+  "bbox_max": [
+   0.0947,
+   0.28,
+   0.0947
+  ],
+  "size": [
+   0.1893,
+   0.28,
+   0.1893
+  ],
+  "node_names": [
+   "plantSmall1(Clone)"
+  ]
+ },
+ "plantSmall2": {
+  "file": "plantSmall2.glb",
+  "kb": 12.7,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "plant",
+    "base": [
+     0.182,
+     0.8208,
+     0.5758,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 158,
+  "verts": 576,
+  "bbox_min": [
+   -0.0947,
+   0,
+   -0.0947
+  ],
+  "bbox_max": [
+   0.0947,
+   0.28,
+   0.0947
+  ],
+  "size": [
+   0.1893,
+   0.28,
+   0.1893
+  ],
+  "node_names": [
+   "plantSmall2(Clone)"
+  ]
+ },
+ "plantSmall3": {
+  "file": "plantSmall3.glb",
+  "kb": 8.2,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "plant",
+    "base": [
+     0.182,
+     0.8208,
+     0.5758,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 98,
+  "verts": 336,
+  "bbox_min": [
+   -0.0849,
+   0,
+   -0.098
+  ],
+  "bbox_max": [
+   0.0849,
+   0.29,
+   0.098
+  ],
+  "size": [
+   0.1697,
+   0.29,
+   0.196
+  ],
+  "node_names": [
+   "plantSmall3(Clone)"
+  ]
+ },
+ "pottedPlant": {
+  "file": "pottedPlant.glb",
+  "kb": 7.4,
+  "nodes": 2,
+  "meshes": 2,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "woodDark",
+    "base": [
+     0.678,
+     0.4559,
+     0.299,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "plant",
+    "base": [
+     0.182,
+     0.8208,
+     0.5758,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 60,
+  "verts": 192,
+  "bbox_min": [
+   -0.0429,
+   0,
+   -0.2415
+  ],
+  "bbox_max": [
+   0.2121,
+   0.5358,
+   0.0495
+  ],
+  "size": [
+   0.255,
+   0.5358,
+   0.291
+  ],
+  "node_names": [
+   "pottedPlant(Clone)",
+   "plant"
+  ]
+ },
+ "radio": {
+  "file": "radio.glb",
+  "kb": 24.4,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "metalMedium",
+    "base": [
+     0.3686,
+     0.4667,
+     0.4667,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 432,
+  "verts": 1644,
+  "bbox_min": [
+   0,
+   0,
+   -0.0975
+  ],
+  "bbox_max": [
+   0.315,
+   0.2282,
+   0
+  ],
+  "size": [
+   0.315,
+   0.2282,
+   0.0975
+  ],
+  "node_names": [
+   "radio(Clone)"
+  ]
+ },
+ "rugDoormat": {
+  "file": "rugDoormat.glb",
+  "kb": 13.5,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 204,
+  "verts": 312,
+  "bbox_min": [
+   0,
+   0,
+   -0.237
+  ],
+  "bbox_max": [
+   0.4293,
+   0.01,
+   0
+  ],
+  "size": [
+   0.4293,
+   0.01,
+   0.237
+  ],
+  "node_names": [
+   "rugDoormat(Clone)"
+  ]
+ },
+ "rugRectangle": {
+  "file": "rugRectangle.glb",
+  "kb": 3.1,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "carpet",
+    "base": [
+     0.9434,
+     0.3672,
+     0.3426,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "carpetDarker",
+    "base": [
+     0.608,
+     0.2978,
+     0.2852,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 28,
+  "verts": 64,
+  "bbox_min": [
+   0,
+   0,
+   -0.92
+  ],
+  "bbox_max": [
+   1.57,
+   0.01,
+   0
+  ],
+  "size": [
+   1.57,
+   0.01,
+   0.92
+  ],
+  "node_names": [
+   "rugRectangle(Clone)"
+  ]
+ },
+ "rugRound": {
+  "file": "rugRound.glb",
+  "kb": 9.9,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "carpet",
+    "base": [
+     0.9434,
+     0.3672,
+     0.3426,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "carpetDarker",
+    "base": [
+     0.608,
+     0.2978,
+     0.2852,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 188,
+  "verts": 380,
+  "bbox_min": [
+   0,
+   0,
+   -0.92
+  ],
+  "bbox_max": [
+   0.92,
+   0.01,
+   0
+  ],
+  "size": [
+   0.92,
+   0.01,
+   0.92
+  ],
+  "node_names": [
+   "rugRound(Clone)"
+  ]
+ },
+ "rugRounded": {
+  "file": "rugRounded.glb",
+  "kb": 10.6,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "carpetDarker",
+    "base": [
+     0.608,
+     0.2978,
+     0.2852,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "carpet",
+    "base": [
+     0.9434,
+     0.3672,
+     0.3426,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 204,
+  "verts": 412,
+  "bbox_min": [
+   0,
+   0,
+   -0.92
+  ],
+  "bbox_max": [
+   1.57,
+   0.01,
+   0
+  ],
+  "size": [
+   1.57,
+   0.01,
+   0.92
+  ],
+  "node_names": [
+   "rugRounded(Clone)"
+  ]
+ },
+ "rugSquare": {
+  "file": "rugSquare.glb",
+  "kb": 3.1,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "carpet",
+    "base": [
+     0.9434,
+     0.3672,
+     0.3426,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "carpetDarker",
+    "base": [
+     0.608,
+     0.2978,
+     0.2852,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 28,
+  "verts": 64,
+  "bbox_min": [
+   0,
+   0,
+   -0.92
+  ],
+  "bbox_max": [
+   0.9043,
+   0.01,
+   0
+  ],
+  "size": [
+   0.9043,
+   0.01,
+   0.92
+  ],
+  "node_names": [
+   "rugSquare(Clone)"
+  ]
+ },
+ "shower": {
+  "file": "shower.glb",
+  "kb": 50.8,
+  "nodes": 3,
+  "meshes": 3,
+  "materials": [
+   {
+    "name": "carpetWhite",
+    "base": [
+     0.9725,
+     1,
+     1,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metalDark",
+    "base": [
+     0.3059,
+     0.3882,
+     0.3882,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "glass",
+    "base": [
+     0.698,
+     0.8275,
+     0.7686,
+     0.5
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 810,
+  "verts": 3483,
+  "bbox_min": [
+   -0.02,
+   0,
+   -1.28
+  ],
+  "bbox_max": [
+   1.28,
+   2.4927,
+   0.0
+  ],
+  "size": [
+   1.3,
+   2.4927,
+   1.28
+  ],
+  "node_names": [
+   "shower(Clone)",
+   "doorLeft",
+   "doorRight"
+  ]
+ },
+ "showerRound": {
+  "file": "showerRound.glb",
+  "kb": 70.4,
+  "nodes": 4,
+  "meshes": 4,
+  "materials": [
+   {
+    "name": "_defaultMat",
+    "base": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metalDark",
+    "base": [
+     0.3059,
+     0.3882,
+     0.3882,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "glass",
+    "base": [
+     0.698,
+     0.8275,
+     0.7686,
+     0.5
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "carpetWhite",
+    "base": [
+     0.9725,
+     1,
+     1,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 960,
+  "verts": 2400,
+  "bbox_min": [
+   -0.3784,
+   0,
+   -0.5618
+  ],
+  "bbox_max": [
+   0.5618,
+   1.094,
+   0.3784
+  ],
+  "size": [
+   0.9402,
+   1.094,
+   0.9402
+  ],
+  "node_names": [
+   "showerRound(Clone)",
+   "doorLeft",
+   "doorRight",
+   "faucet"
+  ]
+ },
+ "sideTable": {
+  "file": "sideTable.glb",
+  "kb": 8.6,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "_defaultMat",
+    "base": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 118,
+  "verts": 348,
+  "bbox_min": [
+   -0.01,
+   0,
+   -0.21
+  ],
+  "bbox_max": [
+   0.5245,
+   0.3844,
+   0.01
+  ],
+  "size": [
+   0.5345,
+   0.3844,
+   0.22
+  ],
+  "node_names": [
+   "sideTable(Clone)"
+  ]
+ },
+ "sideTableDrawers": {
+  "file": "sideTableDrawers.glb",
+  "kb": 18.6,
+  "nodes": 3,
+  "meshes": 3,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "_defaultMat",
+    "base": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 238,
+  "verts": 732,
+  "bbox_min": [
+   -0.01,
+   0,
+   -0.21
+  ],
+  "bbox_max": [
+   0.5245,
+   0.3844,
+   0.1763
+  ],
+  "size": [
+   0.5345,
+   0.3844,
+   0.3863
+  ],
+  "node_names": [
+   "sideTableDrawers(Clone)",
+   "drawerLeft",
+   "drawerRight"
+  ]
+ },
+ "speaker": {
+  "file": "speaker.glb",
+  "kb": 15.4,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metalMedium",
+    "base": [
+     0.3686,
+     0.4667,
+     0.4667,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 228,
+  "verts": 696,
+  "bbox_min": [
+   -0.0,
+   0.0,
+   -0.148
+  ],
+  "bbox_max": [
+   0.148,
+   0.6364,
+   -0.0
+  ],
+  "size": [
+   0.148,
+   0.6364,
+   0.148
+  ],
+  "node_names": [
+   "speaker(Clone)"
+  ]
+ },
+ "speakerSmall": {
+  "file": "speakerSmall.glb",
+  "kb": 14.9,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metalMedium",
+    "base": [
+     0.3686,
+     0.4667,
+     0.4667,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 220,
+  "verts": 672,
+  "bbox_min": [
+   0,
+   0,
+   -0.1332
+  ],
+  "bbox_max": [
+   0.148,
+   0.298,
+   0
+  ],
+  "size": [
+   0.148,
+   0.298,
+   0.1332
+  ],
+  "node_names": [
+   "speakerSmall(Clone)"
+  ]
+ },
+ "stairs": {
+  "file": "stairs.glb",
+  "kb": 21.1,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "woodDark",
+    "base": [
+     0.678,
+     0.4559,
+     0.299,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 308,
+  "verts": 1004,
+  "bbox_min": [
+   0,
+   0.0,
+   -0.79
+  ],
+  "bbox_max": [
+   1.8234,
+   1.3395,
+   0
+  ],
+  "size": [
+   1.8234,
+   1.3395,
+   0.79
+  ],
+  "node_names": [
+   "stairs(Clone)"
+  ]
+ },
+ "stairsCorner": {
+  "file": "stairsCorner.glb",
+  "kb": 21.1,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "woodDark",
+    "base": [
+     0.678,
+     0.4559,
+     0.299,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 312,
+  "verts": 998,
+  "bbox_min": [
+   0.1639,
+   0,
+   -1.4258
+  ],
+  "bbox_max": [
+   1.9376,
+   1.3395,
+   0
+  ],
+  "size": [
+   1.7737,
+   1.3395,
+   1.4258
+  ],
+  "node_names": [
+   "stairsCorner(Clone)"
+  ]
+ },
+ "stairsOpen": {
+  "file": "stairsOpen.glb",
+  "kb": 39.0,
+  "nodes": 3,
+  "meshes": 3,
+  "materials": [
+   {
+    "name": "woodDark",
+    "base": [
+     0.678,
+     0.4559,
+     0.299,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 558,
+  "verts": 1506,
+  "bbox_min": [
+   0,
+   0,
+   -0.79
+  ],
+  "bbox_max": [
+   1.8234,
+   1.3395,
+   0
+  ],
+  "size": [
+   1.8234,
+   1.3395,
+   0.79
+  ],
+  "node_names": [
+   "stairsOpen(Clone)",
+   "Group",
+   "Group"
+  ]
+ },
+ "stairsOpenSingle": {
+  "file": "stairsOpenSingle.glb",
+  "kb": 24.0,
+  "nodes": 2,
+  "meshes": 2,
+  "materials": [
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 326,
+  "verts": 566,
+  "bbox_min": [
+   0,
+   0,
+   -0.79
+  ],
+  "bbox_max": [
+   1.8234,
+   1.3395,
+   0
+  ],
+  "size": [
+   1.8234,
+   1.3395,
+   0.79
+  ],
+  "node_names": [
+   "stairsOpenSingle(Clone)",
+   "Group"
+  ]
+ },
+ "stoolBar": {
+  "file": "stoolBar.glb",
+  "kb": 11.5,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "carpet",
+    "base": [
+     0.9434,
+     0.3672,
+     0.3426,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 176,
+  "verts": 492,
+  "bbox_min": [
+   0,
+   0,
+   -0.2299
+  ],
+  "bbox_max": [
+   0.2654,
+   0.435,
+   0
+  ],
+  "size": [
+   0.2654,
+   0.435,
+   0.2299
+  ],
+  "node_names": [
+   "stoolBar(Clone)"
+  ]
+ },
+ "stoolBarSquare": {
+  "file": "stoolBarSquare.glb",
+  "kb": 9.6,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "carpet",
+    "base": [
+     0.9434,
+     0.3672,
+     0.3426,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 142,
+  "verts": 388,
+  "bbox_min": [
+   0.056,
+   0,
+   -0.1888
+  ],
+  "bbox_max": [
+   0.2095,
+   0.405,
+   -0.0411
+  ],
+  "size": [
+   0.1535,
+   0.405,
+   0.1476
+  ],
+  "node_names": [
+   "stoolBarSquare(Clone)"
+  ]
+ },
+ "table": {
+  "file": "table.glb",
+  "kb": 8.0,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 120,
+  "verts": 168,
+  "bbox_min": [
+   0,
+   0,
+   -0.4474
+  ],
+  "bbox_max": [
+   0.8415,
+   0.3267,
+   0
+  ],
+  "size": [
+   0.8415,
+   0.3267,
+   0.4474
+  ],
+  "node_names": [
+   "table(Clone)"
+  ]
+ },
+ "tableCloth": {
+  "file": "tableCloth.glb",
+  "kb": 9.7,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "carpet",
+    "base": [
+     0.9434,
+     0.3672,
+     0.3426,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 144,
+  "verts": 396,
+  "bbox_min": [
+   0,
+   0,
+   -0.4474
+  ],
+  "bbox_max": [
+   0.8415,
+   0.3267,
+   0.0
+  ],
+  "size": [
+   0.8415,
+   0.3267,
+   0.4474
+  ],
+  "node_names": [
+   "tableCloth(Clone)"
+  ]
+ },
+ "tableCoffee": {
+  "file": "tableCoffee.glb",
+  "kb": 8.1,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 124,
+  "verts": 168,
+  "bbox_min": [
+   -0.461,
+   -0.0,
+   -0.3
+  ],
+  "bbox_max": [
+   0.2,
+   0.23,
+   0.1
+  ],
+  "size": [
+   0.661,
+   0.23,
+   0.4
+  ],
+  "node_names": [
+   "tableCoffee(Clone)"
+  ]
+ },
+ "tableCoffeeGlass": {
+  "file": "tableCoffeeGlass.glb",
+  "kb": 9.2,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "glass",
+    "base": [
+     0.698,
+     0.8275,
+     0.7686,
+     0.5
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 140,
+  "verts": 368,
+  "bbox_min": [
+   -0.461,
+   -0.0,
+   -0.3
+  ],
+  "bbox_max": [
+   0.2,
+   0.23,
+   0.1
+  ],
+  "size": [
+   0.661,
+   0.23,
+   0.4
+  ],
+  "node_names": [
+   "tableCoffeeGlass(Clone)"
+  ]
+ },
+ "tableCoffeeGlassSquare": {
+  "file": "tableCoffeeGlassSquare.glb",
+  "kb": 9.2,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "glass",
+    "base": [
+     0.698,
+     0.8275,
+     0.7686,
+     0.5
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 140,
+  "verts": 368,
+  "bbox_min": [
+   -0.461,
+   -0.0,
+   -0.3
+  ],
+  "bbox_max": [
+   -0.061,
+   0.23,
+   0.1
+  ],
+  "size": [
+   0.4,
+   0.23,
+   0.4
+  ],
+  "node_names": [
+   "tableCoffeeGlassSquare(Clone)"
+  ]
+ },
+ "tableCoffeeSquare": {
+  "file": "tableCoffeeSquare.glb",
+  "kb": 8.1,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 124,
+  "verts": 168,
+  "bbox_min": [
+   -0.461,
+   -0.0,
+   -0.3
+  ],
+  "bbox_max": [
+   -0.061,
+   0.23,
+   0.1
+  ],
+  "size": [
+   0.4,
+   0.23,
+   0.4
+  ],
+  "node_names": [
+   "tableCoffeeSquare(Clone)"
+  ]
+ },
+ "tableCross": {
+  "file": "tableCross.glb",
+  "kb": 11.9,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 178,
+  "verts": 269,
+  "bbox_min": [
+   0,
+   0,
+   -1.0652
+  ],
+  "bbox_max": [
+   2.0289,
+   0.8272,
+   0
+  ],
+  "size": [
+   2.0289,
+   0.8272,
+   1.0652
+  ],
+  "node_names": [
+   "tableCross(Clone)"
+  ]
+ },
+ "tableCrossCloth": {
+  "file": "tableCrossCloth.glb",
+  "kb": 13.5,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "carpet",
+    "base": [
+     0.9434,
+     0.3672,
+     0.3426,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 202,
+  "verts": 598,
+  "bbox_min": [
+   0,
+   0,
+   -1.0652
+  ],
+  "bbox_max": [
+   2.0289,
+   0.8272,
+   0
+  ],
+  "size": [
+   2.0289,
+   0.8272,
+   1.0652
+  ],
+  "node_names": [
+   "tableCrossCloth(Clone)"
+  ]
+ },
+ "tableGlass": {
+  "file": "tableGlass.glb",
+  "kb": 9.6,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "glass",
+    "base": [
+     0.698,
+     0.8275,
+     0.7686,
+     0.5
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 144,
+  "verts": 392,
+  "bbox_min": [
+   0,
+   0,
+   -0.4474
+  ],
+  "bbox_max": [
+   0.8415,
+   0.3267,
+   0
+  ],
+  "size": [
+   0.8415,
+   0.3267,
+   0.4474
+  ],
+  "node_names": [
+   "tableGlass(Clone)"
+  ]
+ },
+ "tableRound": {
+  "file": "tableRound.glb",
+  "kb": 6.3,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 80,
+  "verts": 128,
+  "bbox_min": [
+   0,
+   -0.27,
+   -0.8
+  ],
+  "bbox_max": [
+   0.6928,
+   0.0967,
+   0
+  ],
+  "size": [
+   0.6928,
+   0.3667,
+   0.8
+  ],
+  "node_names": [
+   "tableRound(Clone)"
+  ]
+ },
+ "televisionAntenna": {
+  "file": "televisionAntenna.glb",
+  "kb": 4.4,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "metalMedium",
+    "base": [
+     0.3686,
+     0.4667,
+     0.4667,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 44,
+  "verts": 80,
+  "bbox_min": [
+   -0.1323,
+   0,
+   -0.08
+  ],
+  "bbox_max": [
+   0.1323,
+   0.1027,
+   0
+  ],
+  "size": [
+   0.2645,
+   0.1027,
+   0.08
+  ],
+  "node_names": [
+   "televisionAntenna(Clone)"
+  ]
+ },
+ "televisionModern": {
+  "file": "televisionModern.glb",
+  "kb": 6.2,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "metalDark",
+    "base": [
+     0.3059,
+     0.3882,
+     0.3882,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 72,
+  "verts": 228,
+  "bbox_min": [
+   -0.3424,
+   0,
+   -0.0642
+  ],
+  "bbox_max": [
+   0.3424,
+   0.4547,
+   0.0642
+  ],
+  "size": [
+   0.6848,
+   0.4547,
+   0.1284
+  ],
+  "node_names": [
+   "televisionModern(Clone)"
+  ]
+ },
+ "televisionVintage": {
+  "file": "televisionVintage.glb",
+  "kb": 18.9,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metalMedium",
+    "base": [
+     0.3686,
+     0.4667,
+     0.4667,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metalDark",
+    "base": [
+     0.3059,
+     0.3882,
+     0.3882,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 280,
+  "verts": 1656,
+  "bbox_min": [
+   0,
+   0,
+   -0.27
+  ],
+  "bbox_max": [
+   0.41,
+   0.27,
+   0
+  ],
+  "size": [
+   0.41,
+   0.27,
+   0.27
+  ],
+  "node_names": [
+   "televisionVintage(Clone)"
+  ]
+ },
+ "toaster": {
+  "file": "toaster.glb",
+  "kb": 14.6,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "metalMedium",
+    "base": [
+     0.3686,
+     0.4667,
+     0.4667,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 220,
+  "verts": 652,
+  "bbox_min": [
+   -0.094,
+   0,
+   -0.05
+  ],
+  "bbox_max": [
+   0.094,
+   0.13,
+   0.05
+  ],
+  "size": [
+   0.188,
+   0.13,
+   0.1
+  ],
+  "node_names": [
+   "toaster(Clone)"
+  ]
+ },
+ "toilet": {
+  "file": "toilet.glb",
+  "kb": 17.7,
+  "nodes": 2,
+  "meshes": 2,
+  "materials": [
+   {
+    "name": "carpetWhite",
+    "base": [
+     0.9725,
+     1,
+     1,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metalLight",
+    "base": [
+     0.9373,
+     0.9804,
+     0.9569,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metalDark",
+    "base": [
+     0.3059,
+     0.3882,
+     0.3882,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "_defaultMat",
+    "base": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 230,
+  "verts": 1062,
+  "bbox_min": [
+   -0.0,
+   0,
+   -0.658
+  ],
+  "bbox_max": [
+   1.0046,
+   0.9494,
+   0.1317
+  ],
+  "size": [
+   1.0046,
+   0.9494,
+   0.7897
+  ],
+  "node_names": [
+   "toilet(Clone)",
+   "cover"
+  ]
+ },
+ "toiletSquare": {
+  "file": "toiletSquare.glb",
+  "kb": 17.1,
+  "nodes": 2,
+  "meshes": 2,
+  "materials": [
+   {
+    "name": "carpetWhite",
+    "base": [
+     0.9725,
+     1,
+     1,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metalLight",
+    "base": [
+     0.9373,
+     0.9804,
+     0.9569,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 228,
+  "verts": 700,
+  "bbox_min": [
+   -0.2435,
+   -0.0,
+   -0.3872
+  ],
+  "bbox_max": [
+   0.3036,
+   0.451,
+   0.0978
+  ],
+  "size": [
+   0.5471,
+   0.451,
+   0.485
+  ],
+  "node_names": [
+   "toiletSquare(Clone)",
+   "Group"
+  ]
+ },
+ "trashcan": {
+  "file": "trashcan.glb",
+  "kb": 6.3,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metalDark",
+    "base": [
+     0.3059,
+     0.3882,
+     0.3882,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 68,
+  "verts": 232,
+  "bbox_min": [
+   -0.2595,
+   -0.0,
+   -0.22
+  ],
+  "bbox_max": [
+   0.2365,
+   0.9064,
+   0.22
+  ],
+  "size": [
+   0.496,
+   0.9064,
+   0.44
+  ],
+  "node_names": [
+   "trashcan(Clone)"
+  ]
+ },
+ "wall": {
+  "file": "wall.glb",
+  "kb": 3.3,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "_defaultMat",
+    "base": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metalDark",
+    "base": [
+     0.3059,
+     0.3882,
+     0.3882,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 12,
+  "verts": 90,
+  "bbox_min": [
+   0,
+   0,
+   -0.05
+  ],
+  "bbox_max": [
+   1,
+   1.2895,
+   0
+  ],
+  "size": [
+   1,
+   1.2895,
+   0.05
+  ],
+  "node_names": [
+   "wall(Clone)"
+  ]
+ },
+ "wallCorner": {
+  "file": "wallCorner.glb",
+  "kb": 4.4,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "metalDark",
+    "base": [
+     0.3059,
+     0.3882,
+     0.3882,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "_defaultMat",
+    "base": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 28,
+  "verts": 174,
+  "bbox_min": [
+   0,
+   -0.0,
+   -0.55
+  ],
+  "bbox_max": [
+   0.55,
+   1.2895,
+   0
+  ],
+  "size": [
+   0.55,
+   1.2895,
+   0.55
+  ],
+  "node_names": [
+   "wallCorner(Clone)"
+  ]
+ },
+ "wallCornerRond": {
+  "file": "wallCornerRond.glb",
+  "kb": 10.2,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "metalDark",
+    "base": [
+     0.3059,
+     0.3882,
+     0.3882,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "_defaultMat",
+    "base": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 116,
+  "verts": 636,
+  "bbox_min": [
+   0,
+   0,
+   -0.55
+  ],
+  "bbox_max": [
+   0.55,
+   1.2895,
+   0
+  ],
+  "size": [
+   0.55,
+   1.2895,
+   0.55
+  ],
+  "node_names": [
+   "wallCornerRond(Clone)"
+  ]
+ },
+ "wallDoorway": {
+  "file": "wallDoorway.glb",
+  "kb": 6.3,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "_defaultMat",
+    "base": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metalDark",
+    "base": [
+     0.3059,
+     0.3882,
+     0.3882,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 60,
+  "verts": 324,
+  "bbox_min": [
+   0,
+   0,
+   -0.0696
+  ],
+  "bbox_max": [
+   1,
+   1.2895,
+   0.0196
+  ],
+  "size": [
+   1,
+   1.2895,
+   0.0891
+  ],
+  "node_names": [
+   "wallDoorway(Clone)"
+  ]
+ },
+ "wallDoorwayWide": {
+  "file": "wallDoorwayWide.glb",
+  "kb": 6.3,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "_defaultMat",
+    "base": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metalDark",
+    "base": [
+     0.3059,
+     0.3882,
+     0.3882,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 60,
+  "verts": 324,
+  "bbox_min": [
+   0,
+   -0.0,
+   -0.0696
+  ],
+  "bbox_max": [
+   1,
+   1.2895,
+   0.0196
+  ],
+  "size": [
+   1,
+   1.2895,
+   0.0891
+  ],
+  "node_names": [
+   "wallDoorwayWide(Clone)"
+  ]
+ },
+ "wallHalf": {
+  "file": "wallHalf.glb",
+  "kb": 3.3,
+  "nodes": 1,
+  "meshes": 1,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "_defaultMat",
+    "base": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metalDark",
+    "base": [
+     0.3059,
+     0.3882,
+     0.3882,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 12,
+  "verts": 90,
+  "bbox_min": [
+   0,
+   0,
+   -0.05
+  ],
+  "bbox_max": [
+   0.5,
+   1.2895,
+   0
+  ],
+  "size": [
+   0.5,
+   1.2895,
+   0.05
+  ],
+  "node_names": [
+   "wallHalf(Clone)"
+  ]
+ },
+ "wallWindow": {
+  "file": "wallWindow.glb",
+  "kb": 10.5,
+  "nodes": 2,
+  "meshes": 2,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metalDark",
+    "base": [
+     0.3059,
+     0.3882,
+     0.3882,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "_defaultMat",
+    "base": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "glass",
+    "base": [
+     0.698,
+     0.8275,
+     0.7686,
+     0.5
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 108,
+  "verts": 476,
+  "bbox_min": [
+   0,
+   0,
+   -0.0696
+  ],
+  "bbox_max": [
+   1,
+   1.2895,
+   0.0196
+  ],
+  "size": [
+   1,
+   1.2895,
+   0.0891
+  ],
+  "node_names": [
+   "wallWindow(Clone)",
+   "window"
+  ]
+ },
+ "wallWindowSlide": {
+  "file": "wallWindowSlide.glb",
+  "kb": 14.2,
+  "nodes": 3,
+  "meshes": 3,
+  "materials": [
+   {
+    "name": "wood",
+    "base": [
+     0.8962,
+     0.6016,
+     0.3932,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metalDark",
+    "base": [
+     0.3059,
+     0.3882,
+     0.3882,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "_defaultMat",
+    "base": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "glass",
+    "base": [
+     0.698,
+     0.8275,
+     0.7686,
+     0.5
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 152,
+  "verts": 604,
+  "bbox_min": [
+   0,
+   0,
+   -0.0696
+  ],
+  "bbox_max": [
+   1,
+   1.2895,
+   0.0196
+  ],
+  "size": [
+   1,
+   1.2895,
+   0.0891
+  ],
+  "node_names": [
+   "wallWindowSlide(Clone)",
+   "windowBottom",
+   "windowTop"
+  ]
+ },
+ "washer": {
+  "file": "washer.glb",
+  "kb": 47.0,
+  "nodes": 2,
+  "meshes": 2,
+  "materials": [
+   {
+    "name": "metalLight",
+    "base": [
+     0.9373,
+     0.9804,
+     0.9569,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metalMedium",
+    "base": [
+     0.3686,
+     0.4667,
+     0.4667,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metalDark",
+    "base": [
+     0.3059,
+     0.3882,
+     0.3882,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "glass",
+    "base": [
+     0.698,
+     0.8275,
+     0.7686,
+     0.5
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "_defaultMat",
+    "base": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 720,
+  "verts": 3288,
+  "bbox_min": [
+   0,
+   -0.03,
+   -0.35
+  ],
+  "bbox_max": [
+   0.39,
+   0.47,
+   0.13
+  ],
+  "size": [
+   0.39,
+   0.5,
+   0.48
+  ],
+  "node_names": [
+   "washer(Clone)",
+   "washerDoor"
+  ]
+ },
+ "washerDryerStacked": {
+  "file": "washerDryerStacked.glb",
+  "kb": 62.6,
+  "nodes": 3,
+  "meshes": 3,
+  "materials": [
+   {
+    "name": "metalMedium",
+    "base": [
+     0.3686,
+     0.4667,
+     0.4667,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metalLight",
+    "base": [
+     0.9373,
+     0.9804,
+     0.9569,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metalDark",
+    "base": [
+     0.3059,
+     0.3882,
+     0.3882,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "metal",
+    "base": [
+     0.7406,
+     0.8229,
+     0.8396,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "glass",
+    "base": [
+     0.698,
+     0.8275,
+     0.7686,
+     0.5
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   },
+   {
+    "name": "_defaultMat",
+    "base": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "metallic": 0,
+    "roughness": 1,
+    "has_tex": false
+   }
+  ],
+  "images": 0,
+  "textures": 0,
+  "tris": 992,
+  "verts": 4135,
+  "bbox_min": [
+   0,
+   -0.13,
+   -0.35
+  ],
+  "bbox_max": [
+   0.39,
+   0.94,
+   0.13
+  ],
+  "size": [
+   0.39,
+   1.07,
+   0.48
+  ],
+  "node_names": [
+   "washerDryerStacked(Clone)",
+   "dryerDoor",
+   "washerDoor"
+  ]
+ }
+}

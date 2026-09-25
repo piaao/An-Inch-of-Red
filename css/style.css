@@ -1,0 +1,368 @@
+/* ------------------------------------------------------------------ base */
+:root {
+  --bg: #2b3441;
+  --ink: #eef2f7;
+  --ink-dim: #9fb0c4;
+  --ink-faint: #6d7f95;
+  --warm: #e5a066;
+  --gold: #ffd98a;
+  --panel: rgba(21, 27, 36, .72);
+  --panel-line: rgba(255, 255, 255, .10);
+  --shadow: 0 10px 34px rgba(0, 0, 0, .38);
+  --r: 12px;
+  --font: "Segoe UI", "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+}
+
+#stage {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  cursor: grab;
+  touch-action: none;
+}
+#stage:active { cursor: grabbing; }
+
+.layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* ------------------------------------------------------------------- hud */
+#hud {
+  position: fixed;
+  top: 18px;
+  left: 20px;
+  z-index: 10;
+  pointer-events: none;
+}
+#hud h1 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 650;
+  letter-spacing: .06em;
+  color: #fff;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, .6);
+}
+#hud .sub {
+  margin: 5px 0 0;
+  font-size: 12.5px;
+  color: var(--ink-dim);
+  letter-spacing: .03em;
+}
+#hud .credit {
+  margin: 5px 0 0;
+  font-size: 11.5px;
+  color: #8b9cb0;
+  text-shadow: 0 1px 7px rgba(0, 0, 0, .5);
+}
+#hud a { color: var(--ink-faint); }
+#hud a:hover { color: var(--warm); }
+
+/* ---------------------------------------------------------------- panels */
+.panel {
+  position: fixed;
+  z-index: 10;
+  background: var(--panel);
+  border: 1px solid var(--panel-line);
+  border-radius: var(--r);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+}
+
+/* Stats + the FPS pill share one right-hand column. The old rule parked the
+   pill at top:18px with translateY(100%), which shifts it by its OWN height
+   only -- so once the stats panel grew past about 25px the two overlapped.
+   Flex stacking makes the gap the panel's real height, whatever it is. */
+#rstack {
+  position: fixed;
+  top: 18px;
+  right: 20px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 9px;
+  pointer-events: none;
+}
+#rstack > * { pointer-events: auto; }
+
+#stats {
+  position: static;
+  padding: 11px 14px;
+  min-width: 186px;
+  font-size: 12px;
+}
+#stats .row {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 3px 0;
+}
+#stats .row span { color: var(--ink-dim); }
+#stats .row b {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: var(--gold);
+}
+
+#perf {
+  position: static;
+  padding: 6px 11px;
+  font-size: 11px;
+  color: var(--ink-dim);
+  background: var(--panel);
+  border: 1px solid var(--panel-line);
+  border-radius: 999px;
+  backdrop-filter: blur(14px);
+  z-index: 10;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+@media (max-height: 620px) { #perf { display: none; } }
+
+/* ----------------------------------------------------------------- docks */
+.dock {
+  position: fixed;
+  z-index: 10;
+  display: flex;
+  gap: 6px;
+  padding: 6px;
+  background: var(--panel);
+  border: 1px solid var(--panel-line);
+  border-radius: 999px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+}
+#views {
+  bottom: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: min(92vw, 780px);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+#views::-webkit-scrollbar { display: none; }
+
+.dock.vertical {
+  bottom: 26px;
+  right: 20px;
+  flex-direction: column;
+  border-radius: var(--r);
+  width: 132px;
+}
+
+.dock button {
+  flex: 0 0 auto;
+  padding: 7px 13px;
+  font: inherit;
+  font-size: 12.5px;
+  color: var(--ink-dim);
+  background: transparent;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .16s, color .16s;
+}
+#flags button { border-radius: 8px; text-align: left; width: 100%; }
+.dock button:hover { color: #fff; background: rgba(255, 255, 255, .08); }
+#views button.active {
+  color: #26201a;
+  background: linear-gradient(180deg, var(--gold), var(--warm));
+  font-weight: 600;
+}
+#flags button.on {
+  color: #fff;
+  background: rgba(229, 160, 102, .26);
+  box-shadow: inset 0 0 0 1px rgba(229, 160, 102, .45);
+}
+#flags button::before {
+  content: "";
+  display: inline-block;
+  width: 7px; height: 7px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .22);
+  vertical-align: 1px;
+  transition: background .16s, box-shadow .16s;
+}
+#flags button.on::before {
+  background: var(--gold);
+  box-shadow: 0 0 8px var(--warm);
+}
+
+/* Small type over a dark backdrop needs contrast, not atmosphere: the first
+   cut ran 11.5px of --ink-faint (about 2.4:1). Lighter ink and one size up
+   fixed that -- but shrinking the shadow to a tight 92%-alpha offset in the
+   same pass made it worse in a new way. A near-opaque shadow one pixel under
+   a 12px glyph is a second, black copy of it on a dark background.
+   Wide, soft and semi-transparent is the setting that survives both a dark
+   backdrop and the bright wooden floor this line sometimes crosses. */
+#hint {
+  position: fixed;
+  bottom: 30px;
+  left: 20px;
+  z-index: 10;
+  margin: 0;
+  font-size: 12px;
+  color: #9dafc3;
+  line-height: 1.8;
+  pointer-events: none;
+  text-shadow: 0 1px 7px rgba(0, 0, 0, .55);
+}
+#hint b { color: #d5e0eb; font-weight: 600; }
+
+@media (max-width: 900px) {
+  #hint { display: none; }
+  .dock.vertical { width: auto; right: 12px; bottom: 12px; }
+  #views { bottom: 12px; left: 12px; transform: none; max-width: 58vw; }
+  #rstack { top: 12px; right: 12px; }
+  #stats { min-width: 0; font-size: 11px; padding: 8px 10px; }
+  #hud { top: 12px; left: 12px; }
+  #hud h1 { font-size: 17px; }
+}
+
+/* --------------------------------------------------------------- labels */
+.zone-label {
+  position: absolute;
+  top: 0; left: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px 4px 7px;
+  font-size: 11.5px;
+  letter-spacing: .08em;
+  color: #f4f7fb;
+  background: rgba(18, 23, 31, .62);
+  border: 1px solid rgba(255, 255, 255, .14);
+  border-radius: 999px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .3);
+  pointer-events: auto;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity .2s, background .16s, border-color .16s;
+  will-change: transform;
+}
+.zone-label:hover {
+  background: rgba(24, 30, 40, .9);
+  border-color: var(--gold);
+}
+.zone-label i {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--hue, var(--warm));
+  box-shadow: 0 0 9px var(--hue, var(--warm));
+}
+
+#zone-tip {
+  position: fixed;
+  top: 0; left: 0;
+  z-index: 20;
+  padding: 7px 12px;
+  font-size: 12.5px;
+  color: #fff;
+  background: rgba(18, 23, 31, .92);
+  border: 1px solid rgba(255, 215, 138, .35);
+  border-radius: 9px;
+  box-shadow: var(--shadow);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .14s;
+  white-space: nowrap;
+}
+#zone-tip.show { opacity: 1; }
+#zone-tip b { color: var(--gold); }
+#zone-tip span { color: var(--ink-dim); margin-left: 8px; font-size: 11.5px; }
+
+/* -------------------------------------------------------------- loading */
+#loading {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(120% 90% at 50% 30%, #36414f 0%, #1c222c 70%);
+  transition: opacity .5s;
+}
+#loading.hidden { display: none !important; }
+#loading.failed .spinner { display: none; }
+#loading.failed .bar { display: none; }
+#loading.failed #load-pct { display: none; }
+
+#loading .box {
+  text-align: center;
+  max-width: 560px;
+  padding: 0 26px;
+}
+#loading h2 {
+  margin: 18px 0 6px;
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: .05em;
+}
+#loading p {
+  margin: 6px 0;
+  font-size: 12.5px;
+  color: var(--ink-dim);
+  line-height: 1.9;
+  word-break: break-all;
+}
+#loading code {
+  padding: 2px 6px;
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 12px;
+  color: var(--gold);
+  background: rgba(255, 255, 255, .08);
+  border-radius: 5px;
+}
+.spinner {
+  width: 34px; height: 34px;
+  margin: 0 auto;
+  border: 3px solid rgba(255, 255, 255, .14);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin .9s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+#loading .bar {
+  width: min(360px, 70vw);
+  height: 4px;
+  margin: 20px auto 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .12);
+  overflow: hidden;
+}
+#loading .bar i {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--warm), var(--gold));
+  transition: width .18s;
+}
+#load-pct {
+  font-variant-numeric: tabular-nums;
+  color: var(--gold) !important;
+}

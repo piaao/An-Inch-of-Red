@@ -1,0 +1,18 @@
+STATIC     files=6  failures=0
+WEBGL_RENDERER=ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 SUPER (0x000021C4) Direct3D11 vs_5_0 ps_5_0, D3D11)
+RIG        bedroom 0.983@y3.35  bath 0.985@y2.95  kitchen 0.992@y3.2  living 0.999@y3.25  dining 0.925@y2.85  study 0.984@y3.05
+PROBE      furniture=119 floors=80 walls=60 doors=4 meshes=77 tris=22699 mats=18 files=83
+CONTROLS   rotate=true zoom=true pan=true dist=1.2..34 drawCalls=81
+ROOMS      bedroom:16  bath:7  kitchen:27  living:37  dining:13  study:19
+ASSERTIONS failures=0
+  shot overview   全景    216 KB
+  shot top        俯视    186 KB
+  shot living     客厅    193 KB
+  shot bedroom    卧室    163 KB
+  shot kitchen    厨房    199 KB
+  shot dining     餐厅    167 KB
+  shot study      书房    178 KB
+  shot bath       卫生间   187 KB
+SHOTS      ok=8/8  distinct sizes=8
+CLEAN      exceptions=0 http>=400=0 netFailed=0 canceled-after-200=0 consoleErrors=0
+VERDICT    PASS

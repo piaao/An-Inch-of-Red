@@ -1,0 +1,805 @@
+{
+ "step": 0.01,
+ "heights": [
+  0.18,
+  0.36,
+  0.42,
+  0.6,
+  0.95,
+  1.2
+ ],
+ "kinds": {
+  "wall": {
+   "size": [
+    1,
+    1.29,
+    0.05
+   ],
+   "spanZ": [
+    -0.025,
+    0.025
+   ],
+   "rows": [
+    {
+     "y": 0.18,
+     "solid": [
+      [
+       -0.5,
+       0.49
+      ]
+     ],
+     "gaps": [],
+     "solidWidth": 0.99
+    },
+    {
+     "y": 0.36,
+     "solid": [
+      [
+       -0.5,
+       0.49
+      ]
+     ],
+     "gaps": [],
+     "solidWidth": 0.99
+    },
+    {
+     "y": 0.42,
+     "solid": [
+      [
+       -0.5,
+       0.49
+      ]
+     ],
+     "gaps": [],
+     "solidWidth": 0.99
+    },
+    {
+     "y": 0.6,
+     "solid": [
+      [
+       -0.5,
+       0.49
+      ]
+     ],
+     "gaps": [],
+     "solidWidth": 0.99
+    },
+    {
+     "y": 0.95,
+     "solid": [
+      [
+       -0.5,
+       0.49
+      ]
+     ],
+     "gaps": [],
+     "solidWidth": 0.99
+    },
+    {
+     "y": 1.2,
+     "solid": [
+      [
+       -0.5,
+       0.49
+      ]
+     ],
+     "gaps": [],
+     "solidWidth": 0.99
+    }
+   ]
+  },
+  "wallHalf": {
+   "error": "kit: \"wallHalf\" was never loaded"
+  },
+  "wallWindow": {
+   "size": [
+    1,
+    1.29,
+    0.089
+   ],
+   "spanZ": [
+    -0.045,
+    0.045
+   ],
+   "rows": [
+    {
+     "y": 0.18,
+     "solid": [
+      [
+       -0.5,
+       0.49
+      ]
+     ],
+     "gaps": [],
+     "solidWidth": 0.99
+    },
+    {
+     "y": 0.36,
+     "solid": [
+      [
+       -0.5,
+       0.49
+      ]
+     ],
+     "gaps": [],
+     "solidWidth": 0.99
+    },
+    {
+     "y": 0.42,
+     "solid": [
+      [
+       -0.5,
+       0.49
+      ]
+     ],
+     "gaps": [],
+     "solidWidth": 0.99
+    },
+    {
+     "y": 0.6,
+     "solid": [
+      [
+       -0.5,
+       0.49
+      ]
+     ],
+     "gaps": [],
+     "solidWidth": 0.99
+    },
+    {
+     "y": 0.95,
+     "solid": [
+      [
+       -0.5,
+       0.49
+      ]
+     ],
+     "gaps": [],
+     "solidWidth": 0.99
+    },
+    {
+     "y": 1.2,
+     "solid": [
+      [
+       -0.5,
+       0.49
+      ]
+     ],
+     "gaps": [],
+     "solidWidth": 0.99
+    }
+   ]
+  },
+  "wallWindowSlide": {
+   "error": "kit: \"wallWindowSlide\" was never loaded"
+  },
+  "wallDoorway": {
+   "size": [
+    1,
+    1.29,
+    0.089
+   ],
+   "spanZ": [
+    -0.045,
+    0.045
+   ],
+   "rows": [
+    {
+     "y": 0.18,
+     "solid": [
+      [
+       -0.5,
+       -0.22
+      ],
+      [
+       0.22,
+       0.49
+      ]
+     ],
+     "gaps": [
+      [
+       -0.22,
+       0.22
+      ]
+     ],
+     "solidWidth": 0.55
+    },
+    {
+     "y": 0.36,
+     "solid": [
+      [
+       -0.5,
+       -0.22
+      ],
+      [
+       0.22,
+       0.49
+      ]
+     ],
+     "gaps": [
+      [
+       -0.22,
+       0.22
+      ]
+     ],
+     "solidWidth": 0.55
+    },
+    {
+     "y": 0.42,
+     "solid": [
+      [
+       -0.5,
+       -0.22
+      ],
+      [
+       0.22,
+       0.49
+      ]
+     ],
+     "gaps": [
+      [
+       -0.22,
+       0.22
+      ]
+     ],
+     "solidWidth": 0.55
+    },
+    {
+     "y": 0.6,
+     "solid": [
+      [
+       -0.5,
+       -0.22
+      ],
+      [
+       0.22,
+       0.49
+      ]
+     ],
+     "gaps": [
+      [
+       -0.22,
+       0.22
+      ]
+     ],
+     "solidWidth": 0.55
+    },
+    {
+     "y": 0.95,
+     "solid": [
+      [
+       -0.5,
+       -0.22
+      ],
+      [
+       0.22,
+       0.49
+      ]
+     ],
+     "gaps": [
+      [
+       -0.22,
+       0.22
+      ]
+     ],
+     "solidWidth": 0.55
+    },
+    {
+     "y": 1.2,
+     "solid": [
+      [
+       -0.5,
+       0.49
+      ]
+     ],
+     "gaps": [],
+     "solidWidth": 0.99
+    }
+   ]
+  },
+  "wallDoorwayWide": {
+   "error": "kit: \"wallDoorwayWide\" was never loaded"
+  },
+  "wallCorner": {
+   "error": "kit: \"wallCorner\" was never loaded"
+  },
+  "wallCornerRond": {
+   "error": "kit: \"wallCornerRond\" was never loaded"
+  },
+  "doorwayOpen": {
+   "size": [
+    0.486,
+    1.01,
+    0.089
+   ],
+   "spanZ": [
+    -0.045,
+    0.045
+   ],
+   "rows": [
+    {
+     "y": 0.18,
+     "solid": [
+      [
+       -0.243,
+       -0.223
+      ],
+      [
+       0.217,
+       0.237
+      ]
+     ],
+     "gaps": [
+      [
+       -0.223,
+       0.217
+      ]
+     ],
+     "solidWidth": 0.04
+    },
+    {
+     "y": 0.36,
+     "solid": [
+      [
+       -0.243,
+       -0.223
+      ],
+      [
+       0.217,
+       0.237
+      ]
+     ],
+     "gaps": [
+      [
+       -0.223,
+       0.217
+      ]
+     ],
+     "solidWidth": 0.04
+    },
+    {
+     "y": 0.42,
+     "solid": [
+      [
+       -0.243,
+       -0.223
+      ],
+      [
+       0.217,
+       0.237
+      ]
+     ],
+     "gaps": [
+      [
+       -0.223,
+       0.217
+      ]
+     ],
+     "solidWidth": 0.04
+    },
+    {
+     "y": 0.6,
+     "solid": [
+      [
+       -0.243,
+       -0.223
+      ],
+      [
+       0.217,
+       0.237
+      ]
+     ],
+     "gaps": [
+      [
+       -0.223,
+       0.217
+      ]
+     ],
+     "solidWidth": 0.04
+    },
+    {
+     "y": 0.95,
+     "solid": [
+      [
+       -0.243,
+       -0.223
+      ],
+      [
+       0.217,
+       0.237
+      ]
+     ],
+     "gaps": [
+      [
+       -0.223,
+       0.217
+      ]
+     ],
+     "solidWidth": 0.04
+    },
+    {
+     "y": 1.2,
+     "above": true
+    }
+   ]
+  },
+  "doorway": {
+   "error": "kit: \"doorway\" was never loaded"
+  },
+  "doorwayFront": {
+   "size": [
+    0.486,
+    1.01,
+    0.113
+   ],
+   "spanZ": [
+    -0.057,
+    0.057
+   ],
+   "rows": [
+    {
+     "y": 0.18,
+     "solid": [
+      [
+       -0.243,
+       0.237
+      ]
+     ],
+     "gaps": [],
+     "solidWidth": 0.48
+    },
+    {
+     "y": 0.36,
+     "solid": [
+      [
+       -0.243,
+       0.237
+      ]
+     ],
+     "gaps": [],
+     "solidWidth": 0.48
+    },
+    {
+     "y": 0.42,
+     "solid": [
+      [
+       -0.243,
+       0.237
+      ]
+     ],
+     "gaps": [],
+     "solidWidth": 0.48
+    },
+    {
+     "y": 0.6,
+     "solid": [
+      [
+       -0.243,
+       0.237
+      ]
+     ],
+     "gaps": [],
+     "solidWidth": 0.48
+    },
+    {
+     "y": 0.95,
+     "solid": [
+      [
+       -0.243,
+       0.237
+      ]
+     ],
+     "gaps": [],
+     "solidWidth": 0.48
+    },
+    {
+     "y": 1.2,
+     "above": true
+    }
+   ]
+  }
+ },
+ "doorways": {
+  "doorwayOpen@2.5,3.025": {
+   "model": "doorwayOpen",
+   "x": 2.5,
+   "z": 3.025,
+   "r": 0,
+   "axis": "x",
+   "note": "卧室门",
+   "rows": [
+    {
+     "y": 0.18,
+     "clear": {
+      "from": 2.29,
+      "to": 2.72,
+      "w": 0.43
+     }
+    },
+    {
+     "y": 0.36,
+     "clear": {
+      "from": 2.29,
+      "to": 2.72,
+      "w": 0.43
+     }
+    },
+    {
+     "y": 0.42,
+     "clear": {
+      "from": 2.29,
+      "to": 2.72,
+      "w": 0.43
+     }
+    },
+    {
+     "y": 0.6,
+     "clear": {
+      "from": 2.29,
+      "to": 2.72,
+      "w": 0.43
+     }
+    },
+    {
+     "y": 0.95,
+     "clear": {
+      "from": 2.29,
+      "to": 2.72,
+      "w": 0.43
+     }
+    },
+    {
+     "y": 1.2,
+     "clear": null
+    }
+   ],
+   "passableWalk": true,
+   "passableSight": true
+  },
+  "doorwayOpen@4.5,3.025": {
+   "model": "doorwayOpen",
+   "x": 4.5,
+   "z": 3.025,
+   "r": 0,
+   "axis": "x",
+   "note": "卫生间门（原 doorway 门扇）",
+   "rows": [
+    {
+     "y": 0.18,
+     "clear": {
+      "from": 4.29,
+      "to": 4.72,
+      "w": 0.43
+     }
+    },
+    {
+     "y": 0.36,
+     "clear": {
+      "from": 4.29,
+      "to": 4.72,
+      "w": 0.43
+     }
+    },
+    {
+     "y": 0.42,
+     "clear": {
+      "from": 4.29,
+      "to": 4.72,
+      "w": 0.43
+     }
+    },
+    {
+     "y": 0.6,
+     "clear": {
+      "from": 4.29,
+      "to": 4.72,
+      "w": 0.43
+     }
+    },
+    {
+     "y": 0.95,
+     "clear": {
+      "from": 4.29,
+      "to": 4.72,
+      "w": 0.43
+     }
+    },
+    {
+     "y": 1.2,
+     "clear": null
+    }
+   ],
+   "passableWalk": true,
+   "passableSight": true
+  },
+  "doorwayOpen@6.025,3.5": {
+   "model": "doorwayOpen",
+   "x": 6.025,
+   "z": 3.5,
+   "r": 90,
+   "axis": "z",
+   "note": "客厅-餐厅门",
+   "rows": [
+    {
+     "y": 0.18,
+     "clear": {
+      "from": 3.29,
+      "to": 3.72,
+      "w": 0.43
+     }
+    },
+    {
+     "y": 0.36,
+     "clear": {
+      "from": 3.29,
+      "to": 3.72,
+      "w": 0.43
+     }
+    },
+    {
+     "y": 0.42,
+     "clear": {
+      "from": 3.29,
+      "to": 3.72,
+      "w": 0.43
+     }
+    },
+    {
+     "y": 0.6,
+     "clear": {
+      "from": 3.29,
+      "to": 3.72,
+      "w": 0.43
+     }
+    },
+    {
+     "y": 0.95,
+     "clear": {
+      "from": 3.29,
+      "to": 3.72,
+      "w": 0.43
+     }
+    },
+    {
+     "y": 1.2,
+     "clear": null
+    }
+   ],
+   "passableWalk": true,
+   "passableSight": true
+  },
+  "doorwayOpen@8.5,3.025": {
+   "model": "doorwayOpen",
+   "x": 8.5,
+   "z": 3.025,
+   "r": 0,
+   "axis": "x",
+   "note": "厨房门",
+   "rows": [
+    {
+     "y": 0.18,
+     "clear": {
+      "from": 8.29,
+      "to": 8.72,
+      "w": 0.43
+     }
+    },
+    {
+     "y": 0.36,
+     "clear": {
+      "from": 8.29,
+      "to": 8.72,
+      "w": 0.43
+     }
+    },
+    {
+     "y": 0.42,
+     "clear": {
+      "from": 8.29,
+      "to": 8.72,
+      "w": 0.43
+     }
+    },
+    {
+     "y": 0.6,
+     "clear": {
+      "from": 8.29,
+      "to": 8.72,
+      "w": 0.43
+     }
+    },
+    {
+     "y": 0.95,
+     "clear": {
+      "from": 8.29,
+      "to": 8.72,
+      "w": 0.43
+     }
+    },
+    {
+     "y": 1.2,
+     "clear": null
+    }
+   ],
+   "passableWalk": true,
+   "passableSight": true
+  },
+  "doorwayFront@4.5,8.025": {
+   "model": "doorwayFront",
+   "x": 4.5,
+   "z": 8.025,
+   "r": 180,
+   "axis": "x",
+   "note": "入户门",
+   "rows": [
+    {
+     "y": 0.18,
+     "clear": null
+    },
+    {
+     "y": 0.36,
+     "clear": null
+    },
+    {
+     "y": 0.42,
+     "clear": null
+    },
+    {
+     "y": 0.6,
+     "clear": null
+    },
+    {
+     "y": 0.95,
+     "clear": null
+    },
+    {
+     "y": 1.2,
+     "clear": null
+    }
+   ],
+   "passableWalk": false,
+   "passableSight": false
+  }
+ },
+ "controls": [
+  {
+   "id": "spine x=1.5",
+   "clear": null,
+   "solid": true
+  },
+  {
+   "id": "spine x=6.5",
+   "clear": null,
+   "solid": true
+  },
+  {
+   "id": "bed|bath z=1.5",
+   "clear": null,
+   "solid": true
+  },
+  {
+   "id": "bath|kit z=1.5",
+   "clear": null,
+   "solid": true
+  },
+  {
+   "id": "living|east z=6.5",
+   "clear": null,
+   "solid": true
+  },
+  {
+   "id": "dine|study bay x=7.5",
+   "clear": {
+    "from": 7.01,
+    "to": 8.01,
+    "w": 1
+   },
+   "solid": false
+  },
+  {
+   "id": "north envelope x=5",
+   "clear": null,
+   "solid": true
+  }
+ ]
+}

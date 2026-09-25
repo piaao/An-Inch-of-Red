@@ -1,0 +1,17 @@
+  用 C:\Users\NING MEI\AppData\Local\Programs\Python\Python38-32\python.exe (3.8.3)
+[PASS] A serve.py 起来了（python.exe 双击时会用的解释器）           
+[PASS] A GET /play.html                               5897 B
+[PASS] A GET /index.html                              2761 B
+[PASS] A GET /game/core/nav.js                        15198 B
+[PASS] A GET /assets/models/bathtub.glb               35500 B
+[PASS] A GET /data/../game/arenas/room_scene.json     62966 B
+[PASS] A 缺失文件应 404                                    404
+[PASS] B 无参数默认页 = play.html（游戏，不是查看器）                 play.html
+[PASS] B --viewer 时页 = index.html                     viewer 开关存在
+[PASS] B 默认端口 8777                                    8777
+[PASS] C 服务在时打开了浏览器                                   opened=['http://127.0.0.1:8841/play.html']
+[PASS] C 打开的是游戏页 play.html                            opened=['http://127.0.0.1:8841/play.html']
+[PASS] C 服务没起来时绝不提前开浏览器（反例）                           returned=False opened=[]
+[PASS] D 端口被占用时自己挪到下一个可用端口                            被占 60781 → 有人监听 [60782]
+
+VERDICT PASS  15/15

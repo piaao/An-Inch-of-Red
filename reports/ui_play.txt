@@ -1,0 +1,70 @@
+-- 1. Node yardstick ---------------------------------------------------
+   PASS  13x9 8r 110i               rooms  8  items 105/110  climbTops  76  free 74%  prizes 6/6
+   generated 1 layouts in 1.1 s   1/1 PASS
+   wrote work/_ui.svg
+   wrote work/_ui_layout.js
+   wrote work/_ui_arena.json  73 KB
+   PASS  the generator produced a layout for these parameters — exit 0
+   generated 8 rooms, plan 13x9, 207 solids, nav 32479 cells / 1 region
+   shipped   6 rooms, plan 10x8, 189 solids, nav 21378 cells
+   PASS  the two floors are genuinely different (so "not the shipped one" can mean something) — nav 32479 vs 21378; plan 13 vs 10
+   PASS  the generator produced the SECOND parameter set too — exit 0
+   17x9   8 rooms, 219 solids, nav 46599 cells, grid 340x180
+   PASS  the two generated floors differ from each other (so "the current one" is a real distinction) — 17x9 nav 46599 vs 13x9 nav 32479
+
+-- 2. the workbench loads ---------------------------------------------
+   http://127.0.0.1:8783/procgen.html
+   ready=true   status "生成完成"
+   PASS  the workbench booted and loaded its assets — 生成完成
+   PASS  no exceptions / console errors
+   PASS  no HTTP 4xx / 5xx
+   PASS  no real failed requests
+   PASS  every control is built from the generator's own DEFAULTS, with none drifted — 14/14 inputs; w=10 rooms=6 seed=procgen
+   PASS  the page generated a floor on load without being asked — 6 rooms, 130 solids
+
+-- 3. press 生成 with the parameters in the boxes ----------------------
+   fields echoed as: {"w":13,"d":9,"rooms":8,"items":110,"minRoom":2.4,"lane":0.62,"gap":0.02,"doorMargin":1,"loopDoor":0.28,"maxLoopDoors":2,"windowChance":0.2,"roomCap":26,"floorTries":26,"seed":"pui"}
+   readings: 全部 9 项通过 | rooms 8 | nav 32479 cells / 1 region | solids 207
+   drawn plan: 32998 chars of SVG
+   PASS  the fields are what the form reports back — {"w":13,"d":9,"rooms":8,"items":110,"minRoom":2.4,"lane":0.62,"gap":0.02,"doorMargin":1,"loopDoor":0.28,"maxLoopDoors":2,"windowChance":0.2,"roomCap":26,"floorTries":26,"seed":"pui"}
+   PASS  all eight checks pass in the page — 9 checks, 0 failing
+   PASS  the page's rooms / solids are Node's rooms / solids — 8/8 rooms, 207/207 solids
+   PASS  the page's nav grid is Node's nav grid, cell for cell — 32479/32479 cells, 1/1 regions
+   PASS  the spawn is where Node put it — (9.085570170850168, 8.39990167436567)
+   PASS  the 红包 the plan marks are the ones the game will place — 6/6 prizes, worst gap 0.0e+0 m
+   PASS  the verdict banner reports the checks, and a plan is actually drawn — 32998 chars of SVG, banner "全部 9 项通过"
+   PASS  the caption names the requested dimensions — 13×9 m · 8 房 · 110 件
+   PASS  THE FLOOR IS NOT THE SHIPPED APARTMENT — nav 32479 (shipped 21378), plan 13x9 (shipped 10x8)
+
+-- 4. change the parameters, and the picture changes ------------------
+   13x9 -> 17x9: SVG 32998 -> 33297 chars, caption "17×9 m · 8 房 · 110 件"
+   PASS  widening the flat changes the plan the page holds — 13 -> 17
+   PASS  and the DRAWING changed with it, rather than being the previous one relabelled — 32998 -> 33297 chars
+   PASS  the new caption names the new dimensions — 17×9 m · 8 房 · 110 件
+
+-- 5. 走进去玩: hand the floor to the game ----------------------------
+   PASS  the snapshot about to be handed over is the one the CLI would have written — 77618 vs 77618 chars -- identical
+   PASS  the button navigated to the session arena — http://127.0.0.1:8783/play.html?arena=session:procgen
+   PASS  the game booted on the handed-over floor — ready
+   game nav 46599 cells (340x180), 1 region, 6 prizes, 17 waypoints
+   PASS  the game is on the floor that was on screen, not the earlier one — 46599 cells; current 46599, previous 32479
+   PASS  and not on the shipped one — 46599 vs shipped 21378
+   PASS  the same six 红包, in the same places as Node put them — 6 prizes, worst drift 0.0e+0 m
+   PASS  no exceptions in the game session
+
+-- 6. does the handed-over floor render? ------------------------------
+   PASS  the handed-over floor renders as lit space, not a black frame — mean 107.8, sd 73.0, dark 0.0%, 291 colours
+   PASS  a dollhouse screenshot of the floor the workbench handed over — 234097 B
+   PASS  a first-person screenshot at the spawn — 122371 B
+
+-- 7. a session arena with nothing behind it --------------------------
+   __playError: ?arena=session:nope: sessionStorage has nothing under "an-inch-of-red:nope". Only a page that generates a floor can fill it: open procgen.html and pre
+   PASS  it fails LOUDLY instead of silently serving a different apartment — ?arena=session:nope: sessionStorage has nothing under "an-inch-of-red:nope". Only a page that generates a floo
+
+-- 8. artifacts -------------------------------------------------------
+   PASS  a screenshot of the workbench itself — 182075 B
+
+========================================================================
+  34/34 checks passed
+========================================================================
+  VERDICT: PASS

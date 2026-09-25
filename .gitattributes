@@ -1,0 +1,7 @@
+# Bytes are the source of truth in this repo: several patch scripts and verifiers
+# match on exact substrings, so git must not rewrite line endings behind our back.
+* -text
+
+# The one exception, and it is deliberate: a .bat that gets LF on checkout stops
+# working when double-clicked on Windows.
+*.bat text eol=crlf

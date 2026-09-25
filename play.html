@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>一寸红 · An Inch of Red · 剖面公寓</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232b3441'/%3E%3Crect x='8' y='7' width='16' height='20' rx='2.5' fill='%23c8102e'/%3E%3Ccircle cx='16' cy='16' r='4' fill='%23e8c46a'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/play.css">
+</head>
+<body>
+
+<canvas id="stage"></canvas>
+
+<!-- Colour grade: a cold wash when the clock is nearly out, a warm one under
+     chase. Purely emotional, so it is CSS rather than a post pass. -->
+<div id="stain" data-kind="none"></div>
+<div id="flash"></div>
+
+<div id="crosshair"><i></i><i></i></div>
+
+<header id="hud">
+  <div class="line">
+    <span id="objective">红包 <b id="objective-n">0</b>/<span id="objective-total">6</span></span>
+    <span id="roomname">—</span>
+  </div>
+  <div id="clockbar"><i id="clockfill"></i></div>
+  <div id="clocktext">3:00</div>
+  <canvas id="minimap" width="260" height="211" aria-label="平面缩略图：房间与朝向"></canvas>
+</header>
+
+<aside id="guardbox">
+  <div class="gline">
+    <span id="guard-dot" data-mode="patrol"></span>
+    <span id="guard-state">巡逻中</span>
+  </div>
+  <div id="suspbar"><i id="suspfill" data-mode="cool"></i></div>
+  <p id="guard-hint">—</p>
+</aside>
+
+<div id="toasts"></div>
+<div id="banner"></div>
+
+<p id="hint"><b>WASD</b> 移动 · <b>鼠标</b> 转向 · <b>空格</b> 跳跃（能跳上桌子、浴缸、台面）· <b>G</b> 红点提示 · <b>M</b> 静音 · <b>Esc</b> 暂停</p>
+
+<!-- ------------------------------------------------------------- loading -->
+<div id="ov-load" class="overlay">
+  <div class="box">
+    <div class="spinner"></div>
+    <h2 id="load-title">正在搭建公寓</h2>
+    <p id="load-msg">初始化…</p>
+    <div class="bar"><i id="load-bar"></i></div>
+    <p id="load-pct">0%</p>
+  </div>
+</div>
+
+<!-- --------------------------------------------------------------- start -->
+<div id="ov-start" class="overlay hidden">
+  <div class="panel wide">
+    <h1>一 寸 红</h1>
+    <p class="sub en">An Inch of Red</p>
+    <p class="sub">你是一只 42 cm 高的小东西。这间公寓里有六个红包，
+      还有一间屋子那么大的红色地毯、抱枕和书 —— <b>它们都是红的</b>。</p>
+
+    <h3>难度</h3>
+    <div id="start-cards"></div>
+
+    <h3>种子</h3>
+    <div class="seedrow">
+      <input id="seed-input" type="text" spellcheck="false" autocomplete="off">
+      <label class="chk"><input id="opt-markers" type="checkbox" checked> 显示红点提示</label>
+    </div>
+    <p id="seed-note" class="seednote"></p>
+    <div id="start-meta"></div>
+
+    <button id="start-go" type="button" class="go">开始</button>
+    <p class="foot">移动：<b>WASD</b>；<b>转向只靠鼠标</b>（点击画面锁定指针）；<b>空格</b> 跳跃；
+      走到红包上即拾取。左上角是平面缩略图：房间、你的朝向、守卫的朝向。
+      红包不在明面上：它可能在柜子里，也可能夹在两个高过你的家具之间，往上跳才够得着。
+      每局开始重新藏红包，而且<b>不是每个房间都有</b>。难度越高，守卫盯住的地面越大、红包越小 ——
+      地上那片<b>光</b>就是它的监控区，站进去它就会看见你；视线被墙挡住它照样看不见。</p>
+  </div>
+</div>
+
+<!-- --------------------------------------------------------------- pause -->
+<div id="ov-pause" class="overlay hidden">
+  <div class="panel">
+    <h2>暂停</h2>
+    <div class="btns">
+      <button id="pause-resume" type="button" class="go">继续</button>
+      <button id="pause-restart" type="button">重开这一局</button>
+      <button id="pause-menu" type="button">换难度 / 换种子</button>
+    </div>
+  </div>
+</div>
+
+<!-- ----------------------------------------------------------------- end -->
+<div id="ov-end" class="overlay hidden">
+  <div class="panel">
+    <h2 id="end-title">结束</h2>
+    <p id="end-body"></p>
+    <div id="end-stats"></div>
+    <div class="btns">
+      <button id="end-again" type="button" class="go">再来一局</button>
+      <button id="end-menu" type="button">换难度 / 换种子</button>
+    </div>
+  </div>
+</div>
+
+<!-- Classic script (see js/open-guard.js): the failure it explains is "the module
+     graph never ran", so it cannot itself be a module. Shared with procgen.html
+     and index.html so the next page cannot be written without it. -->
+<script src="js/open-guard.js"
+        data-overlay="ov-load" data-title="load-title" data-msg="load-msg"
+        data-reveal="hidden" data-fail="failed"
+        data-needle="__playBooted" data-page="play.html"
+        data-open="start.bat" data-cmd="python serve.py"></script>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "./vendor/three.module.js",
+    "three/addons/": "./vendor/addons/"
+  }
+}
+</script>
+
+<script type="module">
+  import { start } from './game/play/play.js';
+
+  // Watched by js/open-guard.js. Set the moment the module graph has loaded, so
+  // "still building the apartment" is never mistaken for "never ran".
+  window.__playBooted = true;
+
+  start().catch(function (err) {
+    console.error(err);
+    var l = document.getElementById('ov-load');
+    l.classList.remove('hidden');
+    l.classList.add('failed');
+    document.getElementById('load-title').textContent = '启动失败';
+    document.getElementById('load-msg').innerHTML =
+      '<code>' + (err && err.message ? String(err.message).replace(/</g, '&lt;') : String(err)) + '</code>';
+    window.__playError = String(err && err.message || err);
+  });
+</script>
+
+</body>
+</html>

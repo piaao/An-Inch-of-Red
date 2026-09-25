@@ -1,0 +1,186 @@
+PASS  10x8  6 rooms  60 items
+   params {"w":10,"d":8,"rooms":6,"items":60,"seed":"procgen","minRoom":2.4,"lane":0.62,"gap":0.02,"doorMargin":1,"loopDoor":0.28,"maxLoopDoors":2,"windowChance":0.2,"roomCap":26,"floorTries":26}
+   rooms 6 (bedroom, kitchen, living, bath, study, dining)  doors 6  walls 12 runs / 62 segments
+   items 56/60  climbTops 38  free 79.4%  rejections {"overlap":333,"outside":4,"lane":60,"slot":19,"sealed":1,"noHost":3,"noModel":0,"budget":3,"seed":0}
+   [ok] the generator honoured its parameters
+   [ok] level.js validateLevel  -- 130 solids, 6 rooms, spawn (8.01, 7.46)
+   [ok] no hole in a wall without a door
+   [ok] every walkable cell is reachable (no pocket over 0.045 m2)  -- 23486/32000 cells, 1 region(s); no unreachable pocket
+   [ok] the level carries the layout it was built from (what you see is what you play)  -- layout 10x8 m, 6 rooms, 45 models, 10x8 m plan
+   [ok] every room resolves to its own region, no pocket the walker could use  -- 6/6 rooms, 0 unowned region(s) (0 under the walker's 0.045 m2, 0 over it)
+   [ok] A* spawn -> every room centre
+   [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 25 anchors scored, rooms used 3/6
+   [ok] the outer wall stops the walker (no standable cell in the edge strip)  -- 0/72 sampled edge points standable
+   .. front door on the south wall at x 8..9
+
+PASS  8x6   4 rooms  40 items
+   params {"w":8,"d":6,"rooms":4,"items":40,"seed":"procgen","minRoom":2.4,"lane":0.62,"gap":0.02,"doorMargin":1,"loopDoor":0.28,"maxLoopDoors":2,"windowChance":0.2,"roomCap":26,"floorTries":26}
+   rooms 4 (bath, living, bedroom, kitchen)  doors 4  walls 9 runs / 42 segments
+   items 35/40  climbTops 23  free 74.9%  rejections {"overlap":157,"outside":0,"lane":20,"slot":10,"sealed":1,"noHost":1,"noModel":0,"budget":2,"seed":0}
+   [ok] the generator honoured its parameters
+   [ok] level.js validateLevel  -- 85 solids, 4 rooms, spawn (3.62, 5.29)
+   [ok] no hole in a wall without a door
+   [ok] every walkable cell is reachable (no pocket over 0.045 m2)  -- 13189/19200 cells, 1 region(s); no unreachable pocket
+   [ok] the level carries the layout it was built from (what you see is what you play)  -- layout 8x6 m, 4 rooms, 36 models, 8x6 m plan
+   [ok] every room resolves to its own region, no pocket the walker could use  -- 4/4 rooms, 0 unowned region(s) (0 under the walker's 0.045 m2, 0 over it)
+   [ok] A* spawn -> every room centre
+   [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 21 anchors scored, rooms used 3/4
+   [ok] the outer wall stops the walker (no standable cell in the edge strip)  -- 0/56 sampled edge points standable
+   .. front door on the south wall at x 3..4
+   .. living: seed moved off the room centre (furniture covers it)
+
+PASS  12x9  7 rooms  95 items
+   params {"w":12,"d":9,"rooms":7,"items":95,"seed":"procgen","minRoom":2.4,"lane":0.62,"gap":0.02,"doorMargin":1,"loopDoor":0.28,"maxLoopDoors":2,"windowChance":0.2,"roomCap":26,"floorTries":26}
+   rooms 7 (living, bedroom, kitchen, dining, study, bath, bedroom2)  doors 7  walls 15 runs / 78 segments
+   items 92/95  climbTops 60  free 76.0%  rejections {"overlap":339,"outside":0,"lane":76,"slot":47,"sealed":0,"noHost":6,"noModel":0,"budget":1,"seed":0}
+   [ok] the generator honoured its parameters
+   [ok] level.js validateLevel  -- 184 solids, 7 rooms, spawn (9.97, 8.49)
+   [ok] no hole in a wall without a door
+   [ok] every walkable cell is reachable (no pocket over 0.045 m2)  -- 30785/43200 cells, 1 region(s); no unreachable pocket
+   [ok] the level carries the layout it was built from (what you see is what you play)  -- layout 12x9 m, 7 rooms, 52 models, 12x9 m plan
+   [ok] every room resolves to its own region, no pocket the walker could use  -- 7/7 rooms, 0 unowned region(s) (0 under the walker's 0.045 m2, 0 over it)
+   [ok] A* spawn -> every room centre
+   [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 45 anchors scored, rooms used 3/7
+   [ok] the outer wall stops the walker (no standable cell in the edge strip)  -- 0/84 sampled edge points standable
+   .. front door on the south wall at x 10..11
+
+PASS  14x10 9 rooms 130 items
+   params {"w":14,"d":10,"rooms":9,"items":130,"seed":"procgen","minRoom":2.4,"lane":0.62,"gap":0.02,"doorMargin":1,"loopDoor":0.28,"maxLoopDoors":2,"windowChance":0.2,"roomCap":26,"floorTries":26}
+   rooms 9 (living, bedroom, kitchen, dining, study, study2, bath, dining2, bedroom2)  doors 11  walls 19 runs / 97 segments
+   items 125/130  climbTops 86  free 74.5%  rejections {"overlap":371,"outside":1,"lane":82,"slot":27,"sealed":3,"noHost":3,"noModel":0,"budget":2,"seed":0}
+   [ok] the generator honoured its parameters
+   [ok] level.js validateLevel  -- 244 solids, 9 rooms, spawn (10.50, 8.02)
+   [ok] no hole in a wall without a door
+   [ok] every walkable cell is reachable (no pocket over 0.045 m2)  -- 39413/56000 cells, 1 region(s); no unreachable pocket
+   [ok] the level carries the layout it was built from (what you see is what you play)  -- layout 14x10 m, 9 rooms, 49 models, 14x10 m plan
+   [ok] every room resolves to its own region, no pocket the walker could use  -- 9/9 rooms, 0 unowned region(s) (0 under the walker's 0.045 m2, 0 over it)
+   [ok] A* spawn -> every room centre
+   [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 58 anchors scored, rooms used 3/9
+   [ok] the outer wall stops the walker (no standable cell in the edge strip)  -- 0/96 sampled edge points standable
+   .. front door on the south wall at x 10..11
+   .. living: seed moved off the room centre (furniture covers it)
+
+PASS  10x8  3 rooms 100 items
+   params {"w":10,"d":8,"rooms":3,"items":100,"seed":"procgen","minRoom":2.4,"lane":0.62,"gap":0.02,"doorMargin":1,"loopDoor":0.28,"maxLoopDoors":2,"windowChance":0.2,"roomCap":26,"floorTries":26}
+   rooms 3 (bedroom, kitchen, living)  doors 3  walls 7 runs / 51 segments
+   items 70/100  climbTops 51  free 75.4%  rejections {"overlap":336,"outside":0,"lane":14,"slot":19,"sealed":1,"noHost":1,"noModel":0,"budget":0,"seed":0}
+   [ok] the generator honoured its parameters
+   [ok] level.js validateLevel  -- 127 solids, 3 rooms, spawn (1.99, 7.46)
+   [ok] no hole in a wall without a door
+   [ok] every walkable cell is reachable (no pocket over 0.045 m2)  -- 23404/32000 cells, 1 region(s); no unreachable pocket
+   [ok] the level carries the layout it was built from (what you see is what you play)  -- layout 10x8 m, 3 rooms, 34 models, 10x8 m plan
+   [ok] every room resolves to its own region, no pocket the walker could use  -- 3/3 rooms, 0 unowned region(s) (0 under the walker's 0.045 m2, 0 over it)
+   [ok] A* spawn -> every room centre
+   [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 35 anchors scored, rooms used 3/3
+   [ok] the outer wall stops the walker (no standable cell in the edge strip)  -- 0/72 sampled edge points standable
+   .. front door on the south wall at x 1..2
+   .. placed 70 of the 100 items asked for: the envelope ran out of legal floor
+
+PASS  6x6   4 rooms  35 items
+   params {"w":6,"d":6,"rooms":4,"items":35,"seed":"procgen","minRoom":2.4,"lane":0.62,"gap":0.02,"doorMargin":1,"loopDoor":0.28,"maxLoopDoors":2,"windowChance":0.2,"roomCap":26,"floorTries":26}
+   rooms 4 (bath, living, bedroom, kitchen)  doors 5  walls 8 runs / 36 segments
+   items 31/35  climbTops 16  free 74.7%  rejections {"overlap":99,"outside":0,"lane":47,"slot":51,"sealed":7,"noHost":1,"noModel":0,"budget":2,"seed":0}
+   [ok] the generator honoured its parameters
+   [ok] level.js validateLevel  -- 77 solids, 4 rooms, spawn (2.62, 5.29)
+   [ok] no hole in a wall without a door
+   [ok] every walkable cell is reachable (no pocket over 0.045 m2)  -- 9583/14400 cells, 1 region(s); no unreachable pocket
+   [ok] the level carries the layout it was built from (what you see is what you play)  -- layout 6x6 m, 4 rooms, 35 models, 6x6 m plan
+   [ok] every room resolves to its own region, no pocket the walker could use  -- 4/4 rooms, 0 unowned region(s) (0 under the walker's 0.045 m2, 0 over it)
+   [ok] A* spawn -> every room centre
+   [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 16 anchors scored, rooms used 3/4
+   [ok] the outer wall stops the walker (no standable cell in the edge strip)  -- 0/48 sampled edge points standable
+   .. front door on the south wall at x 2..3
+   .. living: seed moved off the room centre (furniture covers it)
+
+PASS  20x12 12 rooms 220 items
+   params {"w":20,"d":12,"rooms":12,"items":220,"seed":"procgen","minRoom":2.4,"lane":0.62,"gap":0.02,"doorMargin":1,"loopDoor":0.28,"maxLoopDoors":2,"windowChance":0.2,"roomCap":26,"floorTries":26}
+   rooms 12 (living, bedroom, kitchen, dining, study, study2, study3, bath, dining2, bedroom2, bedroom3, dining3)  doors 14  walls 25 runs / 146 segments
+   items 215/220  climbTops 146  free 76.6%  rejections {"overlap":1078,"outside":0,"lane":92,"slot":31,"sealed":4,"noHost":3,"noModel":0,"budget":1,"seed":0}
+   [ok] the generator honoured its parameters
+   [ok] level.js validateLevel  -- 389 solids, 12 rooms, spawn (9.56, 11.28)
+   [ok] no hole in a wall without a door
+   [ok] every walkable cell is reachable (no pocket over 0.045 m2)  -- 69822/96000 cells, 1 region(s); no unreachable pocket
+   [ok] the level carries the layout it was built from (what you see is what you play)  -- layout 20x12 m, 12 rooms, 51 models, 20x12 m plan
+   [ok] every room resolves to its own region, no pocket the walker could use  -- 12/12 rooms, 0 unowned region(s) (0 under the walker's 0.045 m2, 0 over it)
+   [ok] A* spawn -> every room centre
+   [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 82 anchors scored, rooms used 3/12
+   [ok] the outer wall stops the walker (no standable cell in the edge strip)  -- 0/128 sampled edge points standable
+   .. front door on the south wall at x 9..10
+
+PASS  16x14 10 rooms 160 items
+   params {"w":16,"d":14,"rooms":10,"items":160,"seed":"procgen","minRoom":2.4,"lane":0.62,"gap":0.02,"doorMargin":1,"loopDoor":0.28,"maxLoopDoors":2,"windowChance":0.2,"roomCap":26,"floorTries":26}
+   rooms 10 (living, bedroom, kitchen, dining, study, study2, dining2, bath, bedroom2, bedroom3)  doors 12  walls 23 runs / 129 segments
+   items 154/160  climbTops 109  free 79.6%  rejections {"overlap":670,"outside":0,"lane":54,"slot":17,"sealed":0,"noHost":3,"noModel":0,"budget":1,"seed":0}
+   [ok] the generator honoured its parameters
+   [ok] level.js validateLevel  -- 307 solids, 10 rooms, spawn (3.90, 13.39)
+   [ok] no hole in a wall without a door
+   [ok] every walkable cell is reachable (no pocket over 0.045 m2)  -- 67674/89600 cells, 1 region(s); no unreachable pocket
+   [ok] the level carries the layout it was built from (what you see is what you play)  -- layout 16x14 m, 10 rooms, 58 models, 16x14 m plan
+   [ok] every room resolves to its own region, no pocket the walker could use  -- 10/10 rooms, 0 unowned region(s) (0 under the walker's 0.045 m2, 0 over it)
+   [ok] A* spawn -> every room centre
+   [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 76 anchors scored, rooms used 3/10
+   [ok] the outer wall stops the walker (no standable cell in the edge strip)  -- 0/120 sampled edge points standable
+   .. front door on the south wall at x 3..4
+
+PASS  7x5   2 rooms  24 items
+   params {"w":7,"d":5,"rooms":2,"items":24,"seed":"procgen","minRoom":2.4,"lane":0.62,"gap":0.02,"doorMargin":1,"loopDoor":0.28,"maxLoopDoors":2,"windowChance":0.2,"roomCap":26,"floorTries":26}
+   rooms 2 (living, bedroom)  doors 2  walls 5 runs / 29 segments
+   items 18/24  climbTops 14  free 79.5%  rejections {"overlap":68,"outside":0,"lane":1,"slot":1,"sealed":0,"noHost":0,"noModel":0,"budget":2,"seed":0}
+   [ok] the generator honoured its parameters
+   [ok] level.js validateLevel  -- 51 solids, 2 rooms, spawn (2.78, 4.33)
+   [ok] no hole in a wall without a door
+   [ok] every walkable cell is reachable (no pocket over 0.045 m2)  -- 10429/14000 cells, 1 region(s); no unreachable pocket
+   [ok] the level carries the layout it was built from (what you see is what you play)  -- layout 7x5 m, 2 rooms, 20 models, 7x5 m plan
+   [ok] every room resolves to its own region, no pocket the walker could use  -- 2/2 rooms, 0 unowned region(s) (0 under the walker's 0.045 m2, 0 over it)
+   [ok] A* spawn -> every room centre
+   [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 11 anchors scored, rooms used 2/2
+   [ok] the outer wall stops the walker (no standable cell in the edge strip)  -- 0/48 sampled edge points standable
+   .. front door on the south wall at x 2..3
+   .. placed 18 of the 24 items asked for: the envelope ran out of legal floor
+
+PASS  24x16 16 rooms 300 items
+   params {"w":24,"d":16,"rooms":16,"items":300,"seed":"procgen","minRoom":2.4,"lane":0.62,"gap":0.02,"doorMargin":1,"loopDoor":0.28,"maxLoopDoors":2,"windowChance":0.2,"roomCap":26,"floorTries":26}
+   rooms 16 (bedroom, kitchen, study, living, bedroom2, bedroom3, dining, study2, study3, dining2, bath, bedroom4, dining3, dining4, study4, bedroom5)  doors 18  walls 41 runs / 208 segments
+   items 293/300  climbTops 213  free 79.3%  rejections {"overlap":1210,"outside":13,"lane":90,"slot":34,"sealed":1,"noHost":8,"noModel":0,"budget":0,"seed":0}
+   [ok] the generator honoured its parameters
+   [ok] level.js validateLevel  -- 537 solids, 16 rooms, spawn (2.10, 15.57)
+   [ok] no hole in a wall without a door
+   [ok] every walkable cell is reachable (no pocket over 0.045 m2)  -- 116133/153600 cells, 1 region(s); no unreachable pocket
+   [ok] the level carries the layout it was built from (what you see is what you play)  -- layout 24x16 m, 16 rooms, 59 models, 24x16 m plan
+   [ok] every room resolves to its own region, no pocket the walker could use  -- 16/16 rooms, 0 unowned region(s) (0 under the walker's 0.045 m2, 0 over it)
+   [ok] A* spawn -> every room centre
+   [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 124 anchors scored, rooms used 3/16
+   [ok] the outer wall stops the walker (no standable cell in the edge strip)  -- 0/160 sampled edge points standable
+   .. front door on the south wall at x 1..2
+
+PASS  9x9   5 rooms  55 items
+   params {"w":9,"d":9,"rooms":5,"items":55,"seed":"procgen","minRoom":2.4,"lane":0.62,"gap":0.02,"doorMargin":1,"loopDoor":0.28,"maxLoopDoors":2,"windowChance":0.2,"roomCap":26,"floorTries":26}
+   rooms 5 (living, bedroom, kitchen, dining, study)  doors 6  walls 11 runs / 60 segments
+   items 51/55  climbTops 41  free 77.2%  rejections {"overlap":201,"outside":0,"lane":14,"slot":13,"sealed":1,"noHost":1,"noModel":0,"budget":2,"seed":0}
+   [ok] the generator honoured its parameters
+   [ok] level.js validateLevel  -- 123 solids, 5 rooms, spawn (6.20, 8.34)
+   [ok] no hole in a wall without a door
+   [ok] every walkable cell is reachable (no pocket over 0.045 m2)  -- 23186/32400 cells, 1 region(s); no unreachable pocket
+   [ok] the level carries the layout it was built from (what you see is what you play)  -- layout 9x9 m, 5 rooms, 38 models, 9x9 m plan
+   [ok] every room resolves to its own region, no pocket the walker could use  -- 5/5 rooms, 0 unowned region(s) (0 under the walker's 0.045 m2, 0 over it)
+   [ok] A* spawn -> every room centre
+   [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 32 anchors scored, rooms used 3/5
+   [ok] the outer wall stops the walker (no standable cell in the edge strip)  -- 0/72 sampled edge points standable
+   .. front door on the south wall at x 6..7
+   .. living: seed moved off the room centre (furniture covers it)
+
+PASS  11x7  6 rooms  70 items
+   params {"w":11,"d":7,"rooms":6,"items":70,"seed":"procgen","minRoom":2.4,"lane":0.62,"gap":0.02,"doorMargin":1,"loopDoor":0.28,"maxLoopDoors":2,"windowChance":0.2,"roomCap":26,"floorTries":26}
+   rooms 6 (dining, kitchen, living, bedroom, bath, study)  doors 6  walls 12 runs / 61 segments
+   items 66/70  climbTops 51  free 70.4%  rejections {"overlap":307,"outside":5,"lane":51,"slot":45,"sealed":3,"noHost":3,"noModel":0,"budget":2,"seed":0}
+   [ok] the generator honoured its parameters
+   [ok] level.js validateLevel  -- 139 solids, 6 rooms, spawn (8.94, 6.53)
+   [ok] no hole in a wall without a door
+   [ok] every walkable cell is reachable (no pocket over 0.045 m2)  -- 20363/30800 cells, 1 region(s); no unreachable pocket
+   [ok] the level carries the layout it was built from (what you see is what you play)  -- layout 11x7 m, 6 rooms, 47 models, 11x7 m plan
+   [ok] every room resolves to its own region, no pocket the walker could use  -- 6/6 rooms, 0 unowned region(s) (0 under the walker's 0.045 m2, 0 over it)
+   [ok] A* spawn -> every room centre
+   [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 46 anchors scored, rooms used 3/6
+   [ok] the outer wall stops the walker (no standable cell in the edge strip)  -- 0/72 sampled edge points standable
+   .. front door on the south wall at x 9..10
+   .. living: seed moved off the room centre (furniture covers it)
