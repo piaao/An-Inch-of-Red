@@ -5,49 +5,42 @@
 [PASS] C 英文名恰好 2 处（<title> + 开始页）               2 处
 [PASS] C <title> 里含英文名                          
 [PASS] D 显示面不含代号 寻红                             h1/title 干净
-[PASS] E html EOL 单一                            crlf=0 lf=151
+[PASS] E html EOL 单一                            crlf=0 lf=147
 [PASS] F .panel .sub.en 规则恰好一条                  1 条
 [PASS] F 该规则大写英文名                               uppercase
 [PASS] F 该规则字距存在                                letter-spacing: .26em;
 [PASS] F 大括号配平                                  126/126
 [PASS] F css EOL 单一                             crlf=0 lf=502
-[PASS] G README 新章节标题                           
-[PASS] G README 旧章节标题 = 0                       
-[PASS] G README 指向 NAME.md                      2 处
-[PASS] G README 目录树含 play.html 新名               
+[PASS] G SCENE 新章节标题                            
+[PASS] G SCENE 旧章节标题 = 0                        
+[PASS] G SCENE 指向 NAME.md                       2 处
+[PASS] G SCENE 目录树含 play.html 新名                
+[PASS] G README 门面含中英文名并指向 SCENE.md             一寸红 x1 · An Inch of Red x1 · SCENE.md x1
 [PASS] H package.json name                      'an-inch-of-red'
 [PASS] H package.json 仍有代号                      
 [PASS] H package.json 零依赖                       无 dependencies 键
 [PASS] I NAME.md 声明中文名                          
 [PASS] I NAME.md 声明英文名                          
 [PASS] I NAME.md 含改名清单                          
-[PASS] J 代号 寻红 仍在工程里（未被误删）                      63 个文件
+[PASS] J 代号 寻红 留在该留的地方                          6/6 处命中，全库 17 个文件
 
-代号 寻红 普查：63 个文件
-    .workbuddy\memory\2026-09-25.md
-    .workbuddy\memory\MEMORY.md
-    room_scene\GAME_DESIGN.md
-    room_scene\README.md
-    room_scene\game\NAME.md
-    room_scene\game\VERDICT.md
-    room_scene\game\package.json
-    room_scene\game\play\play.js
-    room_scene\scripts\append_log_round2.py
-    room_scene\scripts\derive_redbox.py
-    room_scene\scripts\diag_oracle.mjs
-    room_scene\scripts\patch_p23.py
-    room_scene\scripts\patch_p24.py
-    room_scene\scripts\patch_pname.py
-    room_scene\scripts\update_memory.py
-    room_scene\scripts\verify_game.mjs
-    room_scene\scripts\verify_name.py
-    room_scene\scripts\verify_play.mjs
-    room_scene\scripts\write_memory_verdict.py
-    room_scene\work\_play.log
-    room_scene\work\_verify_play.log
-    room_scene\work\_verify_play_run.log
-    room_scene\work\backup\GAME_DESIGN.md.p45
-    room_scene\work\backup\GAME_DESIGN.md.p66
-    … 另有 39 个
+代号 寻红 普查：17 个文件
+    GAME_DESIGN.md
+    README.md
+    SCENE.md
+    _bak/README.md.before-launcher
+    game/NAME.md
+    game/VERDICT.md
+    game/package.json
+    game/play/play.js
+    reports/patch_name.txt
+    reports/verify_name.txt
+    reports/verify_play.log
+    scripts/_verify_play.bak.mjs
+    scripts/derive_redbox.py
+    scripts/diag_oracle.mjs
+    scripts/verify_game.mjs
+    scripts/verify_name.py
+    scripts/verify_play.mjs
 
-VERDICT PASS  24/24
+VERDICT PASS  25/25

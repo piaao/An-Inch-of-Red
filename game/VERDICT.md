@@ -41,7 +41,7 @@
 | `scripts/diag_explore.mjs` | 「要看要花 97 s」是**设计事实**还是**我的 AI 太笨**？random vs nearest 两种探索策略对照 | `work/diag_explore.json` |
 | `scripts/diag_edges.mjs` / `diag_resolution.mjs` | 导航连通性与分辨率假象（本轮之前已用于定位门框问题） | 终端输出 |
 | `scripts/diag_guard.mjs` / `diag_guard_where.mjs` | 守卫合不合法（站在实体里？走出平面？）+ 600 s 的时间预算去哪了（走 / 扫视 / 卡住） | `work/_guard.log`、`work/_guard_where.log` |
-| `scripts/verify_play.mjs` | **可玩渲染层与核心是不是同一个世界**：69 条断言——逐坐标比对摆放、3672 步碰撞不变量、拾取、守卫、**守卫渲染**、**跳跃契约**、**跳上家具**、**红包要爬上去取**、**红包不在任何房间的地上**、**鼠标转向方向（几何判据）**、**每局随机且种子可复现**、**缩略图字号**、**难度双旋钮**、**监控灯的 A/B 像素差**、**开始页确实在屏幕上**、像素统计 | `work/play_eval.json`、`work/_play.log`、`renders/play/*.png` |
+| `scripts/verify_play.mjs` | **可玩渲染层与核心是不是同一个世界**：70 条断言——逐坐标比对摆放、3672 步碰撞不变量、拾取、守卫、**守卫渲染**、**跳跃契约**、**跳上家具**、**红包要爬上去取**、**红包不在任何房间的地上**、**鼠标转向方向（几何判据）**、**每局随机且种子可复现**、**缩略图字号**、**难度双旋钮**、**监控灯的 A/B 像素差**、**开始页确实在屏幕上**、像素统计 | `work/play_eval.json`、`work/_play.log`、`renders/play/*.png` |
 | `scripts/probe_guard_render.mjs` | 守卫**有没有被画进画面**：同机位渲染两帧（守卫可见 / 隐藏）逐像素 diff，差异质心与守卫投影对账 | `work/_guard_render.json` |
 | `scripts/measure_surveil.mjs` | 难度阶梯**重测胜率**（24 种子 × 4 配置 × 预算 120/180/240）。主口径是**玩家型人格**（每房转一次 + 每个可爬模型一个立点 = 20 点），带两个对照：拿掉攀爬的同一人格、以及老口径的 269 点栅格人格 | `work/surveil_eval.json`、`work/_measure_surveil.log` |
 | `scripts/diag_ai_sight.mjs` | 每个红包**能从哪些视角被看见**：地板视角与登高视角各命中几次，按 `tier` 分档。用来判「AI 收不满」是设计问题还是人格残疾 | `work/_ai_sight.json`、`work/_ai_sight.log` |

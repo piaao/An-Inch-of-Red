@@ -53,9 +53,9 @@
    PASS  no exceptions in the game session
 
 -- 6. does the handed-over floor render? ------------------------------
-   PASS  the handed-over floor renders as lit space, not a black frame — mean 107.8, sd 73.0, dark 0.0%, 291 colours
-   PASS  a dollhouse screenshot of the floor the workbench handed over — 234097 B
-   PASS  a first-person screenshot at the spawn — 122371 B
+   PASS  the handed-over floor renders as lit space, not a black frame — mean 107.8, sd 73.0, dark 0.0%, 292 colours
+   PASS  a dollhouse screenshot of the floor the workbench handed over — 233632 B
+   PASS  a first-person screenshot at the spawn — 122369 B
 
 -- 7. a session arena with nothing behind it --------------------------
    __playError: ?arena=session:nope: sessionStorage has nothing under "an-inch-of-red:nope". Only a page that generates a floor can fill it: open procgen.html and pre
@@ -64,7 +64,11 @@
 -- 8. artifacts -------------------------------------------------------
    PASS  a screenshot of the workbench itself — 182075 B
 
+-- 9. the committed sweep evidence still exists ------------------------
+   PASS  reports/procgen.svg 跑完这一套之后逐字节未变 — c90623f2f386e8073d7c571c5eb8c27d821ceffd -> c90623f2f386e8073d7c571c5eb8c27d821ceffd
+   PASS  reports/procgen.txt 跑完这一套之后逐字节未变 — 97f70c1ce7f4dba49ba9ab61565e7ec978a6b286 -> 97f70c1ce7f4dba49ba9ab61565e7ec978a6b286
+
 ========================================================================
-  34/34 checks passed
+  36/36 checks passed
 ========================================================================
   VERDICT: PASS

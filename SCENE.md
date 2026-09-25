@@ -481,7 +481,7 @@ start-workbench.bat           # 同一件事，双击即可（关键字没法双
 start.bat                     # 只起服务（默认开游戏 play.html）
 # 或手动敲链接：http://127.0.0.1:<端口>/procgen.html
 node scripts/verify_world.mjs        # 世界一致性：看到的房子 == 玩的房子（世界侧唯一判决）
-node scripts/verify_playground.mjs   # 工作台自己的 34 条验收（自起服务，CI 用）
+node scripts/verify_playground.mjs   # 工作台自己的 36 条验收（自起服务，CI 用）
 node scripts/verify_live.mjs         # 对「已经在跑」的服务做同一套对账，--url 指哪测哪
 node scripts/verify_open.mjs         # 打开方式验收：三个页面在 file:// 下必须明说，在 http:// 下必须正常
 node scripts/diag_open.mjs           # 诊断「页面是空壳」：同一个文件两种打开方式逐项对账

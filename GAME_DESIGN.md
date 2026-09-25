@@ -375,7 +375,7 @@ plantSmall2       ×2   / rugRectangle ×2 / sideTable ×2 / speakerSmall ×2
 > 工具链：`game/core/` 纯逻辑核心（零 three.js / DOM / 依赖）+ `game/arena/fromLayout.js` 适配器
 > + `game/arenas/room_scene.json` 快照。**换一栋楼 = 换一个快照，验证脚本原样可跑。**
 > 复现：`node scripts/verify_game.mjs 24`（95 s）/ `diag_oracle.mjs` / `diag_explore.mjs`。
-> 可玩渲染层（`play.html`）另有 **69 条**无头断言：`node scripts/verify_play.mjs`。
+> 可玩渲染层（`play.html`）另有 **70 条**无头断言：`node scripts/verify_play.mjs`。
 > 完整结论见 **`game/VERDICT.md`**。
 
 | 设计里的说法 | 实测 | 结论 |
