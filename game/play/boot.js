@@ -38,7 +38,15 @@ export async function loadArena(url) {
  * need a different build step -- which is the coupling `game/core/` exists to
  * avoid. 0.9 s is cheaper than that.
  */
-export function buildCore(level, { seed, count, onStage } = {}) {
+/**
+ * The most sentries any preset garrisons. The actors and the patrols are
+ * both built to this ceiling so that switching difficulty is free -- what
+ * a preset decides is how many of them are SHOWN and DRIVEN, not how many
+ * exist.
+ */
+export const MAX_GUARDS = 2;
+
+export function buildCore(level, { seed, count, guards = MAX_GUARDS, onStage } = {}) {
   const stage = (s) => { if (onStage) onStage(s); };
   const t0 = performance.now();
   const ms = {};
@@ -76,13 +84,27 @@ export function buildCore(level, { seed, count, onStage } = {}) {
   ms.place = performance.now() - t;
   stage(`藏好 ${placement.prizes.length} 个红包`);
 
+  // EVERY PATROL IS BUILT, AND EACH FROM ITS OWN NAMED STREAM. The first keeps
+  // the `guard-<seed>` name it has always had, so the shipped patrol is
+  // bit-for-bit what it was -- a second guard must not move the first one.
+  // `guard2-<seed>` is the same discipline `prizeRng` follows: a stream is
+  // derived by NAME, so adding a consumer cannot shift what an existing one
+  // draws. Building them regardless of the preset is what keeps a difficulty
+  // switch off the 0.9 s core rebuild.
   t = performance.now();
-  const patrol = buildPatrol(level, guardNav, new Rng(`guard-${seed}`), {});
+  const patrols = [];
+  for (let i = 0; i < Math.max(1, guards); i++) {
+    const stream = i === 0 ? `guard-${seed}` : `guard${i + 1}-${seed}`;
+    patrols.push(buildPatrol(level, guardNav, new Rng(stream), {}));
+  }
   ms.patrol = performance.now() - t;
-  stage(`巡逻路线 ${patrol.waypoints.length} 个航点`);
+  stage(`巡逻路线 ${patrols.map((p) => p.waypoints.length).join(' + ')} 个航点`);
 
   ms.total = performance.now() - t0;
-  return { nav, guardNav, vantages, placement, prizes: placement.prizes, patrol, ms };
+  return {
+    nav, guardNav, vantages, placement, prizes: placement.prizes,
+    patrol: patrols[0], patrols, ms,
+  };
 }
 
 /**

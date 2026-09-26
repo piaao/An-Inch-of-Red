@@ -309,7 +309,7 @@ async function main() {
   say('');
   say('-- 2. collision + movement -------------------------------------------');
   const walk = await sess.evalAsync(`
-    await __play.begin('solo');                     // no guard: this is about walls
+    await __play.begin('solo', { guards: 0 });                     // garrison stood down: this is about walls
     const info0 = __play.info();
     let bad = 0, first = null;
     const legs = [[1, 0], [1, 0.4], [0, 1], [-1, 0], [0, -1], [1, -1], [-1, 1], [0, 0]];
@@ -384,7 +384,7 @@ async function main() {
   say('');
   say('-- 3. pickup ----------------------------------------------------------');
   const pick = await sess.evalAsync(`
-    await __play.begin('solo');
+    await __play.begin('solo', { guards: 0 });
     const CH = ${JSON.stringify(ladders)};
     const av = () => __play.avatar.state();
     // THE PEAK, NOT THE ENDING. A packet is usually taken while the body is
@@ -494,7 +494,7 @@ async function main() {
     + `${xcheck.prizeCells} see a 红包; best ${xcheck.bestRed.n} reds @ `
     + `(${num(xcheck.bestRed.x, 2)}, ${num(xcheck.bestRed.z, 2)})`);
   const cens = await sess.evalAsync(`
-    await __play.begin('solo');
+    await __play.begin('solo', { guards: 0 });
     const CELLS = ${JSON.stringify(censusCells(level, ref.nav, ref.prizes))};
     let cells = 0, redCells = 0, prizeCells = 0;
     let bestR = { n: -1, prizes: -1, sprites: 0, x: 0, z: 0 };
@@ -894,7 +894,7 @@ async function main() {
   say('');
   say('-- 8. 跳上家具 --------------------------------------------------------');
   const climb = await sess.evalAsync(`
-    await __play.begin('solo');
+    await __play.begin('solo', { guards: 0 });
     const L = __play.level;
     const test = (model) => {
       const s = L.solids.find((x) => x.model === model);

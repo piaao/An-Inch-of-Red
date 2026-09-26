@@ -154,40 +154,92 @@ export const LOOP = {
  * proportion (sd ~ 9 pt at p = 0.3), so those two are not ordered by this
  * table; what the table does establish is that both are distinctly harder
  * than 见习 and distinctly easier than 硬核.
+ *
+ * ============================================================ REVISION 2 ===
+ * THE LADDER ABOVE IS NOW A HISTORICAL READING, and every `ai` string below
+ * says so. Two things changed at once and both invalidate it:
+ *
+ *   1. The 红包 got smaller. `fromLayout.js` now builds an 11.5 x 7.2 cm
+ *      packet where it used to build a 16 x 10 cm one, and `noticeRange` is
+ *      `sqrt(area / MIN_ANGLE)` -- so EVERY preset's target is now harder to
+ *      notice, including 标准, which had not otherwise moved.
+ *   2. The rungs became a ladder of GARRISONS and PRIZES, not just of cones:
+ *      见习 now runs a (weak) guard at all, and 紧张/硬核 run TWO guards over
+ *      12 and 24 packets. The old rows were taken with one guard over six.
+ *
+ * So the numbers in `ai` are kept as the readings they are, marked with the
+ * configuration they were taken under. Re-measuring is `measure_surveil.mjs`
+ * with this table's own garrisons and packet count; until that runs, no card
+ * may quote these as its own win rate. The rule in the header stands: a preset
+ * may not quote a number it did not measure -- and it may not keep quoting one
+ * taken under a configuration that no longer exists.
  */
 export const DIFFICULTIES = [
   {
-    id: 'solo', name: '见习', budget: 240, guard: null,
-    surveil: null, prizeScale: 1.15,      // 18.4 x 11.5 cm, noticed at 5.1 m
-    blurb: '没有守卫。红包比平时大一圈，先把六个房间走熟、看清它长在什么地方。',
-    ai: 'AI 玩家型人格 240 s：胜率 66.7 %，收集 5.67/6，用时 180 s（24 种子，§6.2）',
+    id: 'solo', name: '见习', budget: 240,
+    guard: 'patrol', guards: 1, prizeCount: 6,
+    // The narrowest fan on the ladder (74° / 4.2 m at 0.8x -> 59° / 3.4 m).
+    // 见习 used to have NO guard; a rung with nothing on it taught the
+    // controls and nothing about the game, and the first thing every player
+    // asked for was "where is it". It is still the quietest thing to walk
+    // past on this ladder, which is what keeps the ladder a ladder.
+    surveil: 0.80, prizeScale: 1.15,      // packet 13.2 x 8.3 cm
+    blurb: '一名走得慢、看得近的哨兵（扇区收窄至 0.8×）。红包比平时大一圈，先把六个房间走熟。',
+    ai: '⚠ 旧配置（无守卫 / 6 红包 / 16×10 cm）240 s：66.7 %，收集 5.67/6 —— 本档已有守卫，'
+      + '且红包尺寸已缩小，此数作废，待按新配置重测（scripts/README「五条教训」1、VERDICT §6.2 REVISION 3）',
   },
   {
-    id: 'patrol', name: '标准', budget: 180, guard: 'patrol',
+    id: 'patrol', name: '标准', budget: 180,
+    guard: 'patrol', guards: 1, prizeCount: 6,
     surveil: 1.00, prizeScale: 1.00,      // the measured base. do not move.
     blurb: '一名巡逻哨。它会绕全屋走，在你附近停下来左右扫视。',
-    ai: 'AI 玩家型人格 180 s：无守卫 66.7 % → 有巡逻 33.3 %'
-      + '（−33.4 pt，被抓 2.08 次；24 种子，§6.2）',
+    ai: '⚠ 旧配置（1 守卫 / 6 红包 / 16×10 cm）180 s：无守卫 66.7 % → 有巡逻 33.3 %'
+      + '（−33.4 pt，被抓 2.08 次；24 种子，§6.2）。红包尺寸已缩小，此数作废，待重测',
   },
   {
-    id: 'tight', name: '紧张', budget: 180, guard: 'patrol',
+    id: 'tight', name: '紧张', budget: 180,
+    guard: 'patrol', guards: 2, prizeCount: 12,
     surveil: 1.19, prizeScale: 0.85,      // 74°/4.2 m -> 88°/5.0 m (11.4 -> 19.2 m2)
-    blurb: '同一名哨兵，却长了眼：监控扇区更宽更远，红包也小了一圈。',
-    ai: 'AI 玩家型人格 180 s：29.2 % 胜，收集 4.88/6，被抓 1.96 次（24 种子，§6.2）',
+    blurb: '两名哨兵分头绕屋，监控扇区也更宽更远；红包十二个，每个都小一圈。',
+    ai: '⚠ 旧配置（1 守卫 / 6 红包 / 16×10 cm）180 s：29.2 % 胜，收集 4.88/6，被抓 1.96 次'
+      + '（24 种子，§6.2）。本档现为 2 守卫 / 12 红包，此数作废，待重测',
   },
   {
-    id: 'hunter', name: '硬核', budget: 180, guard: 'hunter',
-    surveil: 1.00, prizeScale: 0.70,      // base 96°/6.0 m, packet 11.2 x 7.0 cm
-    blurb: '视野更宽、跑得更快、更不容易被甩掉的哨兵，红包只有一张名片大。',
-    ai: 'AI 玩家型人格 180 s：12.5 % 胜，收集 3.54/6，被抓 3.21 次（24 种子，§6.2）',
+    id: 'hunter', name: '硬核', budget: 180,
+    guard: 'hunter', guards: 2, prizeCount: 24,
+    surveil: 1.00, prizeScale: 0.70,      // base 96°/6.0 m, packet 8.1 x 5.0 cm
+    blurb: '两名视野更宽、跑得更快的哨兵；二十四个红包，每个只有一张名片大。',
+    ai: '⚠ 旧配置（1 守卫 / 6 红包 / 16×10 cm）180 s：12.5 % 胜，收集 3.54/6，被抓 3.21 次'
+      + '（24 种子，§6.2）。本档现为 2 守卫 / 24 红包，此数作废，待重测',
   },
 ];
 
 /** Which preset the start overlay opens on. */
 export const DEFAULT_DIFFICULTY = 'patrol';
 
-/** 6 红包 over 6 rooms. Held equal to the verified pipeline's count. */
+/**
+ * The DEFAULT 红包 count -- 6 over 6 rooms, held equal to the verified
+ * pipeline's count. A preset may raise it (`prizeCount`); nothing may lower it
+ * below the number of rooms, because "one hidden in every room" is what makes
+ * a sweep of the flat a strategy rather than a gamble.
+ */
 export const PRIZE_COUNT = 6;
+
+/** How many guards this preset garrisons. `guard` names the MODE they share. */
+export function guardCountFor(preset) {
+  if (!preset || !preset.guard) return 0;
+  // THE FLOOR OF 1 IS DELIBERATE: a preset cannot express "no guard" through
+  // this table -- `guards: 0` is silently coerced to 1. Standing the garrison
+  // down is a TEST HOOK on the play layer (`begin(id, { guards: 0 })`), not a
+  // table entry. That is what keeps "见习 has a guard" a design decision
+  // instead of an accident of how a default happened to be spelled.
+  return Math.max(1, preset.guards || 1);
+}
+
+/** How many 红包 this preset hides. Falls back to the verified 6. */
+export function prizeCountFor(preset) {
+  return (preset && preset.prizeCount) || PRIZE_COUNT;
+}
 
 /** Re-render the guard's vision fan this often, in seconds. */
 export const CONE_HZ = 30;
@@ -268,11 +320,15 @@ export function noticeRangeOf(area) {
 export function difficultySpec(preset, modes, collectible) {
   const cfg = guardCfgFor(preset, modes);
   const c = collectibleFor(preset, collectible);
+  const n = guardCountFor(preset);
   const cm = (v) => String(Math.round(v * 100));
+  // The garrison and the prize count are the two things a player is choosing
+  // between, so they are printed FIRST -- a card whose headline number is the
+  // cone area buries the decision under its units.
   const watched = cfg
-    ? `监控 ${fanArea(cfg.coneDeg, cfg.range).toFixed(1)} m²`
+    ? `${n} 守卫 · 监控 ${fanArea(cfg.coneDeg, cfg.range).toFixed(1)} m²`
       + ` · ${Math.round(cfg.coneDeg)}° × ${cfg.range.toFixed(1)} m`
     : '无监控';
-  return `${watched} · 红包 ${cm(c.size[0])}×${cm(c.size[2])} cm`
-    + ` · ${noticeRangeOf(prizeAreaOf(c)).toFixed(1)} m 内可见`;
+  return `${watched} · 红包 ${prizeCountFor(preset)} 个（${cm(c.size[0])}×${cm(c.size[2])} cm，`
+    + `${noticeRangeOf(prizeAreaOf(c)).toFixed(1)} m 内可见）`;
 }

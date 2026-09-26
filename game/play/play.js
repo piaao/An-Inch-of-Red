@@ -30,11 +30,11 @@ import { createRenderer, createEnvironment, createLights, createGround } from '.
 import { Kit } from '../../js/kit.js';
 import { requiredModels } from '../procgen/required.js';
 import { buildApartment } from '../../js/build.js';
-import { redCensus } from '../core/vision.js';
+import { redCensus, sightLine } from '../core/vision.js';
 import { Guard, GUARD_MODES } from '../core/guard.js';
 import { WALKER } from '../core/sim.js';
 import { roomById } from '../core/level.js';
-import { loadArena, buildCore, placementSummary } from './boot.js';
+import { loadArena, buildCore, placementSummary, MAX_GUARDS } from './boot.js';
 import { Avatar } from './avatar.js';
 import { GlintField, PrizeField, GuardActor, makePlayerShadow } from './scene.js';
 import { Minimap } from './minimap.js';
@@ -44,6 +44,7 @@ import {
   DIFFICULTIES, DEFAULT_DIFFICULTY, PRIZE_COUNT,
   MOVE, VIEW, LOOP, FEEL, CONE_HZ,
   fanArea, guardCfgFor, collectibleFor, prizeAreaOf, noticeRangeOf, difficultySpec,
+  guardCountFor, prizeCountFor,
 } from './config.js';
 
 // WHICH FLOOR AM I PLAYING? The shipped apartment, unless the page was opened
@@ -216,6 +217,8 @@ let core;
 let nav;
 let guardNav;
 let patrol;
+/** One patrol per possible sentry; index 0 is the shipped one. */
+let patrols = [];
 let prizes = [];
 let preset = null;
 let seed = '2026-09-25';
@@ -236,9 +239,26 @@ let prizeCount = PRIZE_COUNT;
 let markersOn = true;
 
 let avatar;
+/**
+ * THE GARRISON. A preset may run more than one sentry, so this is a LIST --
+ * and `guard` stays as an alias for the first one, because `info().guard`
+ * and the minimap's single-guard call were both written against it. A
+ * second guard is an ADDITION, not a rename.
+ */
+let guards = [];
 let guard = null;
+/**
+ * A TEST HOOK, and only a test hook: `begin(id, {guards: 0})` runs a preset
+ * with its garrison stood down. The collision walk in `verify_play` holds
+ * one direction for sixty seconds, and a sentry arresting it halfway would
+ * turn "did the body stay out of the walls" into a question about the
+ * guard's patrol. Cleared on every `begin`, so it cannot leak into a run
+ * that did not ask for it.
+ */
+let guardOverride = null;
 /** The 红包 AS THIS RUN'S DIFFICULTY SIZES IT. Set in `resetRun`. */
 let runCollectible = null;
+let guardActors = [];
 let guardActor = null;
 let minimap = null;
 let prizeField;
@@ -269,7 +289,6 @@ const stats = { frames: 0, fps: 0, stepMs: 0, censusMs: 0, coneMs: 0 };
 export async function start() {
   hud = new Hud();
   audio = new Audio();
-
   /* --- WHICH FLOOR AM I PLAYING? answered before anything is built ------ */
   //
   // The arena used to be loaded LAST, after the apartment was already standing.
@@ -334,8 +353,15 @@ export async function start() {
   prizeField = new PrizeField(scene, level.collectible);
   glints = new GlintField(scene, 28);
   playerShadow = makePlayerShadow(scene);
-  guardActor = new GuardActor(scene, level.body, GUARD_MODES.patrol);
-  guardActor.hide();
+  // One actor per POSSIBLE sentry, built once: switching difficulty must not
+  // cost a scene-graph rebuild, and hiding an actor is free.
+  guardActors = [];
+  for (let i = 0; i < MAX_GUARDS; i++) {
+    const a = new GuardActor(scene, level.body, GUARD_MODES.patrol);
+    a.hide();
+    guardActors.push(a);
+  }
+  guardActor = guardActors[0];
   prizeField.rebuild(prizes, collectibleFor(preset, level.collectible));
 
   /* --- the thumbnail: a plan of the rooms plus two headings -------------- */
@@ -379,6 +405,7 @@ async function rebuildCore() {
   nav = core.nav;
   guardNav = core.guardNav;
   patrol = core.patrol;
+  patrols = core.patrols || [core.patrol];
   prizes = core.prizes;
   if (avatar) avatar.nav = nav;              // the avatar holds a nav reference
   redCentreY = new Map();
@@ -448,11 +475,18 @@ async function beginRun(id) {
   // begin({seed:'genA'}) produced six 红包 that a fresh build for 'genA' does
   // not produce, agreeing on one coordinate of six (scripts/_probe_gen_prizes.mjs).
   // "Instant AND identical" only holds while the seed has not moved.
-  if (seedPinned && coreSeed === seed) {
+  // A PINNED SEED MAY ONLY SKIP THE REBUILD IF THE CORE IS ALREADY THAT SEED
+  // **AND ALREADY HOLDS THIS PRESET'S PACKET COUNT**. The count became a
+  // per-preset dial, so "same seed" is no longer enough: switching 标准 -> 硬核
+  // at a pinned seed would otherwise keep six packets while the card promised
+  // twenty-four.
+  const wantPrizes = prizeCountFor(p);
+  if (seedPinned && coreSeed === seed && prizeCount === wantPrizes) {
     hud.loading(`正在藏红包… ${seed}`, 0.7);
     await frame();
   } else {
     if (!seedPinned) seed = randomSeed();
+    prizeCount = wantPrizes;
     hud.loading(`正在藏红包… ${seed}`, 0.7);
     await frame();
     await rebuildCore();
@@ -463,7 +497,7 @@ async function beginRun(id) {
   resetRun();
   hud.hideLoading();
   S.phase = 'playing';
-  hud.banner(`${p.name} · ${formatClock(p.budget)}${p.guard ? ' · 有守卫' : ''}`, 1600);
+  hud.banner(`${p.name} · ${formatClock(p.budget)} · ${guardCountFor(p)} 守卫 · ${prizeCountFor(p)} 红包`, 1600);
   const c = document.getElementById('stage');
   if (c.requestPointerLock) {
     try { const r = c.requestPointerLock(); if (r && r.catch) r.catch(() => {}); } catch { /* headless */ }
@@ -489,17 +523,23 @@ function resetRun() {
   lastCensus = { reds: [], prizes: [] };
   clearedList = [];
   glints.hideAll();
+  initFog();
 
-  if (preset.guard) {
-    // The preset's OWN cone and range, not the base mode's. `guardCfgFor`
-    // returns a copy, so a widened preset can never mutate the shared
-    // GUARD_MODES entry and quietly re-grade the measured base preset.
-    guard = new Guard(level, guardNav, guardCfgFor(preset, GUARD_MODES), patrol);
-    guardActor.show();
-  } else {
-    guard = null;
-    guardActor.hide();
+  guards = [];
+  const nGuards = guardOverride != null ? guardOverride : guardCountFor(preset);
+  const gCfg = guardCfgFor(preset, GUARD_MODES);
+  for (let i = 0; i < MAX_GUARDS; i++) {
+    if (i < nGuards && gCfg && patrols[i]) {
+      // The preset's OWN cone and range, not the base mode's. `guardCfgFor`
+      // returns a copy, so a widened preset can never mutate the shared
+      // GUARD_MODES entry and quietly re-grade the measured base preset.
+      guards.push(new Guard(level, guardNav, gCfg, patrols[i]));
+      guardActors[i].show();
+    } else {
+      guardActors[i].hide();
+    }
   }
+  guard = guards[0] || null;
   hud.objective(0, prizes.length);
   hud.grade('none');
   hudUpdates(0);
@@ -557,9 +597,11 @@ function stepSim(dt) {
   if (censusAcc >= 1 / LOOP.censusHz) { censusAcc = 0; refreshCensus(); }
 
   checkPickup();
+  updateFog();
 
-  if (guard) {
-    for (const ev of guard.update(dt, avatar.pos())) onGuardEvent(ev);
+  const gp = avatar.pos();
+  for (const g of guards) {
+    for (const ev of g.update(dt, gp)) onGuardEvent(ev);
   }
 
   const remaining = preset.budget - S.elapsed;
@@ -682,6 +724,67 @@ function collect(p) {
   refreshCensus();
 }
 
+/* --------------------------------------------------------------- fog of war */
+
+/**
+ * WHAT THE PLAYER HAS SEEN, on a 1 m lattice.
+ *
+ * Not a renderer concern and not a sim rule: it is a RECORD of the run, the
+ * same way `collectedSet` is. The cell is 1 m because the thumbnail is 26 px
+ * per metre -- a 5 cm cell would be a sub-pixel grid, and fog is read at a
+ * glance or not at all. The map is a PLAN, not a radar, and this is the half
+ * that makes finding your way a thing you earn by walking.
+ */
+let fog = null;
+let fogAt = { x: 1e9, z: 1e9 };
+
+const FOG_CELL = 1;        // m
+const FOG_RANGE = 3.2;     // m -- how far a standing eye opens the map
+
+function initFog() {
+  const cols = Math.max(1, Math.ceil(level.meta.plan.w / FOG_CELL));
+  const rows = Math.max(1, Math.ceil(level.meta.plan.d / FOG_CELL));
+  fog = { cols, rows, cell: FOG_CELL, x0: 0, z0: 0, seen: new Uint8Array(cols * rows) };
+  fogAt = { x: 1e9, z: 1e9 };
+}
+
+/**
+ * Reveal what a standing eye can see.
+ *
+ * Gated on MOVEMENT (0.3 m) rather than on the frame: the test walks
+ * `level.solids` once per candidate cell, and nothing about the answer changes
+ * while you stand still. `sightLine` is the CORE's own ray -- the same one the
+ * guard's cone and the red census use -- so "explored" means "visible from
+ * somewhere you have stood", not "within a radius". Walls close the map again,
+ * which is the entire point: a radius would hand you the bathroom through the
+ * bedroom wall.
+ */
+function updateFog() {
+  if (!fog || !avatar) return;
+  const dx = avatar.x - fogAt.x;
+  const dz = avatar.z - fogAt.z;
+  if (dx * dx + dz * dz < 0.09) return;      // 0.3 m
+  fogAt = { x: avatar.x, z: avatar.z };
+
+  const eyeY = avatar.groundY + level.body.eyeHeight;
+  const here = { x: avatar.x, z: avatar.z };
+  const i0 = Math.max(0, Math.floor((avatar.x - FOG_RANGE) / FOG_CELL));
+  const i1 = Math.min(fog.cols - 1, Math.floor((avatar.x + FOG_RANGE) / FOG_CELL));
+  const j0 = Math.max(0, Math.floor((avatar.z - FOG_RANGE) / FOG_CELL));
+  const j1 = Math.min(fog.rows - 1, Math.floor((avatar.z + FOG_RANGE) / FOG_CELL));
+  for (let j = j0; j <= j1; j++) {
+    for (let i = i0; i <= i1; i++) {
+      if (fog.seen[j * fog.cols + i]) continue;
+      const cx = fog.x0 + (i + 0.5) * FOG_CELL;
+      const cz = fog.z0 + (j + 0.5) * FOG_CELL;
+      if (Math.hypot(cx - avatar.x, cz - avatar.z) > FOG_RANGE) continue;
+      if (sightLine(level, here, { x: cx, z: cz }, eyeY, 0.05).clear) {
+        fog.seen[j * fog.cols + i] = 1;
+      }
+    }
+  }
+}
+
 function onGuardEvent(ev) {
   if (ev.type === 'caught') {
     S.catches += 1;
@@ -699,6 +802,17 @@ function onGuardEvent(ev) {
   }
 }
 
+/**
+ * How alarming a guard is right now. The HUD has ONE guard line, so it has to
+ * pick: a chaser beats an alert, which beats a patrol, and suspicion breaks
+ * ties inside a mode. Picking by index would name whoever happens to be first
+ * in the list, which is a fact about array order rather than about danger.
+ */
+const DANGER_RANK = { patrol: 0, alert: 1, chase: 2 };
+function dangerRank(g) {
+  return (DANGER_RANK[g.mode] || 0) * 10 + (g.suspicion || 0);
+}
+
 function hudUpdates() {
   const remaining = preset.budget - S.elapsed;
   hud.clock(remaining, preset.budget, remaining <= FEEL.lowTime);
@@ -708,17 +822,21 @@ function hudUpdates() {
     const h = document.getElementById('hint');
     if (h) h.classList.add('fade');
   }
-  if (guard) {
+  const hot = guards.length
+    ? guards.reduce((a, b) => (dangerRank(b) > dangerRank(a) ? b : a))
+    : null;
+  if (hot) {
+    const many = guards.length > 1 ? `${guards.length} 名哨兵` : '它';
     hud.guard({
-      enabled: true, mode: guard.mode, suspicion: guard.suspicion,
-      hint: guard.mode === 'chase' ? '被追了 —— 绕开它，等它跟丢。'
-        : guard.mode === 'alert' ? '它察觉到你了：离开视线，警觉会回落。'
-          : '它在巡逻。别站进它前面的扇区。',
+      enabled: true, mode: hot.mode, suspicion: hot.suspicion,
+      hint: hot.mode === 'chase' ? `被${many}追了 —— 绕开它，等它跟丢。`
+        : hot.mode === 'alert' ? `${many}里有一个察觉到你了：离开视线，警觉会回落。`
+          : `${many}在巡逻。别站进它们前面的扇区。`,
     });
   } else {
     hud.guard({ enabled: false, mode: 'off', suspicion: 0, hint: '没有守卫。把六个房间走熟。' });
   }
-  hud.grade(guard && guard.mode === 'chase' ? 'chase' : (remaining <= FEEL.lowTime ? 'low' : 'none'));
+  hud.grade(hot && hot.mode === 'chase' ? 'chase' : (remaining <= FEEL.lowTime ? 'low' : 'none'));
 }
 
 function roomName(id) {
@@ -729,11 +847,13 @@ function roomName(id) {
 /* ---------------------------------------------------------------- render */
 
 function render() {
-  if (guard && guardActor) {
+  if (guards.length) {
     const doCone = coneAcc >= 1 / CONE_HZ;
     if (doCone) coneAcc = 0;
     const t0 = performance.now();
-    guardActor.update(level, guard, doCone, S.t);
+    for (let i = 0; i < guards.length; i++) {
+      if (guardActors[i]) guardActors[i].update(level, guards[i], doCone, S.t);
+    }
     if (doCone) stats.coneMs = performance.now() - t0;
   }
 
@@ -754,9 +874,10 @@ function render() {
     // I pointing" is a second thing that can disagree.
     minimap.draw({
       player: { x: avatar.x, z: avatar.z, facing: avatar.facing() },
-      guard: guard
-        ? { x: guard.pos.x, z: guard.pos.z, facing: guard.facing, mode: guard.mode }
-        : null,
+      guards: guards.map((g) => ({
+        x: g.pos.x, z: g.pos.z, facing: g.facing, mode: g.mode,
+      })),
+      fog,
     });
   }
 
@@ -861,6 +982,9 @@ function info() {
     cleared: clearedReds.size,
     player: avatar ? avatar.state() : null,
     guard: guard ? guard.state() : null,
+    guards: guards.map((g) => g.state()),
+    guardOverride,
+    fogSeen: fog ? fog.seen.reduce((a, v) => a + v, 0) : 0,
     census: { reds: lastCensus.reds.length, prizes: lastCensus.prizes.length },
     markersOn,
     seedPolicy: seedPinned ? 'pinned' : 'random',
@@ -907,6 +1031,8 @@ const api = {
   get patrol() { return patrol; },
   get prizes() { return prizes; },
   get guard() { return guard; },
+  get guards() { return guards; },
+  get fog() { return fog; },
   get avatar() { return avatar; },
   get prizeField() { return prizeField; },
   get glints() { return glints; },
@@ -915,13 +1041,14 @@ const api = {
   summary: () => placementSummary(level, core),
 
   /** Recompute the placement for a new seed / count without restarting. */
-  async configure({ seed: s, count, markers, pin } = {}) {
+  async configure({ seed: s, count, markers, pin, guards: nG } = {}) {
     // An explicit seed PINS. `configure({seed})` is how both the menu's seed
     // box and the headless harness say "this exact layout, please"; `pin:
     // false` is how they say "never mind, go random again".
     if (s) { seed = s; seedPinned = true; }
     if (pin === false) seedPinned = false;
     if (count) prizeCount = count;
+    if (typeof nG === 'number') guardOverride = nG;
     if (markers != null) { markersOn = markers; if (!markersOn) glints.hideAll(); }
     S.phase = 'loading';
     await rebuildCore();
@@ -935,10 +1062,13 @@ const api = {
   /**
    * @param opts.seed    pin this seed first; the run is then reproducible
    * @param opts.random  clear any pin, so this begin draws a fresh layout
+   * @param opts.guards  override the preset's garrison (0 = none). A test
+   *                     hook; every `begin` resets it, so it cannot stick.
    */
   async begin(presetId, opts = {}) {
     if (opts.seed) { seed = opts.seed; seedPinned = true; }
     if (opts.random) seedPinned = false;
+    guardOverride = (typeof opts.guards === 'number') ? opts.guards : null;
     await beginRun(presetId || (preset && preset.id) || DEFAULT_DIFFICULTY);
     return info();
   },

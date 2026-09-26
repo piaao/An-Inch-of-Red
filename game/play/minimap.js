@@ -23,10 +23,26 @@
  * `project(x, z)` is public on purpose: it is how the verifier asserts that the
  * triangle lands exactly where the world position maps, instead of trusting a
  * picture of one.
+ *
+ * THE MARKERS ARE BUILT FOR CONTRAST, NOT FOR SIZE. A slightly larger triangle
+ * is the wrong lever: the acceptance suite bounds the marker's changed-pixel
+ * blob at 12 CSS px, and at this scale the bar is nearly the shape's own
+ * width. So the shape keeps its size and gains a dark ground ring, a thin
+ * WHITE edge and a solid dot at the position -- the guard's #7fd4ff on the
+ * #242e3b floor was a contrast you could only read if you already knew where
+ * to look.
+ *
+ * FOG IS PASSED IN, NOT TRACKED HERE. `draw({fog})` blacks out every cell the
+ * run has not seen yet, so the thumbnail starts as a dark card and is drawn by
+ * walking. What has been seen is simulation state and lives with the run --
+ * this class stays a function of what it is handed.
  */
 
 const PAD = 8;                 // CSS px of margin inside the canvas
-const ARROW = 5.2;             // CSS px, tip length of a heading arrow
+const ARROW = 5.0;             // CSS px, tip length of a heading arrow.
+// 5.0 rather than 5.2 is not a size cut: the marker's changed-pixel blob is
+// bounded at 12 CSS px by `verify_play`, and contrast (white edge, dot,
+// guard ring) is what buys legibility here, not area.
 // The plan is 10 x 8 m. At the original 208 CSS px the scale was 19 px/m,
 // which made the 1.75 m bathroom a 33 px box -- too narrow for a
 // three-character name at ANY font size worth reading, so 「卫生间」 was
@@ -46,6 +62,10 @@ const INK_LABEL = 'rgba(159,176,196,.80)';
 const GUARD_INK = { patrol: '#7fd4ff', alert: '#ffc24d', chase: '#ff4d4d' };
 const PLAYER_INK = '#ffd98a';
 const Halo = 'rgba(8,10,14,.92)';
+/** The thin edge on every marker. White holds on a dark floor AND a lit one. */
+const OUTLINE = 'rgba(255,255,255,.92)';
+/** Unexplored ground: near-black, a touch blue so it still reads as the map. */
+const INK_FOG = 'rgba(6,8,12,.94)';
 
 export class Minimap {
   constructor(canvas, level) {
@@ -95,8 +115,13 @@ export class Minimap {
    *                draw with the arrow, grab, diff) exactly the way the world
    *                guard is A/B'd in `scene.js`.
    * @param guard   {x, z, facing, mode} or null
+   * @param guards    the whole garrison; `guard` is still accepted for the
+   *                single-sentry callers (the verifier draws one)
+   * @param fog     {cols, rows, cell, x0, z0, seen} or null. `seen` is a
+   *                Uint8Array of cols*rows, 1 = explored. Omit it and the
+   *                plan is drawn whole -- which is what the verifier wants.
    */
-  draw({ player = null, guard = null } = {}) {
+  draw({ player = null, guard = null, guards = null, fog = null } = {}) {
     const c = this.ctx;
     const m = this.metrics();
     c.clearRect(0, 0, m.cssW, m.cssD);
@@ -149,15 +174,40 @@ export class Minimap {
     }
     c.stroke();
 
-    // Guard first, player last: you are the one you must never lose.
-    if (guard) {
-      const p = this.project(guard.x, guard.z);
-      this.arrow(p.x, p.y, guard.facing, ARROW * 1.16,
-        GUARD_INK[guard.mode] || GUARD_INK.patrol, Halo);
+    // Fog first, so it covers the plan and NOT the people: a marker you cannot
+    // see because you have not walked there yet would be the map forgetting
+    // where you are. Half a pixel is added to each cell so the seams between
+    // them do not show as hairlines of un-fogged floor.
+    //
+    // "First" is an ASSERTION, not a comment. `scripts/verify_minimap.mjs`
+    // records the call order and fails if the last fog cell is painted after
+    // the first marker -- because moving this block below the markers changes
+    // no other reading at all, and quietly makes a guard in an unexplored room
+    // vanish from the map, in the one game whose whole point is "where is it".
+    if (fog && fog.seen) {
+      const cs = Math.max(1, fog.cell * this.scale) + 0.5;
+      c.fillStyle = INK_FOG;
+      for (let j = 0; j < fog.rows; j++) {
+        for (let i = 0; i < fog.cols; i++) {
+          if (fog.seen[j * fog.cols + i]) continue;
+          const a = this.project(fog.x0 + i * fog.cell, fog.z0 + j * fog.cell);
+          c.fillRect(a.x, a.y, cs, cs);
+        }
+      }
+    }
+
+    // Guards first, player last: you are the one you must never lose. A
+    // single `guard` is still accepted -- it is what the verifier draws -- but
+    // the run hands over the whole garrison, because a preset may hold two.
+    const gs = (guards && guards.length) ? guards : (guard ? [guard] : []);
+    for (const g of gs) {
+      const p = this.project(g.x, g.z);
+      this.arrow(p.x, p.y, g.facing, ARROW * 1.1,
+        GUARD_INK[g.mode] || GUARD_INK.patrol, true);
     }
     if (player) {
       const p = this.project(player.x, player.z);
-      this.arrow(p.x, p.y, player.facing, ARROW, PLAYER_INK, Halo);
+      this.arrow(p.x, p.y, player.facing, ARROW, PLAYER_INK, false);
     }
     return m;
   }
@@ -167,8 +217,22 @@ export class Minimap {
    * +z down). Backed off by 0.55 of the tip length so the shape's centroid sits
    * essentially ON the position -- a triangle drawn "from the position to the
    * front" would read as if you were standing where you are about to be.
+   *
+   * Drawn in THREE passes: a dark ground ring, the colour, then a thin white
+   * edge -- plus a small solid dot exactly at the position. The dot is the
+   * half that size cannot buy: the triangle's centroid is deliberately behind
+   * the position, so without it "where is the marker pointing from" is a
+   * judgement call rather than a fact. `ring` adds the outer circle the guard
+   * gets, which is what makes the two markers tell apart in a glance instead
+   * of by colour alone.
+   *
+   * Every part stays inside the blob bound the acceptance suite asserts: the
+   * widest marker (the guard, at ARROW * 1.1) measures 10.9 CSS px against a
+   * bar of 12 -- read back by `scripts/verify_minimap.mjs`, which drives THIS file
+   * with a recording canvas. That is why the shape did not grow: contrast is
+   * free, and area is what the bar measures.
    */
-  arrow(px, py, facing, len, fill, stroke) {
+  arrow(px, py, facing, len, fill, ring = false) {
     const c = this.ctx;
     const dx = Math.cos(facing);
     const dz = Math.sin(facing);
@@ -183,10 +247,26 @@ export class Minimap {
     c.lineTo(bx + nx * len * 0.5, by + nz * len * 0.5);
     c.lineTo(bx - nx * len * 0.5, by - nz * len * 0.5);
     c.closePath();
+    c.strokeStyle = Halo;
+    c.lineWidth = 2.0;
+    c.stroke();
     c.fillStyle = fill;
     c.fill();
-    c.strokeStyle = stroke;
-    c.lineWidth = 1;
+    c.strokeStyle = OUTLINE;
+    c.lineWidth = 1.0;
     c.stroke();
+
+    c.beginPath();
+    c.arc(px, py, 1.9, 0, Math.PI * 2);
+    c.fillStyle = OUTLINE;
+    c.fill();
+
+    if (ring) {
+      c.beginPath();
+      c.arc(px, py, 3.6, 0, Math.PI * 2);
+      c.strokeStyle = fill;
+      c.lineWidth = 1.6;
+      c.stroke();
+    }
   }
 }

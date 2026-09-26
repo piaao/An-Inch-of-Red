@@ -30,7 +30,12 @@ import { aabbOf } from '../core/level.js';
 
 const DEG = Math.PI / 180;
 
-const DEFAULTS = {
+// EXPORTED so a ruler can compare it against the shipped snapshot. The packet
+// size has exactly one source of truth -- this object -- and one copy of it,
+// `game/arenas/room_scene.json`, which is written by `snapshot_arena.mjs`.
+// Two copies of one fact drift; the export is what lets `verify_packets.mjs`
+// assert they have not.
+export const DEFAULTS = {
   id: 'arena',
   name: 'arena',
   cell: 1.0,
@@ -46,7 +51,15 @@ const DEFAULTS = {
     colour: '#C8102E',          // ΔE 19.6 from the kit's #F05E57 -- design doc §3.2
     shadowColour: '#8E0F22',
     sealColour: '#E8C46A',
-    size: [0.16, 0.026, 0.10],
+    // 11.5 x 0.6 x 7.2 cm. It used to be 16 x 2.6 x 10 -- a wallet-sized card.
+    // `size[1]` is THICKNESS and it is pure decoration: the census gates
+    // "noticeable" on `noticeRange(size[0] * size[2])` (vision.js), so thinning
+    // the packet changes nothing about what can be spotted. The PLAN dimensions
+    // do: 16x10 -> 11.5x7.2 cm is 0.0160 -> 0.0083 m2, which shortens the
+    // notice range by sqrt(0.5175) = 0.72x. That is a real difficulty change,
+    // and the cards' win rates were measured at the OLD size -- so they carry
+    // the size they were taken at until they are re-measured.
+    size: [0.115, 0.006, 0.072],
     pickup: 0.42,
   },
 };

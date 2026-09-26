@@ -1,0 +1,190 @@
+# P4 gates: the packets/garrison ruler, and the minimap ruler
+#
+# Committed snapshot. A re-run writes to work/, never here -- and can be
+# pointed anywhere with --log, which is not a convenience but a fix:
+#   node scripts/verify_packets.mjs [--log <path>]  -> work/verify_packets.log
+#   node scripts/verify_minimap.mjs [--log <path>]  -> work/verify_minimap.log
+#   python work/_p4_mut.py                          -> (stdout; restores what it edits)
+#
+# WHY THIS FILE EXISTS. P4 changed five things, and three of the five suites
+# that would normally cover them CANNOT RUN ON THIS HOST (verify_play /
+# verify_playground / verify_live / verify_gen_play / verify_world all spawn
+# Chrome). So the two questions that do not need a browser were given gates
+# of their own, and those gates live here.
+#
+# The last section is the MUTATION run. A checker that cannot fail is worse
+# than no checker -- this project shipped one once -- so each new gate was
+# fed a minimal physical edit and had to go red ON THE NAMED CHECK.
+
+==============================================================================
+1.  THE COMMITTED TREE, materialised from the index
+    (git checkout-index -a --prefix=work/_stage_tree/)   -- 318 files, exit 0
+    music-work references inside game/play/: NONE
+==============================================================================
+  exit 0  18/18 checks passed / VERDICT: PASS
+
+  exit 0  13/13 checks passed / VERDICT: PASS
+
+==============================================================================
+2.  node scripts/verify_packets.mjs      (exit 0)
+==============================================================================
+== the 红包 the shipped arena promised ==
+  snapshot collectible.size [0.115,0.006,0.072]
+  area 0.00828 m2 -> notice range 3.22 m  (was 0.016 m2 -> 4.47 m)
+  ok   the packet is 6 mm thick -- thin to the point of being a slip of paper  -- 6.0 mm
+  ok   the plan area fell by more than 45 % (this is the part that moves difficulty)  -- 51.7 % of the old area
+  ok   and the notice range fell with it -- thinner did NOT do this, smaller did  -- 3.22 m vs 4.47 m, ratio 0.72x
+  ok   the snapshot and fromLayout.DEFAULTS still say the same size (one fact, two copies)  -- [0.115,0.006,0.072]
+
+== the preset table ==
+  见习  solo    guards=1 prizes=6 surveil=0.8 prizeScale=1.15
+  标准  patrol  guards=1 prizes=6 surveil=1 prizeScale=1
+  紧张  tight   guards=2 prizes=12 surveil=1.19 prizeScale=0.85
+  硬核  hunter  guards=2 prizes=24 surveil=1 prizeScale=0.7
+  ok   见习 has a guard -- it used to have NONE (a rung with nothing on it)
+  ok   标准 has one guard
+  ok   紧张 has two guards and twelve packets
+  ok   硬核 has two guards and twenty-four packets
+  ok   every preset hides at least one packet per room (>= 6)  -- 6/6/12/24
+
+== what the core actually builds ==
+  count= 6  placed=6  rooms 5/6  anchors 42  patrols 2  waypoints 6/6  378 ms
+  ok   count 6 places exactly 6 packets  -- 6 placed
+  ok   count 6 builds two patrols
+  count=12  placed=12  rooms 6/6  anchors 42  patrols 2  waypoints 6/6  298 ms
+  ok   count 12 places exactly 12 packets  -- 12 placed
+  ok   count 12 builds two patrols
+  count=24  placed=24  rooms 6/6  anchors 42  patrols 2  waypoints 6/6  209 ms
+  ok   count 24 places exactly 24 packets  -- 24 placed
+  ok   count 24 builds two patrols
+  ok   none of the 24 packets ended up on the floor (the design rule, at max count)  -- 0 of 24
+
+== the two guards walk two different walks ==
+  patrol 0: 6 waypoints;  patrol 1: 6
+  ok   the second guard does not walk the first one's route  -- routes differ
+  ok   patrol[0] is bit-for-bit the same whether or not patrol[1] is built  -- 6 vs 6 waypoints
+
+========================================================================
+  18/18 checks passed
+========================================================================
+  VERDICT: PASS
+  log: work/verify_packets.log
+
+==============================================================================
+3.  node scripts/verify_minimap.mjs      (exit 0)
+==============================================================================
+== the plan ==
+  canvas 260 x 211.2 CSS px, scale 24.40 px/m, 6 rooms, 6 doors
+
+== handed no fog, the map draws whole ==
+  ok   zero fog rectangles without a fog argument  -- 0
+
+== an unexplored map is a black card ==
+  ok   every unexplored cell is painted  -- 80 of 80 cells (10 x 8 on a 10 x 8 m plan)
+
+== walking opens the map, cell by cell ==
+  ok   exactly the seen cells go unpainted  -- 77 painted, 3 cells marked seen
+
+== the fog is a floor, not a lid ==
+  ok   every fog cell is painted BEFORE the first player/guard marker  -- last fog call #214, first marker #215 -- a guard in an unexplored room still shows on the map
+
+== the markers, and the 12 CSS px blob the suite bounds ==
+  ok   two heading triangles, each stroked twice (dark ground ring, then white edge)  -- 4 strokes, 2 of them white
+  ok   both markers carry a solid centre dot at the position  -- 2
+  ok   ONLY the guard gets the outer ring -- friend and threat differ by shape  -- 1
+  ok   the widest marker blob still fits the suite's 12 px bound  -- 10.94 px (bar is 12; the old single-stroke marker was ~9)
+
+== a second guard is an addition, not a rename ==
+  ok   the single-guard call `{guard}` still draws both markers  -- 2
+  ok   two guards draw three markers (player + 2)  -- 3
+
+== the run passes what this needs ==
+  ok   play.js hands the map its fog
+  ok   play.js hands the map the whole garrison
+  ok   exploration is opened through the CORE's own sightLine
+
+========================================================================
+  13/13 checks passed
+========================================================================
+  VERDICT: PASS
+  log: work/verify_minimap.log
+
+==============================================================================
+4.  python work/_p4_mut.py               (exit 0)
+==============================================================================
+backed up 4 file(s), 121824 bytes total
+
+--- A1  红包厚度 6 mm -> 26 mm，只改 builder
+    scripts/verify_packets.mjs -> exit 1 (want non-zero), named check present: yes
+    | 17/18 checks passed
+    | FAILED: the snapshot and fromLayout.DEFAULTS still say the same size (one fact, two copies) — snapshot [0.115,0.006,0.072] vs DEFAULTS [0.115,0.026,0.072]
+
+--- A2  红包厚度 6 mm -> 26 mm，只改快照
+    scripts/verify_packets.mjs -> exit 1 (want non-zero), named check present: yes
+    | 16/18 checks passed
+    | FAILED: the packet is 6 mm thick -- thin to the point of being a slip of paper — 26.0 mm
+    | FAILED: the snapshot and fromLayout.DEFAULTS still say the same size (one fact, two copies) — snapshot [0.115,0.026,0.072] vs DEFAULTS [0.115,0.006,0.072]
+
+--- A3  见习 的守卫数 1 -> 2（它就不是阶梯最窄的那一档了）
+    scripts/verify_packets.mjs -> exit 1 (want non-zero), named check present: yes
+    | 17/18 checks passed
+    | FAILED: 见习 has a guard -- it used to have NONE (a rung with nothing on it) —
+
+--- B1  迷雾画在标识之后（守卫会在地图上消失）
+    scripts/verify_minimap.mjs -> exit 1 (want non-zero), named check present: yes
+    | 12/13 checks passed
+    | FAILED: every fog cell is painted BEFORE the first player/guard marker — last fog call #222, first marker #138 -- a guard in an unexplored room still shows on the map
+
+--- B2  标识底环 2.0 px -> 3.5 px（把它「变明显」的方式改成变大）
+    scripts/verify_minimap.mjs -> exit 1 (want non-zero), named check present: yes
+    | 12/13 checks passed
+    | FAILED: the widest marker blob still fits the suite's 12 px bound — 12.44 px (bar is 12; the old single-stroke marker was ~9)
+
+--- B3  把守卫的外环也摘掉（两个标识只靠颜色区分）
+    scripts/verify_minimap.mjs -> exit 1 (want non-zero), named check present: yes
+    | 12/13 checks passed
+    | FAILED: ONLY the guard gets the outer ring -- friend and threat differ by shape — 0
+
+--- restored ---
+  game/arena/fromLayout.js            18845 bytes  OK
+  game/arenas/room_scene.json         71712 bytes  OK
+  game/play/config.js                 19168 bytes  OK
+  game/play/minimap.js                12099 bytes  OK
+
+checked 4 files restored byte-for-byte: yes
+NON-VACUITY: 6/6 mutations turned the right check red
+
+==============================================================================
+NOTES
+==============================================================================
+1. Counts as run: 18/18 checks passed / VERDICT: PASS + 13/13 checks passed / VERDICT: PASS, and 6/6 mutations turned the right check red.
+   Section 1 runs the same two gates against the INDEX, so the evidence
+   is about the bytes being committed rather than about the working tree
+   -- which also carries a parallel music change that is NOT in this
+   commit. The working tree's logs (sections 2 and 3) and the index
+   tree's came out identical on the readings that matter.
+2. THE TWO FALSE GREENS, kept because they are the finding.
+   * A3 (solo `guards: 1 -> 0`) stayed green because `guardCountFor`
+     is `Math.max(1, preset.guards || 1)`: the 0 is silently coerced,
+     so the mutation did not change the built world at all. Re-run as
+     `1 -> 2` and the named check fires. A preset therefore cannot say
+     "no guard"; standing down is the play-layer hook
+     `begin(id, { guards: 0 })`.
+   * B2 (marker ground ring `2.0 -> 2.6 px`) stayed green because the
+     widest blob only reaches 11.54 px -- it never crosses the bar of
+     12. The 2.6 value was rejected earlier for ANTIALIASING margin on
+     a real canvas; that is a judgement, and it is not asserted. At
+     3.5 px the blob is 12.44 and the check fires.
+   Lesson: a mutation must be shown to have changed the world before
+   it is used to judge a gate. Both times, the gate was right.
+3. AND ONE THAT WAS NOT A FALSE GREEN BUT A POLLUTED ONE. The first
+   version of the two gates wrote their log to a fixed path. A mutation
+   run therefore made each gate overwrite its OWN canonical log with a
+   FAILED transcript, and reverting the source afterwards did not revert
+   the log -- `work/verify_packets.log` sat there reporting a failure
+   that never happened to any real code. `--log` exists because of that;
+   the mutation run now writes work/_mut_<tag>.log and cannot touch the
+   canonical slot. "Remember to restore the log" is not a mechanism.
+4. What these gates do NOT cover, and who does: pixels. Marker blob
+   geometry is asserted here as DRAW CALLS; the centroid-vs-project()
+   half lives in scripts/verify_play.mjs and needs a browser.
