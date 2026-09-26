@@ -1,270 +1,257 @@
 PASS  10x8  6 rooms  60 items
-   params {"w":10,"d":8,"rooms":6,"items":60,"seed":"procgen","minRoom":2.4,"lane":0.62,"gap":0.02,"doorMargin":1,"loopDoor":0.28,"maxLoopDoors":2,"windowChance":0.2,"roomCap":26,"floorTries":26}
-   rooms 6 (bedroom, kitchen, living, bath, study, dining)  doors 6  walls 12 runs / 62 segments
-   items 56/60  climbTops 38  free 79.4%  rejections {"overlap":333,"outside":4,"lane":60,"slot":19,"sealed":1,"noHost":3,"noModel":0,"budget":3,"seed":0}
+   params {"w":10,"d":8,"rooms":6,"program":null,"items":60,"seed":"procgen","minRoom":2.4,"lane":0.62,"gap":0.02,"doorMargin":1,"loopDoor":0.28,"maxLoopDoors":2,"windowChance":0.2,"roomCap":26,"floorTries":26}
+   rooms 6 (bath, living, bedroom, kitchen, dining, study)  doors 7  walls 12 runs / 62 segments
+   items 56/60  climbTops 35  free 78.6%  rejections {"overlap":217,"outside":0,"lane":27,"slot":10,"sealed":0,"noHost":1,"noModel":0,"budget":2,"seed":0}
    [ok] the generator honoured its parameters
-   [ok] level.js validateLevel  -- 130 solids, 6 rooms, spawn (8.01, 7.46)
+   [ok] level.js validateLevel  -- 132 solids, 6 rooms, spawn (4.59, 7.28)
    [ok] no hole in a wall without a door
-   [ok] every walkable cell is reachable (no pocket over 0.045 m2)  -- 23486/32000 cells, 1 region(s); no unreachable pocket
-   [ok] the level carries the layout it was built from (what you see is what you play)  -- layout 10x8 m, 6 rooms, 45 models, 10x8 m plan
+   [ok] every walkable cell is reachable (no pocket over 0.045 m2)  -- 23040/32000 cells, 1 region(s); no unreachable pocket
+   [ok] the level carries the layout it was built from (what you see is what you play)  -- layout 10x8 m, 6 rooms, 47 models, 10x8 m plan
    [ok] every room resolves to its own region, no pocket the walker could use  -- 6/6 rooms, 0 unowned region(s) (0 under the walker's 0.045 m2, 0 over it)
    [ok] A* spawn -> every room centre
-   [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 25 anchors scored, rooms used 3/6
+   [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 32 anchors scored, rooms used 3/6
    [ok] the outer wall stops the walker (no standable cell in the edge strip)  -- 0/72 sampled edge points standable
-   arrangement (a separate axis) 1/6
-   [XX] entry-public  the front door opens into a shared room, not a bedroom or a bath  -- entered into bedroom (bedroom)
-   [ok] entry-hub  the room you enter is a most-connected room (a hall, not a dead end)  -- entry "bedroom" is a way through to 2 room(s); the busiest room(s) reach 2 (bedroom/kitchen/living/bath)
-   [XX] door-hops  every room is within 3 doorways of the front door  -- furthest room is 4 hop(s) away
-   [XX] bath  the bathroom is one private room, reached without crossing a bedroom  -- bath: 2 door(s) from kitchen+study; reachable from the entry without passing a bedroom: yes
-   [XX] kitchen-dining  the kitchen opens onto the dining room  -- kitchen kitchen->[living,bath]
-   [XX] bedroom-window  every bedroom with an outside wall has a window  -- 1 of 1 bedroom(s) have an outside wall; 1 without a window: bedroom
-   .. front door on the south wall at x 8..9
+   arrangement (a separate axis) 6/6
+   [ok] entry-public  the front door opens into a shared room, not a bedroom or a bath  -- entered into living (living)
+   [ok] entry-hub  the room you enter is a most-connected room (a hall, not a dead end)  -- entry "living" is a way through to 4 room(s); the busiest room(s) reach 4 (living)
+   [ok] door-hops  every room is within 3 doorways of the front door  -- furthest room is 2 hop(s) away
+   [ok] bath  the bathroom is one private room, reached without crossing a bedroom  -- bath: 1 door(s) from living; reachable from the entry without passing a bedroom: yes
+   [ok] kitchen-dining  the kitchen opens onto the dining room  -- kitchen kitchen->[dining]
+   [ok] bedroom-window  every bedroom with an outside wall has a window  -- 1 of 1 bedroom(s) have an outside wall; all of them have one
+   .. dining: seed moved off the room centre (furniture covers it)
 
 PASS  8x6   4 rooms  40 items
-   params {"w":8,"d":6,"rooms":4,"items":40,"seed":"procgen","minRoom":2.4,"lane":0.62,"gap":0.02,"doorMargin":1,"loopDoor":0.28,"maxLoopDoors":2,"windowChance":0.2,"roomCap":26,"floorTries":26}
-   rooms 4 (bath, living, bedroom, kitchen)  doors 4  walls 9 runs / 42 segments
-   items 35/40  climbTops 23  free 74.9%  rejections {"overlap":157,"outside":0,"lane":20,"slot":10,"sealed":1,"noHost":1,"noModel":0,"budget":2,"seed":0}
+   params {"w":8,"d":6,"rooms":4,"program":null,"items":40,"seed":"procgen","minRoom":2.4,"lane":0.62,"gap":0.02,"doorMargin":1,"loopDoor":0.28,"maxLoopDoors":2,"windowChance":0.2,"roomCap":26,"floorTries":26}
+   rooms 4 (living, bath, kitchen, bedroom)  doors 4  walls 8 runs / 42 segments
+   items 36/40  climbTops 26  free 73.2%  rejections {"overlap":219,"outside":0,"lane":16,"slot":8,"sealed":0,"noHost":1,"noModel":0,"budget":3,"seed":0}
    [ok] the generator honoured its parameters
-   [ok] level.js validateLevel  -- 85 solids, 4 rooms, spawn (3.62, 5.29)
+   [ok] level.js validateLevel  -- 86 solids, 4 rooms, spawn (1.98, 5.45)
    [ok] no hole in a wall without a door
-   [ok] every walkable cell is reachable (no pocket over 0.045 m2)  -- 13189/19200 cells, 1 region(s); no unreachable pocket
-   [ok] the level carries the layout it was built from (what you see is what you play)  -- layout 8x6 m, 4 rooms, 36 models, 8x6 m plan
+   [ok] every walkable cell is reachable (no pocket over 0.045 m2)  -- 12851/19200 cells, 1 region(s); no unreachable pocket
+   [ok] the level carries the layout it was built from (what you see is what you play)  -- layout 8x6 m, 4 rooms, 32 models, 8x6 m plan
    [ok] every room resolves to its own region, no pocket the walker could use  -- 4/4 rooms, 0 unowned region(s) (0 under the walker's 0.045 m2, 0 over it)
    [ok] A* spawn -> every room centre
-   [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 21 anchors scored, rooms used 3/4
+   [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 27 anchors scored, rooms used 3/4
    [ok] the outer wall stops the walker (no standable cell in the edge strip)  -- 0/56 sampled edge points standable
-   arrangement (a separate axis) 3/6, 1 n/a
-   [XX] entry-public  the front door opens into a shared room, not a bedroom or a bath  -- entered into bedroom (bedroom)
-   [XX] entry-hub  the room you enter is a most-connected room (a hall, not a dead end)  -- entry "bedroom" is a way through to 1 room(s); the busiest room(s) reach 2 (bath/living)
-   [ok] door-hops  every room is within 3 doorways of the front door  -- furthest room is 3 hop(s) away
-   [XX] bath  the bathroom is one private room, reached without crossing a bedroom  -- bath: 2 door(s) from bedroom+living; reachable from the entry without passing a bedroom: yes
+   arrangement (a separate axis) 6/6, 1 n/a
+   [ok] entry-public  the front door opens into a shared room, not a bedroom or a bath  -- entered into living (living)
+   [ok] entry-hub  the room you enter is a most-connected room (a hall, not a dead end)  -- entry "living" is a way through to 2 room(s); the busiest room(s) reach 2 (living/kitchen)
+   [ok] door-hops  every room is within 3 doorways of the front door  -- furthest room is 2 hop(s) away
+   [ok] bath  the bathroom is one private room, reached without crossing a bedroom  -- bath: 1 door(s) from living; reachable from the entry without passing a bedroom: yes
    [ok] kitchen-dining  the kitchen opens onto the dining room  -- not applicable  -- not applicable: no dining room in this plan
    [ok] bedroom-window  every bedroom with an outside wall has a window  -- 1 of 1 bedroom(s) have an outside wall; all of them have one
-   .. front door on the south wall at x 3..4
    .. living: seed moved off the room centre (furniture covers it)
 
 PASS  12x9  7 rooms  95 items
-   params {"w":12,"d":9,"rooms":7,"items":95,"seed":"procgen","minRoom":2.4,"lane":0.62,"gap":0.02,"doorMargin":1,"loopDoor":0.28,"maxLoopDoors":2,"windowChance":0.2,"roomCap":26,"floorTries":26}
-   rooms 7 (living, bedroom, kitchen, dining, study, bath, bedroom2)  doors 7  walls 15 runs / 78 segments
-   items 92/95  climbTops 60  free 76.0%  rejections {"overlap":339,"outside":0,"lane":76,"slot":47,"sealed":0,"noHost":6,"noModel":0,"budget":1,"seed":0}
+   params {"w":12,"d":9,"rooms":7,"program":null,"items":95,"seed":"procgen","minRoom":2.4,"lane":0.62,"gap":0.02,"doorMargin":1,"loopDoor":0.28,"maxLoopDoors":2,"windowChance":0.2,"roomCap":26,"floorTries":26}
+   rooms 7 (bath, living, bedroom, kitchen, dining, bedroom2, study)  doors 8  walls 14 runs / 77 segments
+   items 89/95  climbTops 63  free 77.8%  rejections {"overlap":382,"outside":3,"lane":33,"slot":14,"sealed":0,"noHost":2,"noModel":0,"budget":1,"seed":0}
    [ok] the generator honoured its parameters
-   [ok] level.js validateLevel  -- 184 solids, 7 rooms, spawn (9.97, 8.49)
+   [ok] level.js validateLevel  -- 182 solids, 7 rooms, spawn (5.58, 8.28)
    [ok] no hole in a wall without a door
-   [ok] every walkable cell is reachable (no pocket over 0.045 m2)  -- 30785/43200 cells, 1 region(s); no unreachable pocket
-   [ok] the level carries the layout it was built from (what you see is what you play)  -- layout 12x9 m, 7 rooms, 52 models, 12x9 m plan
+   [ok] every walkable cell is reachable (no pocket over 0.045 m2)  -- 31684/43200 cells, 1 region(s); no unreachable pocket
+   [ok] the level carries the layout it was built from (what you see is what you play)  -- layout 12x9 m, 7 rooms, 51 models, 12x9 m plan
    [ok] every room resolves to its own region, no pocket the walker could use  -- 7/7 rooms, 0 unowned region(s) (0 under the walker's 0.045 m2, 0 over it)
    [ok] A* spawn -> every room centre
-   [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 45 anchors scored, rooms used 3/7
+   [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 39 anchors scored, rooms used 3/7
    [ok] the outer wall stops the walker (no standable cell in the edge strip)  -- 0/84 sampled edge points standable
-   arrangement (a separate axis) 4/6
-   [ok] entry-public  the front door opens into a shared room, not a bedroom or a bath  -- entered into study (study)
-   [XX] entry-hub  the room you enter is a most-connected room (a hall, not a dead end)  -- entry "study" is a way through to 1 room(s); the busiest room(s) reach 4 (kitchen)
-   [ok] door-hops  every room is within 3 doorways of the front door  -- furthest room is 3 hop(s) away
-   [XX] bath  the bathroom is one private room, reached without crossing a bedroom  -- bath: 1 door(s) from bedroom; reachable from the entry without passing a bedroom: NO
-   [ok] kitchen-dining  the kitchen opens onto the dining room  -- kitchen kitchen->[bedroom,dining,bedroom,living]
+   arrangement (a separate axis) 6/6
+   [ok] entry-public  the front door opens into a shared room, not a bedroom or a bath  -- entered into living (living)
+   [ok] entry-hub  the room you enter is a most-connected room (a hall, not a dead end)  -- entry "living" is a way through to 4 room(s); the busiest room(s) reach 4 (living)
+   [ok] door-hops  every room is within 3 doorways of the front door  -- furthest room is 2 hop(s) away
+   [ok] bath  the bathroom is one private room, reached without crossing a bedroom  -- bath: 1 door(s) from living; reachable from the entry without passing a bedroom: yes
+   [ok] kitchen-dining  the kitchen opens onto the dining room  -- kitchen kitchen->[dining]
    [ok] bedroom-window  every bedroom with an outside wall has a window  -- 2 of 2 bedroom(s) have an outside wall; all of them have one
-   .. front door on the south wall at x 10..11
 
 PASS  14x10 9 rooms 130 items
-   params {"w":14,"d":10,"rooms":9,"items":130,"seed":"procgen","minRoom":2.4,"lane":0.62,"gap":0.02,"doorMargin":1,"loopDoor":0.28,"maxLoopDoors":2,"windowChance":0.2,"roomCap":26,"floorTries":26}
-   rooms 9 (living, bedroom, kitchen, dining, study, study2, bath, dining2, bedroom2)  doors 11  walls 19 runs / 97 segments
-   items 125/130  climbTops 86  free 74.5%  rejections {"overlap":371,"outside":1,"lane":82,"slot":27,"sealed":3,"noHost":3,"noModel":0,"budget":2,"seed":0}
+   params {"w":14,"d":10,"rooms":9,"program":null,"items":130,"seed":"procgen","minRoom":2.4,"lane":0.62,"gap":0.02,"doorMargin":1,"loopDoor":0.28,"maxLoopDoors":2,"windowChance":0.2,"roomCap":26,"floorTries":26}
+   rooms 9 (bath, living, bedroom, kitchen, dining, study, bedroom2, bedroom3, study2)  doors 11  walls 20 runs / 95 segments
+   items 120/130  climbTops 90  free 75.0%  rejections {"overlap":378,"outside":10,"lane":125,"slot":93,"sealed":1,"noHost":3,"noModel":0,"budget":2,"seed":0}
    [ok] the generator honoured its parameters
-   [ok] level.js validateLevel  -- 244 solids, 9 rooms, spawn (10.50, 8.02)
+   [ok] level.js validateLevel  -- 237 solids, 9 rooms, spawn (5.71, 9.31)
    [ok] no hole in a wall without a door
-   [ok] every walkable cell is reachable (no pocket over 0.045 m2)  -- 39413/56000 cells, 1 region(s); no unreachable pocket
-   [ok] the level carries the layout it was built from (what you see is what you play)  -- layout 14x10 m, 9 rooms, 49 models, 14x10 m plan
+   [ok] every walkable cell is reachable (no pocket over 0.045 m2)  -- 39635/56000 cells, 1 region(s); no unreachable pocket
+   [ok] the level carries the layout it was built from (what you see is what you play)  -- layout 14x10 m, 9 rooms, 52 models, 14x10 m plan
    [ok] every room resolves to its own region, no pocket the walker could use  -- 9/9 rooms, 0 unowned region(s) (0 under the walker's 0.045 m2, 0 over it)
    [ok] A* spawn -> every room centre
-   [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 58 anchors scored, rooms used 3/9
+   [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 49 anchors scored, rooms used 3/9
    [ok] the outer wall stops the walker (no standable cell in the edge strip)  -- 0/96 sampled edge points standable
-   arrangement (a separate axis) 2/6
-   [XX] entry-public  the front door opens into a shared room, not a bedroom or a bath  -- entered into bath (bath)
-   [XX] entry-hub  the room you enter is a most-connected room (a hall, not a dead end)  -- entry "bath" is a way through to 2 room(s); the busiest room(s) reach 3 (kitchen/dining/study)
-   [XX] door-hops  every room is within 3 doorways of the front door  -- furthest room is 6 hop(s) away
-   [XX] bath  the bathroom is one private room, reached without crossing a bedroom  -- bath: 2 door(s) from bedroom+study; reachable from the entry without passing a bedroom: yes
-   [ok] kitchen-dining  the kitchen opens onto the dining room  -- kitchen kitchen->[bedroom,dining,study]
-   [ok] bedroom-window  every bedroom with an outside wall has a window  -- 2 of 2 bedroom(s) have an outside wall; all of them have one
-   .. front door on the south wall at x 10..11
-   .. living: seed moved off the room centre (furniture covers it)
+   arrangement (a separate axis) 6/6
+   [ok] entry-public  the front door opens into a shared room, not a bedroom or a bath  -- entered into living (living)
+   [ok] entry-hub  the room you enter is a most-connected room (a hall, not a dead end)  -- entry "living" is a way through to 5 room(s); the busiest room(s) reach 5 (living)
+   [ok] door-hops  every room is within 3 doorways of the front door  -- furthest room is 2 hop(s) away
+   [ok] bath  the bathroom is one private room, reached without crossing a bedroom  -- bath: 1 door(s) from living; reachable from the entry without passing a bedroom: yes
+   [ok] kitchen-dining  the kitchen opens onto the dining room  -- kitchen kitchen->[living,bedroom,dining]
+   [ok] bedroom-window  every bedroom with an outside wall has a window  -- 3 of 3 bedroom(s) have an outside wall; all of them have one
+   .. dining: seed moved off the room centre (furniture covers it)
 
 PASS  10x8  3 rooms 100 items
-   params {"w":10,"d":8,"rooms":3,"items":100,"seed":"procgen","minRoom":2.4,"lane":0.62,"gap":0.02,"doorMargin":1,"loopDoor":0.28,"maxLoopDoors":2,"windowChance":0.2,"roomCap":26,"floorTries":26}
-   rooms 3 (bedroom, kitchen, living)  doors 3  walls 7 runs / 51 segments
-   items 70/100  climbTops 51  free 75.4%  rejections {"overlap":336,"outside":0,"lane":14,"slot":19,"sealed":1,"noHost":1,"noModel":0,"budget":0,"seed":0}
+   params {"w":10,"d":8,"rooms":3,"program":null,"items":100,"seed":"procgen","minRoom":2.4,"lane":0.62,"gap":0.02,"doorMargin":1,"loopDoor":0.28,"maxLoopDoors":2,"windowChance":0.2,"roomCap":26,"floorTries":26}
+   rooms 3 (living, kitchen, bedroom)  doors 4  walls 7 runs / 50 segments
+   items 67/100  climbTops 48  free 75.1%  rejections {"overlap":406,"outside":0,"lane":34,"slot":25,"sealed":2,"noHost":1,"noModel":0,"budget":0,"seed":0}
    [ok] the generator honoured its parameters
-   [ok] level.js validateLevel  -- 127 solids, 3 rooms, spawn (1.99, 7.46)
+   [ok] level.js validateLevel  -- 125 solids, 3 rooms, spawn (1.99, 7.46)
    [ok] no hole in a wall without a door
-   [ok] every walkable cell is reachable (no pocket over 0.045 m2)  -- 23404/32000 cells, 1 region(s); no unreachable pocket
-   [ok] the level carries the layout it was built from (what you see is what you play)  -- layout 10x8 m, 3 rooms, 34 models, 10x8 m plan
+   [ok] every walkable cell is reachable (no pocket over 0.045 m2)  -- 23334/32000 cells, 1 region(s); no unreachable pocket
+   [ok] the level carries the layout it was built from (what you see is what you play)  -- layout 10x8 m, 3 rooms, 42 models, 10x8 m plan
    [ok] every room resolves to its own region, no pocket the walker could use  -- 3/3 rooms, 0 unowned region(s) (0 under the walker's 0.045 m2, 0 over it)
    [ok] A* spawn -> every room centre
-   [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 35 anchors scored, rooms used 3/3
+   [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 38 anchors scored, rooms used 3/3
    [ok] the outer wall stops the walker (no standable cell in the edge strip)  -- 0/72 sampled edge points standable
-   arrangement (a separate axis) 4/6, 2 n/a
-   [XX] entry-public  the front door opens into a shared room, not a bedroom or a bath  -- entered into bedroom (bedroom)
-   [XX] entry-hub  the room you enter is a most-connected room (a hall, not a dead end)  -- entry "bedroom" is a way through to 1 room(s); the busiest room(s) reach 2 (living)
-   [ok] door-hops  every room is within 3 doorways of the front door  -- furthest room is 2 hop(s) away
+   arrangement (a separate axis) 6/6, 2 n/a
+   [ok] entry-public  the front door opens into a shared room, not a bedroom or a bath  -- entered into living (living)
+   [ok] entry-hub  the room you enter is a most-connected room (a hall, not a dead end)  -- entry "living" is a way through to 2 room(s); the busiest room(s) reach 2 (living/kitchen/bedroom)
+   [ok] door-hops  every room is within 3 doorways of the front door  -- furthest room is 1 hop(s) away
    [ok] bath  the bathroom is one private room, reached without crossing a bedroom  -- not applicable  -- no bathroom in this plan (a small flat does not have one)
    [ok] kitchen-dining  the kitchen opens onto the dining room  -- not applicable  -- not applicable: no dining room in this plan
    [ok] bedroom-window  every bedroom with an outside wall has a window  -- 1 of 1 bedroom(s) have an outside wall; all of them have one
-   .. front door on the south wall at x 1..2
-   .. placed 70 of the 100 items asked for: the envelope ran out of legal floor
+   .. placed 67 of the 100 items asked for: the envelope ran out of legal floor
 
 PASS  6x6   4 rooms  35 items
-   params {"w":6,"d":6,"rooms":4,"items":35,"seed":"procgen","minRoom":2.4,"lane":0.62,"gap":0.02,"doorMargin":1,"loopDoor":0.28,"maxLoopDoors":2,"windowChance":0.2,"roomCap":26,"floorTries":26}
-   rooms 4 (bath, living, bedroom, kitchen)  doors 5  walls 8 runs / 36 segments
-   items 31/35  climbTops 16  free 74.7%  rejections {"overlap":99,"outside":0,"lane":47,"slot":51,"sealed":7,"noHost":1,"noModel":0,"budget":2,"seed":0}
+   params {"w":6,"d":6,"rooms":4,"program":null,"items":35,"seed":"procgen","minRoom":2.4,"lane":0.62,"gap":0.02,"doorMargin":1,"loopDoor":0.28,"maxLoopDoors":2,"windowChance":0.2,"roomCap":26,"floorTries":26}
+   rooms 4 (living, bath, kitchen, bedroom)  doors 4  walls 8 runs / 36 segments
+   items 31/35  climbTops 21  free 76.3%  rejections {"overlap":71,"outside":1,"lane":15,"slot":8,"sealed":0,"noHost":1,"noModel":0,"budget":2,"seed":0}
    [ok] the generator honoured its parameters
-   [ok] level.js validateLevel  -- 77 solids, 4 rooms, spawn (2.62, 5.29)
+   [ok] level.js validateLevel  -- 75 solids, 4 rooms, spawn (1.83, 5.35)
    [ok] no hole in a wall without a door
-   [ok] every walkable cell is reachable (no pocket over 0.045 m2)  -- 9583/14400 cells, 1 region(s); no unreachable pocket
-   [ok] the level carries the layout it was built from (what you see is what you play)  -- layout 6x6 m, 4 rooms, 35 models, 6x6 m plan
+   [ok] every walkable cell is reachable (no pocket over 0.045 m2)  -- 9830/14400 cells, 1 region(s); no unreachable pocket
+   [ok] the level carries the layout it was built from (what you see is what you play)  -- layout 6x6 m, 4 rooms, 33 models, 6x6 m plan
    [ok] every room resolves to its own region, no pocket the walker could use  -- 4/4 rooms, 0 unowned region(s) (0 under the walker's 0.045 m2, 0 over it)
    [ok] A* spawn -> every room centre
-   [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 16 anchors scored, rooms used 3/4
+   [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 18 anchors scored, rooms used 3/4
    [ok] the outer wall stops the walker (no standable cell in the edge strip)  -- 0/48 sampled edge points standable
-   arrangement (a separate axis) 4/6, 1 n/a
-   [XX] entry-public  the front door opens into a shared room, not a bedroom or a bath  -- entered into bedroom (bedroom)
-   [ok] entry-hub  the room you enter is a most-connected room (a hall, not a dead end)  -- entry "bedroom" is a way through to 2 room(s); the busiest room(s) reach 2 (bath/living/bedroom/kitchen)
+   arrangement (a separate axis) 6/6, 1 n/a
+   [ok] entry-public  the front door opens into a shared room, not a bedroom or a bath  -- entered into living (living)
+   [ok] entry-hub  the room you enter is a most-connected room (a hall, not a dead end)  -- entry "living" is a way through to 2 room(s); the busiest room(s) reach 2 (living/kitchen)
    [ok] door-hops  every room is within 3 doorways of the front door  -- furthest room is 2 hop(s) away
-   [XX] bath  the bathroom is one private room, reached without crossing a bedroom  -- bath: 2 door(s) from living+bedroom; reachable from the entry without passing a bedroom: yes
+   [ok] bath  the bathroom is one private room, reached without crossing a bedroom  -- bath: 1 door(s) from living; reachable from the entry without passing a bedroom: yes
    [ok] kitchen-dining  the kitchen opens onto the dining room  -- not applicable  -- not applicable: no dining room in this plan
    [ok] bedroom-window  every bedroom with an outside wall has a window  -- 1 of 1 bedroom(s) have an outside wall; all of them have one
-   .. front door on the south wall at x 2..3
-   .. living: seed moved off the room centre (furniture covers it)
 
 PASS  20x12 12 rooms 220 items
-   params {"w":20,"d":12,"rooms":12,"items":220,"seed":"procgen","minRoom":2.4,"lane":0.62,"gap":0.02,"doorMargin":1,"loopDoor":0.28,"maxLoopDoors":2,"windowChance":0.2,"roomCap":26,"floorTries":26}
-   rooms 12 (living, bedroom, kitchen, dining, study, study2, study3, bath, dining2, bedroom2, bedroom3, dining3)  doors 14  walls 25 runs / 146 segments
-   items 215/220  climbTops 146  free 76.6%  rejections {"overlap":1078,"outside":0,"lane":92,"slot":31,"sealed":4,"noHost":3,"noModel":0,"budget":1,"seed":0}
+   params {"w":20,"d":12,"rooms":12,"program":null,"items":220,"seed":"procgen","minRoom":2.4,"lane":0.62,"gap":0.02,"doorMargin":1,"loopDoor":0.28,"maxLoopDoors":2,"windowChance":0.2,"roomCap":26,"floorTries":26}
+   rooms 12 (living, bath, kitchen, study, study2, bedroom, bedroom2, bedroom3, dining, bedroom4, bedroom5, study3)  doors 14  walls 27 runs / 145 segments
+   items 190/220  climbTops 142  free 76.2%  rejections {"overlap":681,"outside":5,"lane":123,"slot":50,"sealed":2,"noHost":4,"noModel":0,"budget":0,"seed":0}
    [ok] the generator honoured its parameters
-   [ok] level.js validateLevel  -- 389 solids, 12 rooms, spawn (9.56, 11.28)
+   [ok] level.js validateLevel  -- 363 solids, 12 rooms, spawn (17.89, 11.59)
    [ok] no hole in a wall without a door
-   [ok] every walkable cell is reachable (no pocket over 0.045 m2)  -- 69822/96000 cells, 1 region(s); no unreachable pocket
-   [ok] the level carries the layout it was built from (what you see is what you play)  -- layout 20x12 m, 12 rooms, 51 models, 20x12 m plan
+   [ok] every walkable cell is reachable (no pocket over 0.045 m2)  -- 69599/96000 cells, 1 region(s); no unreachable pocket
+   [ok] the level carries the layout it was built from (what you see is what you play)  -- layout 20x12 m, 12 rooms, 59 models, 20x12 m plan
    [ok] every room resolves to its own region, no pocket the walker could use  -- 12/12 rooms, 0 unowned region(s) (0 under the walker's 0.045 m2, 0 over it)
    [ok] A* spawn -> every room centre
-   [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 82 anchors scored, rooms used 3/12
+   [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 89 anchors scored, rooms used 3/12
    [ok] the outer wall stops the walker (no standable cell in the edge strip)  -- 0/128 sampled edge points standable
-   arrangement (a separate axis) 1/6
-   [XX] entry-public  the front door opens into a shared room, not a bedroom or a bath  -- entered into bedroom (bedroom2)
-   [XX] entry-hub  the room you enter is a most-connected room (a hall, not a dead end)  -- entry "bedroom2" is a way through to 3 room(s); the busiest room(s) reach 4 (bath)
-   [XX] door-hops  every room is within 3 doorways of the front door  -- furthest room is 4 hop(s) away
-   [XX] bath  the bathroom is one private room, reached without crossing a bedroom  -- bath: 4 door(s) from study+bedroom+study+bedroom; reachable from the entry without passing a bedroom: NO
-   [ok] kitchen-dining  the kitchen opens onto the dining room  -- kitchen kitchen->[dining,living]
-   [XX] bedroom-window  every bedroom with an outside wall has a window  -- 3 of 3 bedroom(s) have an outside wall; 2 without a window: bedroom, bedroom3
-   .. front door on the south wall at x 9..10
+   arrangement (a separate axis) 6/6
+   [ok] entry-public  the front door opens into a shared room, not a bedroom or a bath  -- entered into living (living)
+   [ok] entry-hub  the room you enter is a most-connected room (a hall, not a dead end)  -- entry "living" is a way through to 5 room(s); the busiest room(s) reach 5 (living)
+   [ok] door-hops  every room is within 3 doorways of the front door  -- furthest room is 3 hop(s) away
+   [ok] bath  the bathroom is one private room, reached without crossing a bedroom  -- bath: 1 door(s) from living; reachable from the entry without passing a bedroom: yes
+   [ok] kitchen-dining  the kitchen opens onto the dining room  -- kitchen kitchen->[living,bedroom,dining]
+   [ok] bedroom-window  every bedroom with an outside wall has a window  -- 5 of 5 bedroom(s) have an outside wall; all of them have one
 
 PASS  16x14 10 rooms 160 items
-   params {"w":16,"d":14,"rooms":10,"items":160,"seed":"procgen","minRoom":2.4,"lane":0.62,"gap":0.02,"doorMargin":1,"loopDoor":0.28,"maxLoopDoors":2,"windowChance":0.2,"roomCap":26,"floorTries":26}
-   rooms 10 (living, bedroom, kitchen, dining, study, study2, dining2, bath, bedroom2, bedroom3)  doors 12  walls 23 runs / 129 segments
-   items 154/160  climbTops 109  free 79.6%  rejections {"overlap":670,"outside":0,"lane":54,"slot":17,"sealed":0,"noHost":3,"noModel":0,"budget":1,"seed":0}
+   params {"w":16,"d":14,"rooms":10,"program":null,"items":160,"seed":"procgen","minRoom":2.4,"lane":0.62,"gap":0.02,"doorMargin":1,"loopDoor":0.28,"maxLoopDoors":2,"windowChance":0.2,"roomCap":26,"floorTries":26}
+   rooms 10 (living, bath, kitchen, study, study2, bedroom, bedroom2, dining, bedroom3, bedroom4)  doors 12  walls 24 runs / 129 segments
+   items 150/160  climbTops 106  free 79.8%  rejections {"overlap":589,"outside":1,"lane":78,"slot":35,"sealed":2,"noHost":4,"noModel":0,"budget":2,"seed":0}
    [ok] the generator honoured its parameters
-   [ok] level.js validateLevel  -- 307 solids, 10 rooms, spawn (3.90, 13.39)
+   [ok] level.js validateLevel  -- 303 solids, 10 rooms, spawn (6.66, 13.29)
    [ok] no hole in a wall without a door
-   [ok] every walkable cell is reachable (no pocket over 0.045 m2)  -- 67674/89600 cells, 1 region(s); no unreachable pocket
-   [ok] the level carries the layout it was built from (what you see is what you play)  -- layout 16x14 m, 10 rooms, 58 models, 16x14 m plan
-   [ok] every room resolves to its own region, no pocket the walker could use  -- 10/10 rooms, 0 unowned region(s) (0 under the walker's 0.045 m2, 0 over it)
+   [ok] every walkable cell is reachable (no pocket over 0.045 m2)  -- 67613/89600 cells, 2 region(s); 0.0025m2@6.9,5.2
+   [ok] the level carries the layout it was built from (what you see is what you play)  -- layout 16x14 m, 10 rooms, 54 models, 16x14 m plan
+   [ok] every room resolves to its own region, no pocket the walker could use  -- 10/10 rooms, 1 unowned region(s) (1 under the walker's 0.045 m2, 0 over it)
    [ok] A* spawn -> every room centre
-   [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 76 anchors scored, rooms used 3/10
+   [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 66 anchors scored, rooms used 3/10
    [ok] the outer wall stops the walker (no standable cell in the edge strip)  -- 0/120 sampled edge points standable
-   arrangement (a separate axis) 3/6
-   [ok] entry-public  the front door opens into a shared room, not a bedroom or a bath  -- entered into study (study2)
-   [XX] entry-hub  the room you enter is a most-connected room (a hall, not a dead end)  -- entry "study2" is a way through to 1 room(s); the busiest room(s) reach 4 (kitchen)
-   [XX] door-hops  every room is within 3 doorways of the front door  -- furthest room is 4 hop(s) away
-   [XX] bath  the bathroom is one private room, reached without crossing a bedroom  -- bath: 3 door(s) from dining+bedroom+kitchen; reachable from the entry without passing a bedroom: NO
-   [ok] kitchen-dining  the kitchen opens onto the dining room  -- kitchen kitchen->[bedroom,bath,bedroom,dining]
-   [ok] bedroom-window  every bedroom with an outside wall has a window  -- 2 of 3 bedroom(s) have an outside wall; all of them have one
-   .. front door on the south wall at x 3..4
+   arrangement (a separate axis) 6/6
+   [ok] entry-public  the front door opens into a shared room, not a bedroom or a bath  -- entered into living (living)
+   [ok] entry-hub  the room you enter is a most-connected room (a hall, not a dead end)  -- entry "living" is a way through to 5 room(s); the busiest room(s) reach 5 (living)
+   [ok] door-hops  every room is within 3 doorways of the front door  -- furthest room is 2 hop(s) away
+   [ok] bath  the bathroom is one private room, reached without crossing a bedroom  -- bath: 1 door(s) from living; reachable from the entry without passing a bedroom: yes
+   [ok] kitchen-dining  the kitchen opens onto the dining room  -- kitchen kitchen->[living,bedroom,dining]
+   [ok] bedroom-window  every bedroom with an outside wall has a window  -- 4 of 4 bedroom(s) have an outside wall; all of them have one
 
 PASS  7x5   2 rooms  24 items
-   params {"w":7,"d":5,"rooms":2,"items":24,"seed":"procgen","minRoom":2.4,"lane":0.62,"gap":0.02,"doorMargin":1,"loopDoor":0.28,"maxLoopDoors":2,"windowChance":0.2,"roomCap":26,"floorTries":26}
-   rooms 2 (living, bedroom)  doors 2  walls 5 runs / 29 segments
-   items 18/24  climbTops 14  free 79.5%  rejections {"overlap":68,"outside":0,"lane":1,"slot":1,"sealed":0,"noHost":0,"noModel":0,"budget":2,"seed":0}
+   params {"w":7,"d":5,"rooms":2,"program":null,"items":24,"seed":"procgen","minRoom":2.4,"lane":0.62,"gap":0.02,"doorMargin":1,"loopDoor":0.28,"maxLoopDoors":2,"windowChance":0.2,"roomCap":26,"floorTries":26}
+   rooms 2 (bedroom, living)  doors 2  walls 5 runs / 29 segments
+   items 17/24  climbTops 14  free 80.4%  rejections {"overlap":12,"outside":0,"lane":3,"slot":0,"sealed":0,"noHost":0,"noModel":0,"budget":1,"seed":0}
    [ok] the generator honoured its parameters
-   [ok] level.js validateLevel  -- 51 solids, 2 rooms, spawn (2.78, 4.33)
+   [ok] level.js validateLevel  -- 50 solids, 2 rooms, spawn (4.22, 4.33)
    [ok] no hole in a wall without a door
-   [ok] every walkable cell is reachable (no pocket over 0.045 m2)  -- 10429/14000 cells, 1 region(s); no unreachable pocket
-   [ok] the level carries the layout it was built from (what you see is what you play)  -- layout 7x5 m, 2 rooms, 20 models, 7x5 m plan
+   [ok] every walkable cell is reachable (no pocket over 0.045 m2)  -- 10413/14000 cells, 1 region(s); no unreachable pocket
+   [ok] the level carries the layout it was built from (what you see is what you play)  -- layout 7x5 m, 2 rooms, 21 models, 7x5 m plan
    [ok] every room resolves to its own region, no pocket the walker could use  -- 2/2 rooms, 0 unowned region(s) (0 under the walker's 0.045 m2, 0 over it)
    [ok] A* spawn -> every room centre
-   [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 11 anchors scored, rooms used 2/2
+   [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 14 anchors scored, rooms used 2/2
    [ok] the outer wall stops the walker (no standable cell in the edge strip)  -- 0/48 sampled edge points standable
    arrangement (a separate axis) 6/6, 2 n/a
    [ok] entry-public  the front door opens into a shared room, not a bedroom or a bath  -- entered into living (living)
-   [ok] entry-hub  the room you enter is a most-connected room (a hall, not a dead end)  -- entry "living" is a way through to 1 room(s); the busiest room(s) reach 1 (living/bedroom)
+   [ok] entry-hub  the room you enter is a most-connected room (a hall, not a dead end)  -- entry "living" is a way through to 1 room(s); the busiest room(s) reach 1 (bedroom/living)
    [ok] door-hops  every room is within 3 doorways of the front door  -- furthest room is 1 hop(s) away
    [ok] bath  the bathroom is one private room, reached without crossing a bedroom  -- not applicable  -- no bathroom in this plan (a small flat does not have one)
    [ok] kitchen-dining  the kitchen opens onto the dining room  -- not applicable  -- not applicable: no kitchen in this plan
    [ok] bedroom-window  every bedroom with an outside wall has a window  -- 1 of 1 bedroom(s) have an outside wall; all of them have one
-   .. front door on the south wall at x 2..3
-   .. placed 18 of the 24 items asked for: the envelope ran out of legal floor
+   .. placed 17 of the 24 items asked for: the envelope ran out of legal floor
 
 PASS  24x16 16 rooms 300 items
-   params {"w":24,"d":16,"rooms":16,"items":300,"seed":"procgen","minRoom":2.4,"lane":0.62,"gap":0.02,"doorMargin":1,"loopDoor":0.28,"maxLoopDoors":2,"windowChance":0.2,"roomCap":26,"floorTries":26}
-   rooms 16 (bedroom, kitchen, study, living, bedroom2, bedroom3, dining, study2, study3, dining2, bath, bedroom4, dining3, dining4, study4, bedroom5)  doors 18  walls 41 runs / 208 segments
-   items 293/300  climbTops 213  free 79.3%  rejections {"overlap":1210,"outside":13,"lane":90,"slot":34,"sealed":1,"noHost":8,"noModel":0,"budget":0,"seed":0}
+   params {"w":24,"d":16,"rooms":16,"program":null,"items":300,"seed":"procgen","minRoom":2.4,"lane":0.62,"gap":0.02,"doorMargin":1,"loopDoor":0.28,"maxLoopDoors":2,"windowChance":0.2,"roomCap":26,"floorTries":26}
+   rooms 16 (living, kitchen, bedroom, study, study2, study3, study4, bath, bedroom2, dining, bedroom3, bedroom4, bedroom5, bedroom6, bedroom7, bedroom8)  doors 18  walls 36 runs / 213 segments
+   items 268/300  climbTops 201  free 79.4%  rejections {"overlap":1185,"outside":9,"lane":74,"slot":29,"sealed":4,"noHost":6,"noModel":0,"budget":0,"seed":0}
    [ok] the generator honoured its parameters
-   [ok] level.js validateLevel  -- 537 solids, 16 rooms, spawn (2.10, 15.57)
+   [ok] level.js validateLevel  -- 517 solids, 16 rooms, spawn (11.55, 15.28)
    [ok] no hole in a wall without a door
-   [ok] every walkable cell is reachable (no pocket over 0.045 m2)  -- 116133/153600 cells, 1 region(s); no unreachable pocket
-   [ok] the level carries the layout it was built from (what you see is what you play)  -- layout 24x16 m, 16 rooms, 59 models, 24x16 m plan
+   [ok] every walkable cell is reachable (no pocket over 0.045 m2)  -- 115635/153600 cells, 1 region(s); no unreachable pocket
+   [ok] the level carries the layout it was built from (what you see is what you play)  -- layout 24x16 m, 16 rooms, 54 models, 24x16 m plan
    [ok] every room resolves to its own region, no pocket the walker could use  -- 16/16 rooms, 0 unowned region(s) (0 under the walker's 0.045 m2, 0 over it)
    [ok] A* spawn -> every room centre
-   [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 124 anchors scored, rooms used 3/16
+   [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 120 anchors scored, rooms used 3/16
    [ok] the outer wall stops the walker (no standable cell in the edge strip)  -- 0/160 sampled edge points standable
-   arrangement (a separate axis) 2/6
-   [XX] entry-public  the front door opens into a shared room, not a bedroom or a bath  -- entered into bedroom (bedroom)
-   [XX] entry-hub  the room you enter is a most-connected room (a hall, not a dead end)  -- entry "bedroom" is a way through to 1 room(s); the busiest room(s) reach 4 (bedroom)
-   [XX] door-hops  every room is within 3 doorways of the front door  -- furthest room is 7 hop(s) away
-   [XX] bath  the bathroom is one private room, reached without crossing a bedroom  -- bath: 3 door(s) from bedroom+bedroom+study; reachable from the entry without passing a bedroom: NO
-   [ok] kitchen-dining  the kitchen opens onto the dining room  -- kitchen kitchen->[dining,dining]
-   [ok] bedroom-window  every bedroom with an outside wall has a window  -- 2 of 5 bedroom(s) have an outside wall; all of them have one
-   .. front door on the south wall at x 1..2
+   arrangement (a separate axis) 6/6
+   [ok] entry-public  the front door opens into a shared room, not a bedroom or a bath  -- entered into living (living)
+   [ok] entry-hub  the room you enter is a most-connected room (a hall, not a dead end)  -- entry "living" is a way through to 7 room(s); the busiest room(s) reach 7 (living)
+   [ok] door-hops  every room is within 3 doorways of the front door  -- furthest room is 3 hop(s) away
+   [ok] bath  the bathroom is one private room, reached without crossing a bedroom  -- bath: 1 door(s) from living; reachable from the entry without passing a bedroom: yes
+   [ok] kitchen-dining  the kitchen opens onto the dining room  -- kitchen kitchen->[living,bedroom,dining]
+   [ok] bedroom-window  every bedroom with an outside wall has a window  -- 6 of 8 bedroom(s) have an outside wall; all of them have one
 
 PASS  9x9   5 rooms  55 items
-   params {"w":9,"d":9,"rooms":5,"items":55,"seed":"procgen","minRoom":2.4,"lane":0.62,"gap":0.02,"doorMargin":1,"loopDoor":0.28,"maxLoopDoors":2,"windowChance":0.2,"roomCap":26,"floorTries":26}
-   rooms 5 (living, bedroom, kitchen, dining, study)  doors 6  walls 11 runs / 60 segments
-   items 51/55  climbTops 41  free 77.2%  rejections {"overlap":201,"outside":0,"lane":14,"slot":13,"sealed":1,"noHost":1,"noModel":0,"budget":2,"seed":0}
+   params {"w":9,"d":9,"rooms":5,"program":null,"items":55,"seed":"procgen","minRoom":2.4,"lane":0.62,"gap":0.02,"doorMargin":1,"loopDoor":0.28,"maxLoopDoors":2,"windowChance":0.2,"roomCap":26,"floorTries":26}
+   rooms 5 (bath, living, bedroom, kitchen, dining)  doors 6  walls 11 runs / 58 segments
+   items 48/55  climbTops 33  free 80.2%  rejections {"overlap":273,"outside":1,"lane":30,"slot":20,"sealed":2,"noHost":0,"noModel":0,"budget":2,"seed":0}
    [ok] the generator honoured its parameters
-   [ok] level.js validateLevel  -- 123 solids, 5 rooms, spawn (6.20, 8.34)
+   [ok] level.js validateLevel  -- 118 solids, 5 rooms, spawn (4.50, 8.28)
    [ok] no hole in a wall without a door
-   [ok] every walkable cell is reachable (no pocket over 0.045 m2)  -- 23186/32400 cells, 1 region(s); no unreachable pocket
-   [ok] the level carries the layout it was built from (what you see is what you play)  -- layout 9x9 m, 5 rooms, 38 models, 9x9 m plan
+   [ok] every walkable cell is reachable (no pocket over 0.045 m2)  -- 24330/32400 cells, 1 region(s); no unreachable pocket
+   [ok] the level carries the layout it was built from (what you see is what you play)  -- layout 9x9 m, 5 rooms, 40 models, 9x9 m plan
    [ok] every room resolves to its own region, no pocket the walker could use  -- 5/5 rooms, 0 unowned region(s) (0 under the walker's 0.045 m2, 0 over it)
    [ok] A* spawn -> every room centre
-   [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 32 anchors scored, rooms used 3/5
+   [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 24 anchors scored, rooms used 3/5
    [ok] the outer wall stops the walker (no standable cell in the edge strip)  -- 0/72 sampled edge points standable
-   arrangement (a separate axis) 5/6, 1 n/a
-   [ok] entry-public  the front door opens into a shared room, not a bedroom or a bath  -- entered into study (study)
-   [ok] entry-hub  the room you enter is a most-connected room (a hall, not a dead end)  -- entry "study" is a way through to 2 room(s); the busiest room(s) reach 2 (living/bedroom/kitchen/dining/study)
-   [ok] door-hops  every room is within 3 doorways of the front door  -- furthest room is 2 hop(s) away
-   [ok] bath  the bathroom is one private room, reached without crossing a bedroom  -- not applicable  -- no bathroom in this plan (a small flat does not have one)
-   [XX] kitchen-dining  the kitchen opens onto the dining room  -- kitchen kitchen->[bedroom,study]
+   arrangement (a separate axis) 6/6
+   [ok] entry-public  the front door opens into a shared room, not a bedroom or a bath  -- entered into living (living)
+   [ok] entry-hub  the room you enter is a most-connected room (a hall, not a dead end)  -- entry "living" is a way through to 4 room(s); the busiest room(s) reach 4 (living)
+   [ok] door-hops  every room is within 3 doorways of the front door  -- furthest room is 1 hop(s) away
+   [ok] bath  the bathroom is one private room, reached without crossing a bedroom  -- bath: 1 door(s) from living; reachable from the entry without passing a bedroom: yes
+   [ok] kitchen-dining  the kitchen opens onto the dining room  -- kitchen kitchen->[living,dining]
    [ok] bedroom-window  every bedroom with an outside wall has a window  -- 1 of 1 bedroom(s) have an outside wall; all of them have one
-   .. front door on the south wall at x 6..7
    .. living: seed moved off the room centre (furniture covers it)
 
 PASS  11x7  6 rooms  70 items
-   params {"w":11,"d":7,"rooms":6,"items":70,"seed":"procgen","minRoom":2.4,"lane":0.62,"gap":0.02,"doorMargin":1,"loopDoor":0.28,"maxLoopDoors":2,"windowChance":0.2,"roomCap":26,"floorTries":26}
-   rooms 6 (dining, kitchen, living, bedroom, bath, study)  doors 6  walls 12 runs / 61 segments
-   items 66/70  climbTops 51  free 70.4%  rejections {"overlap":307,"outside":5,"lane":51,"slot":45,"sealed":3,"noHost":3,"noModel":0,"budget":2,"seed":0}
+   params {"w":11,"d":7,"rooms":6,"program":null,"items":70,"seed":"procgen","minRoom":2.4,"lane":0.62,"gap":0.02,"doorMargin":1,"loopDoor":0.28,"maxLoopDoors":2,"windowChance":0.2,"roomCap":26,"floorTries":26}
+   rooms 6 (bath, living, bedroom, kitchen, dining, study)  doors 7  walls 12 runs / 61 segments
+   items 61/70  climbTops 46  free 76.0%  rejections {"overlap":247,"outside":6,"lane":57,"slot":51,"sealed":0,"noHost":3,"noModel":0,"budget":2,"seed":0}
    [ok] the generator honoured its parameters
-   [ok] level.js validateLevel  -- 139 solids, 6 rooms, spawn (8.94, 6.53)
+   [ok] level.js validateLevel  -- 136 solids, 6 rooms, spawn (4.70, 6.30)
    [ok] no hole in a wall without a door
-   [ok] every walkable cell is reachable (no pocket over 0.045 m2)  -- 20363/30800 cells, 1 region(s); no unreachable pocket
-   [ok] the level carries the layout it was built from (what you see is what you play)  -- layout 11x7 m, 6 rooms, 47 models, 11x7 m plan
+   [ok] every walkable cell is reachable (no pocket over 0.045 m2)  -- 21663/30800 cells, 1 region(s); no unreachable pocket
+   [ok] the level carries the layout it was built from (what you see is what you play)  -- layout 11x7 m, 6 rooms, 45 models, 11x7 m plan
    [ok] every room resolves to its own region, no pocket the walker could use  -- 6/6 rooms, 0 unowned region(s) (0 under the walker's 0.045 m2, 0 over it)
    [ok] A* spawn -> every room centre
-   [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 46 anchors scored, rooms used 3/6
+   [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 34 anchors scored, rooms used 3/6
    [ok] the outer wall stops the walker (no standable cell in the edge strip)  -- 0/72 sampled edge points standable
-   arrangement (a separate axis) 1/6
-   [ok] entry-public  the front door opens into a shared room, not a bedroom or a bath  -- entered into kitchen (kitchen)
-   [XX] entry-hub  the room you enter is a most-connected room (a hall, not a dead end)  -- entry "kitchen" is a way through to 1 room(s); the busiest room(s) reach 2 (dining/living/bedroom/bath)
-   [XX] door-hops  every room is within 3 doorways of the front door  -- furthest room is 5 hop(s) away
-   [XX] bath  the bathroom is one private room, reached without crossing a bedroom  -- bath: 2 door(s) from dining+study; reachable from the entry without passing a bedroom: NO
-   [XX] kitchen-dining  the kitchen opens onto the dining room  -- kitchen kitchen->[bedroom]
-   [XX] bedroom-window  every bedroom with an outside wall has a window  -- 1 of 1 bedroom(s) have an outside wall; 1 without a window: bedroom
-   .. front door on the south wall at x 9..10
-   .. living: seed moved off the room centre (furniture covers it)
+   arrangement (a separate axis) 6/6
+   [ok] entry-public  the front door opens into a shared room, not a bedroom or a bath  -- entered into living (living)
+   [ok] entry-hub  the room you enter is a most-connected room (a hall, not a dead end)  -- entry "living" is a way through to 4 room(s); the busiest room(s) reach 4 (living)
+   [ok] door-hops  every room is within 3 doorways of the front door  -- furthest room is 2 hop(s) away
+   [ok] bath  the bathroom is one private room, reached without crossing a bedroom  -- bath: 1 door(s) from living; reachable from the entry without passing a bedroom: yes
+   [ok] kitchen-dining  the kitchen opens onto the dining room  -- kitchen kitchen->[dining]
+   [ok] bedroom-window  every bedroom with an outside wall has a window  -- 1 of 1 bedroom(s) have an outside wall; all of them have one

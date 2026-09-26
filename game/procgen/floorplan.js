@@ -19,23 +19,36 @@
  *
  * Five stages, each of which can say no:
  *
- *   1. PARTITION  the envelope is split into N rectangles by recursive binary
- *                 splits, always on the 1 m grid, because the kit's wall is a
- *                 1 m segment and a wall at x = 4.37 would need a model that
- *                 does not exist.
- *   2. WALLS      wall runs are DERIVED from the partition, not authored. Two
+ *   1. BANDS      the envelope is split into horizontal bands, and each band
+ *                 into cells. ALWAYS on the 1 m grid, because the kit's wall is
+ *                 a 1 m segment and a wall at x = 4.37 would need a model that
+ *                 does not exist -- but also because a partition edge that is
+ *                 not on the grid produces NO WALL AT ALL, and two rooms merge.
+ *                 The band nearest the front door gets few, wide cells, so the
+ *                 room you arrive in can touch a lot of others; see
+ *                 `bandStructure` for why that shape and not another.
+ *   2. WALLS      wall runs are DERIVED from the plan, not authored. Two
  *                 rectangles that touch along a line differ on both sides of
  *                 it, and that difference IS the wall. Nothing can drift.
- *   3. DOORS      a spanning tree of the room-adjacency graph -- N-1 doorways
- *                 for N rooms, which is exactly connected and has no cycles.
- *                 Extra doors are then added at a chosen probability, because a
- *                 real flat is not a tree, and a tree means one door seals a
- *                 wing.
+ *   3. DOORS      a breadth-first tree of doorways from the entry room, so the
+ *                 path to any room is the shortest one the walls allow. Extra
+ *                 doors are then added -- a flat is not a tree, and in a tree
+ *                 one door seals a wing -- GATED so that they can never make
+ *                 some other room better connected than the entry.
  *   4. FURNITURE  the palette is a wish-list; the placer keeps what fits.
  *   5. SEEDS      each room's label/camera seed is chosen from the FREE floor
  *                 left after furniture, not typed in. This is the difference
  *                 between a room that resolves and a room whose seed landed
  *                 inside a wardrobe.
+ *
+ * STAGES 1 AND 3 ARE NOW ONE SEARCH, and that is the P1 change. Roles used to
+ * be handed out by area AFTER the partition, so nothing in the chain could know
+ * that the front door has to open into a hall -- measured, seven of twelve
+ * flats opened it into a bedroom or a bathroom. `planCirculation` proposes
+ * roles and doorways together and refuses a structure that cannot put the front
+ * door in a most-connected room within `MAX_DOOR_HOPS` doorways of every room;
+ * `generateFloorplan` retries with another structure and reports a problem if
+ * none survives.
  *
  * ------------------------------------------------------------------ the rule
  *
@@ -57,8 +70,12 @@
 
 import { Rng } from '../core/rng.js';
 import {
-  ROLE_INFO, ROLE_LADDER, COMPACT_MAX_AREA, PALETTES, CLIMB_TOPS, FILLERS, FILLER_HOSTS,
+  ROLE_INFO, PALETTES, FILLERS, FILLER_HOSTS,
 } from './palette.js';
+// The bar the RULER judges by, imported rather than copied. A placer that aims
+// at 0.28 while the ruler judges at 0.30 makes rooms that are "almost
+// grouped", and nothing in the system would say so.
+import { MAX_DOOR_HOPS } from './siting.js';
 
 const DEG = Math.PI / 180;
 
@@ -111,6 +128,7 @@ export const DEFAULTS = {
   w: 10,
   d: 8,
   rooms: 6,
+  program: null,       // an explicit room list; see roomProgram(). Overrides `rooms`
   items: 60,
   seed: 'procgen',
   minRoom: 2.4,        // smallest room edge (m) -- enforced on both sides of a split
@@ -169,82 +187,183 @@ function slotWidth(a, b) {
   return null;
 }
 
-/* ============================================================= 1. partition */
+/* ================================================================ 1. bands */
 
 /**
- * Where a rectangle may be cut, weighted toward its middle.
+ * The room list: what this flat is supposed to contain.
  *
- * Every candidate is on an INTEGER line: the kit's wall is a 1 m segment plus a
- * 0.5 m `wallHalf`, so integer cuts keep every generated run free of partial
- * segments -- a whole class of placement bug removed by rounding in the right
- * place. The triangular weight is what stops "recursive bisection" from meaning
- * "a grid of equal boxes": a cut at the centre is most likely, one 2 m off-
- * centre is possible, and the result is a flat of noticeably different room
- * sizes rather than a spreadsheet.
+ * THIS IS WHAT DECIDES THE SHAPE OF THE PLAN. It replaced "bisect the envelope
+ * into N pieces, then hand the pieces out by descending area", and that pairing
+ * could not have been right: when the roles are handed out AFTER the partition,
+ * the plan has no way to know that the door you come in by has to open into a
+ * hall. Measured on the twelve-set sweep, the front door opened into a bedroom
+ * or a bathroom in SEVEN of the twelve.
+ *
+ * So the order is inverted. The program says which rooms exist, and the
+ * partition is built to hold exactly that list -- one rectangle per entry.
+ *
+ * The first six entries are the six roles `palette.js` can furnish. Past that
+ * the residential roles repeat, because a building does; never living or
+ * kitchen, because two kitchens in one flat is a bug a player would notice.
  */
-function cutCandidates(leaf, p) {
-  const out = [];
-  for (const axis of ['x', 'z']) {
-    const lo = axis === 'x' ? leaf.x0 : leaf.z0;
-    const hi = axis === 'x' ? leaf.x1 : leaf.z1;
-    const len = hi - lo;
-    if (len < 2 * p.minRoom) continue;
-    const centre = (lo + hi) / 2;
-    const spread = Math.max(1, (len - 2 * p.minRoom) / 2);
-    for (let at = Math.ceil(lo + p.minRoom); at <= Math.floor(hi - p.minRoom); at++) {
-      out.push({ axis, at, w: 1 / (0.5 + Math.abs(at - centre) / spread) });
-    }
-  }
-  return out;
-}
+export const PROGRAM = ['living', 'bedroom', 'kitchen', 'bath', 'dining', 'study'];
 
-const applyCut = (leaf, cut) => (cut.axis === 'x'
-  ? [{ ...leaf, x1: cut.at }, { ...leaf, x0: cut.at }]
-  : [{ ...leaf, z1: cut.at }, { ...leaf, z0: cut.at }]);
+/** Roles a plan may repeat when it asks for more rooms than PROGRAM holds. */
+const REPEATS = ['bedroom', 'bedroom', 'study'];
+
+/** The six roles the palette and the viewer know. Anything else is a typo. */
+export const KNOWN_ROLES = new Set(PROGRAM);
 
 /**
- * Split the envelope into N rectangles.
+ * At most this many bands, and it is arithmetic rather than taste.
  *
- * RETRIES RATHER THAN BACKTRACKS. Greedy largest-first splitting can paint
- * itself into a corner: at 10 x 8 m with a 2.4 m minimum, some sequences leave
- * only 2.4 x 2.4 m leaves, which cannot be cut again, and the flat comes out
- * with five rooms when six were asked for -- measured, seed "procgen". Back-
- * tracking would fix it and cost a page; re-rolling the PARTITION is cheap
- * (microseconds), bounded (24 tries), and keeps the worst case honest, because
- * the caller still reports "asked for 6, got 5" if every try stalls.
- *
- * The attempts draw from FORKED sub-streams, so how many tries it took cannot
- * shift the draws that furniture placement later spends -- the same isolation
- * rng.js documents for `fork`. Otherwise a one-line change to this loop would
- * silently reshape every wardrobe in every existing seed.
+ * The ruler asks whether every room is within MAX_DOOR_HOPS doorways of the
+ * front door. In a band plan the far band is exactly (bands - 1) hops away, so
+ * a fifth band could not pass at any width -- allowing one would only make the
+ * search spend its budget on plans that are already known to fail.
  */
-function partition(p, rng) {
-  let best = partitionOnce(p, rng.fork('part0'));
-  for (let attempt = 1; attempt < 24 && best.length < p.rooms; attempt++) {
-    const leaves = partitionOnce(p, rng.fork(`part${attempt}`));
-    if (leaves.length > best.length) best = leaves;
+const MAX_BANDS = 4;
+
+/**
+ * How many band plans may be proposed before the generator admits it cannot
+ * make one. Cheap (arithmetic, no nav) and the accept test is decidable, so
+ * this is a search rather than a re-roll -- but it is still bounded, because a
+ * search that cannot fail is not a check.
+ */
+const BAND_TRIES = 400;
+
+/**
+ * The room list for these parameters, one role per room.
+ *
+ * @returns { roles, unknown }. `unknown` lists role names the palette does not
+ *          know, RETURNED rather than thrown: one bad word in a room list must
+ *          not cost the sweep its other eleven layouts. The caller turns it
+ *          into a problem on the layout, which the pipeline reports as a
+ *          failed check rather than as a footnote.
+ */
+export function roomProgram(params) {
+  const asked = Array.isArray(params.program) && params.program.length ? params.program : null;
+  if (asked) {
+    const roles = asked.map((r) => String(r).trim()).filter((r) => r.length);
+    return {
+      roles: roles.length ? roles : ['living'],
+      unknown: roles.filter((r) => !KNOWN_ROLES.has(r)),
+    };
   }
-  return best;
+  const n = Math.max(1, Math.round(params.rooms));
+  const roles = [];
+  for (let i = 0; i < n; i++) {
+    roles.push(i < PROGRAM.length ? PROGRAM[i] : REPEATS[(i - PROGRAM.length) % REPEATS.length]);
+  }
+  return { roles, unknown: [] };
 }
 
-function partitionOnce(p, rng) {
-  let leaves = [{ x0: 0, z0: 0, x1: p.w, z1: p.d }];
-  let guard = p.rooms * 8;
-  while (leaves.length < p.rooms && guard-- > 0) {
-    const order = rng.shuffle(leaves).sort((a, b) => rectArea(b) - rectArea(a));
-    let split = false;
-    for (const leaf of order) {
-      const cuts = cutCandidates(leaf, p);
-      if (!cuts.length) continue;
-      const [a, b] = applyCut(leaf, rng.weighted(cuts));
-      leaves = leaves.filter((l) => l !== leaf);
-      leaves.push(a, b);
-      split = true;
-      break;
-    }
-    if (!split) break;                     // nothing left that can be cut
+/**
+ * Split `total` into `k` positive integers inside [minEach, maxEach], at random.
+ *
+ * Deliberately dull, and deliberately not a tuning surface: the interesting
+ * decisions in a band plan are how many bands there are and how many cells each
+ * holds, not whether a cut lands at 3 m or at 4. Handing that last choice to the
+ * rng is what keeps two seeds from producing the same plan.
+ *
+ * It returns null when the arithmetic is impossible, rather than nudging a cut
+ * to make it work. An off-the-metre cut makes `deriveWalls` produce NO WALL AT
+ * ALL, and two rooms then silently merge into one -- which reads as a bug in the
+ * adapter three hundred lines away.
+ */
+function splitCount(rng, total, k, minEach, maxEach) {
+  const hi = maxEach == null ? Infinity : maxEach;
+  if (!(k >= 1) || total < k * minEach || total > k * hi) return null;
+  const parts = new Array(k).fill(minEach);
+  let left = total - k * minEach;
+  let guard = k * 64;
+  while (left > 0 && guard-- > 0) {
+    const i = rng.int(k);
+    if (parts[i] >= hi) continue;
+    parts[i] += 1;
+    left -= 1;
   }
-  return leaves;
+  if (left !== 0) return null;
+  return rng.shuffle(parts);
+}
+
+/**
+ * A BAND PLAN: horizontal bands, each cut into cells, every edge on the metre.
+ *
+ * WHY BANDS AND NOT RECURSIVE BISECTION. Two facts elsewhere in this system
+ * force it, and both are measurements rather than preferences.
+ *
+ * 1. EVERY CUT LANDS ON AN INTEGER. The kit's wall is a 1 m segment and
+ *    `deriveWalls` walks integer positions, so a partition edge at x = 3.33
+ *    produces no wall at all: the two rooms merge and checks 3 and 4 of the
+ *    playability axis fail on a plan whose picture still looks reasonable.
+ *    Bisection already respected this; a band plan has to respect it in one
+ *    more place, which is why `splitCount` refuses instead of rounding.
+ *
+ * 2. THE ENTRY ROOM HAS TO BE THE HUB, AND THAT IS GEOMETRY, NOT NAMING.
+ *    `arrangement.js` compares the entry room's degree in the circulation graph
+ *    against the highest degree in the flat. A degree is the number of walls two
+ *    rooms share, so no role name can make a corner cell better connected than a
+ *    middle one -- the plan has to be BORN with a room that touches many others
+ *    and sits on the front wall.
+ *
+ * A band plan gives exactly that control: the band the front door is cut into
+ * gets FEW, WIDE cells, so each one touches many of the cells behind it, and the
+ * bands behind it get more, narrower ones. This function only proposes;
+ * `planCirculation` is what accepts or rejects.
+ *
+ * The alternative was measured before it was abandoned. Bisecting and re-rolling
+ * until the entry happened to be a hub produced a usable plan in 3 attempts of
+ * 24 at 10 x 8 m with six rooms, and at 24 x 16 m with sixteen rooms the entry
+ * could not reach the far corner within three doorways at ANY bisection of that
+ * granularity -- a bisection tree of sixteen rooms is four rooms deep by
+ * construction, and no choice of doors can shorten a path the walls do not
+ * allow.
+ *
+ * @returns { rects, rows, bands } -- rows are listed FRONT FIRST, so rows[0] is
+ *          the band the front door is cut into -- or null when this seed's
+ *          arithmetic does not work out.
+ */
+function bandStructure(p, rng, n) {
+  const edge = Math.ceil(p.minRoom);
+  const maxRows = Math.floor(p.d / edge);
+  const maxCols = Math.floor(p.w / edge);
+  if (maxRows < 1 || maxCols < 1) return null;
+
+  const R = 1 + rng.int(Math.min(MAX_BANDS, maxRows));
+  const headMax = Math.max(1, Math.min(3, maxCols));
+  const head = 1 + rng.int(headMax);
+  const rest = n - head;
+  if (rest < 0) return null;
+  if (R === 1) { if (rest !== 0) return null; }
+  else if (rest < R - 1 || rest > (R - 1) * maxCols) return null;
+
+  const depths = splitCount(rng, p.d, R, edge, null);
+  if (!depths) return null;
+
+  const counts = [head];
+  if (R > 1) {
+    const tail = splitCount(rng, rest, R - 1, 1, maxCols);
+    if (!tail) return null;
+    for (const q of tail) counts.push(q);
+  }
+
+  const rects = [];
+  const rows = [];
+  let z1 = p.d;
+  for (let r = 0; r < R; r++) {
+    const widths = splitCount(rng, p.w, counts[r], edge, null);
+    if (!widths) return null;
+    const z0 = z1 - depths[r];
+    let x = 0;
+    for (const wd of widths) {
+      rects.push({ x0: x, z0, x1: x + wd, z1 });
+      x += wd;
+    }
+    rows.push({ z0, z1, widths: widths.slice() });
+    z1 = z0;
+  }
+  return { rects, rows, bands: R };
 }
 
 /* ================================================================= 2. walls */
@@ -344,18 +463,6 @@ function usableRect(room, walls) {
 
 /* ================================================================= 3. doors */
 
-class UnionFind {
-  constructor(n) { this.p = Array.from({ length: n }, (_, i) => i); }
-  find(a) { while (this.p[a] !== a) { this.p[a] = this.p[this.p[a]]; a = this.p[a]; } return a; }
-  union(a, b) {
-    const ra = this.find(a);
-    const rb = this.find(b);
-    if (ra === rb) return false;
-    this.p[ra] = rb;
-    return true;
-  }
-}
-
 const wallRot = (side) => (side === 'north' ? 0 : side === 'south' ? 180 : side === 'west' ? -90 : 90);
 
 /**
@@ -378,67 +485,336 @@ function makeDoor(run, roomIdx, k, model, note) {
 }
 
 /**
- * Which doorways exist: a spanning tree first, then a few loops.
+ * Where in a shared wall a doorway may go: `doorMargin` in from either end.
  *
- * Strongest-adjacency-first, which is the building equivalent of a sensible
- * floor plan: rooms connect through their WIDEST shared wall, so circulation
- * runs between the rooms that actually touch a lot, and the 0.5 m sliver where
- * two rooms merely graze becomes a solid wall.
+ * The margin is what keeps a doorway out of a corner, where the two walls' own
+ * bodies meet. When the run is too short to afford it, the whole run is offered
+ * instead of refusing -- a 1 m shared wall is a legitimate place for a door and
+ * a plan that could not use one would be a plan that lost a room.
  */
-function chooseDoors(rects, roles, edges, perimeter, p, rng, trace) {
-  const list = [];
+function pickSeg(e, rng, p) {
+  let lo = e.lo;
+  let hi = e.hi - 1;
+  if (hi - lo >= 2 * p.doorMargin) { lo += p.doorMargin; hi -= p.doorMargin; }
+  if (hi < lo) { lo = e.lo; hi = e.hi - 1; }
+  return lo + rng.int(hi - lo + 1);
+}
+
+/**
+ * The breadth-first tree of doorways from the entry room, and the depths it
+ * implies.
+ *
+ * BREADTH-FIRST ON PURPOSE, because it is what makes the depths minimal: the
+ * path this tree gives to any room is the shortest path the walls allow. The
+ * ruler's "within N doorways" is therefore decided by the plan's SHAPE and not
+ * by which doors happened to be cut first -- a depth-first tree can reach a room
+ * in five doorways over walls that allow two.
+ *
+ * A BATH IS A LEAF. It may be reached, never passed through. That is the
+ * difference between "one door into the bathroom" and "a bathroom used as a
+ * corridor", and the ruler counts DOORS into a bath rather than asking whether
+ * it has any, so a bath with two doors fails whatever the circulation looks
+ * like.
+ */
+function doorTree(root, adj, roles) {
+  const N = adj.length;
+  const parent = new Array(N).fill(-1);
+  const depth = new Array(N).fill(-1);
+  const done = new Array(N).fill(false);
+  const q = [root];
+  done[root] = true;
+  depth[root] = 0;
+  let reached = 1;
+  let max = 0;
+  while (q.length) {
+    const id = q.shift();
+    if (roles[id] === 'bath') continue;
+    for (const nb of adj[id]) {
+      if (done[nb]) continue;
+      done[nb] = true;
+      parent[nb] = id;
+      depth[nb] = depth[id] + 1;
+      if (depth[nb] > max) max = depth[nb];
+      reached += 1;
+      q.push(nb);
+    }
+  }
+  return { parent, depth, reached, max };
+}
+
+/**
+ * Roles AND doorways, decided together -- because they are one decision.
+ *
+ * WHY ONE FUNCTION AND NOT THREE STAGES. The six arrangement questions are not
+ * independently satisfiable by independent choices, and the couplings are the
+ * interesting part:
+ *
+ *   - the room you enter must be a most-connected room, which fixes WHICH CELL
+ *     the front door goes into (the best-connected one on the front wall), and
+ *     therefore which cell can be the living room;
+ *   - the bathroom must be reached from the entry without crossing a bedroom
+ *     and must have exactly ONE door, which is one fact stated twice: it is a
+ *     leaf of the door tree, hanging off the entry;
+ *   - the kitchen and the dining room must share a doorway, so they are chosen
+ *     as a PAIR of adjacent cells rather than one after the other.
+ *
+ * Doing these in separate passes is what produced the readings P0 made red: a
+ * role table handed out by area cannot know any of it afterwards.
+ *
+ * @returns null when this structure cannot satisfy all three. The caller tries
+ *          another structure -- the failure is a rejection, not an exception,
+ *          because "this envelope cannot hold a legible flat" is a real answer
+ *          that the report has to be able to carry.
+ */
+function planCirculation(rects, edges, perimeter, program, p, rng, trace) {
+  const N = rects.length;
+
+  /* the adjacency graph, with the widest shared wall kept for each pair ---- */
+  const adj = rects.map(() => []);
+  const widest = new Map();
+  const key = (a, b) => `${Math.min(a, b)}|${Math.max(a, b)}`;
+  for (const e of edges) {
+    adj[e.a].push(e.b);
+    adj[e.b].push(e.a);
+    const k = key(e.a, e.b);
+    const got = widest.get(k);
+    if (!got || e.len > got.len) widest.set(k, e);
+  }
+  const deg = adj.map((a) => a.length);
+  const maxDeg = Math.max(...deg);
+
+  /* which cell the front door opens into ---------------------------------- */
+  const centre = (i) => (rects[i].x0 + rects[i].x1) / 2;
+  const front = rects.map((r, i) => i).filter((i) => rects[i].z1 === p.d);
+  if (!front.length) return null;
+  const entryIdx = front.slice().sort((a, b) =>
+    (deg[b] - deg[a])
+    || (Math.abs(centre(a) - p.w / 2) - Math.abs(centre(b) - p.w / 2))
+    || (a - b))[0];
+
+  // THE PRECONDITION THE RULER WILL ASK ABOUT, asked here first. Whether the
+  // room you enter can be one of the most-connected rooms is a fact about the
+  // walls, so it is decidable before a single door exists -- which is what makes
+  // this a search rather than a hope. Everything after it assumes it.
+  if (deg[entryIdx] !== maxDeg) return null;
+
+  /* roles ----------------------------------------------------------------- */
+  const roles = new Array(N).fill(null);
+  const pool = program.slice();
+  const draw = (name) => {
+    const at = pool.indexOf(name);
+    if (at < 0) return false;
+    pool.splice(at, 1);
+    return true;
+  };
+  const freeCells = () => roles.map((r, i) => (r === null ? i : -1)).filter((i) => i >= 0);
+  const openNbrs = (i) => adj[i].filter((j) => roles[j] === null);
+
+  roles[entryIdx] = 'living';
+  if (!draw('living')) return null;
+
+  if (pool.includes('bath')) {
+    const cands = openNbrs(entryIdx).slice().sort((a, b) => (adj[a].length - adj[b].length) || (a - b));
+    if (!cands.length) return null;
+    roles[cands[0]] = 'bath';
+    draw('bath');
+  }
+
+  const wantK = pool.includes('kitchen');
+  const wantD = pool.includes('dining');
+  if (wantK && wantD) {
+    const pairs = [];
+    for (const i of freeCells()) {
+      for (const j of adj[i]) {
+        if (j <= i || roles[j] !== null) continue;
+        const onHall = adj[i].includes(entryIdx) || adj[j].includes(entryIdx);
+        pairs.push({ i, j, rank: onHall ? 0 : 1 });
+      }
+    }
+    if (!pairs.length) return null;
+    pairs.sort((a, b) => (a.rank - b.rank) || (a.i - b.i) || (a.j - b.j));
+    const put = pairs[rng.int(Math.min(pairs.length, 3))];
+    roles[put.i] = 'kitchen';
+    roles[put.j] = 'dining';
+    draw('kitchen');
+    draw('dining');
+  } else if (wantK || wantD) {
+    const name = wantK ? 'kitchen' : 'dining';
+    const cands = freeCells().slice().sort((a, b) => (adj[b].length - adj[a].length) || (a - b));
+    if (!cands.length) return null;
+    roles[cands[0]] = name;
+    draw(name);
+  }
+
+  // Everything else. Bedrooms take the cells that CAN have a window first --
+  // not because the ruler demands it (it exempts a room with no outside wall)
+  // but because a bedroom with an outside wall and no window is the dullest way
+  // to fail a plan, and a plan that hands out its perimeter last will do it.
+  const outside = (i) => rects[i].x0 === 0 || rects[i].x1 === p.w
+    || rects[i].z0 === 0 || rects[i].z1 === p.d;
+  const cells = freeCells().sort((a, b) => ((outside(b) ? 1 : 0) - (outside(a) ? 1 : 0)) || (a - b));
+  const rest = pool.slice().sort((a, b) => (a === 'bedroom' ? 0 : 1) - (b === 'bedroom' ? 0 : 1));
+  if (cells.length !== rest.length) return null;
+  for (let i = 0; i < rest.length; i++) roles[cells[i]] = rest[i];
+  if (roles.some((r) => r === null || r === undefined)) return null;
+
+  /* doorways -------------------------------------------------------------- */
+  const doors = [];
   const meta = [];
+  const used = new Set();
+  const degT = new Array(N).fill(0);
+  const cut = (a, b, note) => {
+    const e = widest.get(key(a, b));
+    if (!e) return false;
+    const made = makeDoor(e.wall, [e.a, e.b], pickSeg(e, rng, p), 'doorwayOpen', note);
+    doors.push(made.door);
+    meta.push(made.meta);
+    used.add(key(a, b));
+    degT[a] += 1;
+    degT[b] += 1;
+    return true;
+  };
+  const label = (a, b) => `${roles[a]}|${roles[b]}`;
 
-  const sorted = rng.shuffle(edges.slice()).sort((a, b) => b.len - a.len);
-  const uf = new UnionFind(rects.length);
-  const tree = [];
-  const loops = [];
-  for (const e of sorted) (uf.union(e.a, e.b) ? tree : loops).push(e);
+  const tree = doorTree(entryIdx, adj, roles);
+  if (tree.reached !== N) return null;                 // the bath cannot be a through-route
+  if (tree.max > MAX_DOOR_HOPS) return null;
 
-  const pickSeg = (e) => {
-    let lo = e.lo;
-    let hi = e.hi - 1;
-    if (hi - lo >= 2 * p.doorMargin) { lo += p.doorMargin; hi -= p.doorMargin; }
-    if (hi < lo) { lo = e.lo; hi = e.hi - 1; }
-    return lo + rng.int(hi - lo + 1);
+  let spanning = 0;
+  for (let i = 0; i < N; i++) {
+    if (i === entryIdx) continue;
+    if (cut(tree.parent[i], i, label(tree.parent[i], i))) spanning += 1;
+  }
+
+  let kd = 0;
+  if (wantK && wantD) {
+    const ki = roles.indexOf('kitchen');
+    const di = roles.indexOf('dining');
+    if (!used.has(key(ki, di))) {
+      if (!cut(ki, di, `${roles[ki]}=${roles[di]}`)) return null;
+      kd = 1;
+    }
+  }
+
+  // A flat is not a tree: in a tree, one door seals a wing. Extra doorways are
+  // added, GATED so that they can never raise anybody above the entry -- the
+  // entry's degree is the number the ruler compares, and it was fixed by
+  // geometry before this loop ran. The bath is excluded outright: a second door
+  // into a bathroom fails the ruler on its own.
+  const capDeg = degT[entryIdx];
+  let extra = 0;
+  for (const e of rng.shuffle(edges.slice())) {
+    if (extra >= p.maxLoopDoors) break;
+    if (e.a === entryIdx || e.b === entryIdx) continue;
+    if (roles[e.a] === 'bath' || roles[e.b] === 'bath') continue;
+    if (used.has(key(e.a, e.b))) continue;
+    if (degT[e.a] + 1 > capDeg || degT[e.b] + 1 > capDeg) continue;
+    if (!rng.chance(p.loopDoor)) continue;
+    if (cut(e.a, e.b, `${roles[e.a]}=${roles[e.b]}`)) extra += 1;
+  }
+
+  /* the way in ------------------------------------------------------------ */
+  // Cut into the entry cell's own metre segments, and never within one segment
+  // of its edges: the front door has to be findable from the resolved
+  // rectangles, and a door on a cell corner is a door whose room is ambiguous.
+  const cell = rects[entryIdx];
+  const lo = Math.ceil(cell.x0);
+  const span = Math.floor(cell.x1) - lo;
+  if (span < 1) return null;
+  const k = span >= 3 ? (lo + 1) + rng.int(span - 2) : lo + rng.int(span);
+  const way = makeDoor(perimeter.south, [entryIdx], k, 'doorwayFront', '入户门');
+  doors.push(way.door);
+  meta.push(way.meta);
+  trace.push(`front door on the south wall at x ${k}..${k + 1}, into the ${roles[entryIdx]}`);
+
+  /* windows --------------------------------------------------------------- */
+  // A perimeter segment belongs to the room a point just inside it lands in.
+  // Asked of the plan's OWN rectangles rather than of the picture, so a window
+  // and the room it lights cannot disagree.
+  const ownerOf = (name, i) => {
+    const x = name === 'west' ? 0.5 : name === 'east' ? p.w - 0.5 : i + 0.5;
+    const z = name === 'north' ? 0.5 : name === 'south' ? p.d - 0.5 : i + 0.5;
+    return rects.findIndex((r) => x > r.x0 && x < r.x1 && z > r.z0 && z < r.z1);
+  };
+  const facades = (i) => {
+    const r = rects[i];
+    const out = [];
+    if (r.z1 === p.d) out.push('south');
+    if (r.z0 === 0) out.push('north');
+    if (r.x0 === 0) out.push('west');
+    if (r.x1 === p.w) out.push('east');
+    return out;
+  };
+  const windowable = (name, i) => {
+    const run = perimeter[name];
+    if (!run || i < run.from || i >= run.to) return false;
+    if (Object.prototype.hasOwnProperty.call(run.kinds, i)) return false;
+    if (name === 'south' && Math.abs(i - k) < 2) return false;
+    return true;
   };
 
-  for (const e of tree) {
-    const made = makeDoor(e.wall, [e.a, e.b], pickSeg(e), 'doorwayOpen', `${roles[e.a]}-${roles[e.b]}`);
-    list.push(made.door);
-    meta.push(made.meta);
+  // Seed one window per bedroom that HAS an outside wall. A bedroom with no
+  // facade is not "blind" -- it has nothing to cut, and holding it to a window
+  // would be holding it to arithmetic rather than design. Which bedrooms those
+  // are is counted BELOW, after the scatter, so that the number this reports
+  // and the number the ruler measures are the same population.
+  for (let i = 0; i < N; i++) {
+    if (roles[i] !== 'bedroom') continue;
+    const cands = [];
+    for (const name of facades(i)) {
+      const run = perimeter[name];
+      if (!run) continue;
+      for (let s = run.from; s < run.to; s++) {
+        if (windowable(name, s) && ownerOf(name, s) === i) cands.push([name, s]);
+      }
+    }
+    if (!cands.length) continue;
+    const pick = cands[rng.int(cands.length)];
+    perimeter[pick[0]].kinds[pick[1]] = 'wallWindow';
   }
-
-  let extra = 0;
-  for (const e of loops) {
-    if (extra >= p.maxLoopDoors) break;
-    if (!rng.chance(p.loopDoor)) continue;
-    const made = makeDoor(e.wall, [e.a, e.b], pickSeg(e), 'doorwayOpen', `${roles[e.a]}=${roles[e.b]}`);
-    list.push(made.door);
-    meta.push(made.meta);
-    extra += 1;
-  }
-
-  // The way in: the south perimeter, so the spawn is derivable from geometry
-  // rather than from a remembered coordinate. Kept off the corners.
-  const k = 1 + rng.int(Math.max(1, p.w - 2));
-  const host = rects.findIndex((r) => r.z1 === p.d && k + 0.5 >= r.x0 && k + 0.5 < r.x1);
-  const entry = makeDoor(perimeter.south, host >= 0 ? [host] : [], k, 'doorwayFront', '入户门');
-  list.push(entry.door);
-  meta.push(entry.meta);
-  trace.push(`front door on the south wall at x ${k}..${k + 1}`);
-
-  // Windows: perimeter segments with no doorway, never beside the entrance.
-  for (const run of Object.values(perimeter)) {
+  // And a scattering elsewhere, so a plan does not read as "one window per
+  // bedroom, none anywhere else".
+  for (const name of Object.keys(perimeter)) {
+    const run = perimeter[name];
+    if (!run) continue;
     for (let i = run.from; i < run.to; i++) {
-      if (Object.prototype.hasOwnProperty.call(run.kinds, i)) continue;
-      if (run === perimeter.south && Math.abs(i - k) < 2) continue;
+      if (!windowable(name, i)) continue;
       if (rng.chance(p.windowChance)) run.kinds[i] = 'wallWindow';
     }
   }
 
-  return { doors: list, meta, trees: tree.length, loops: extra };
+  // `blind` -- bedrooms WITH an outside wall that ended up with no window.
+  //
+  // WAS "bedrooms that found no candidate slot", and that was a different set:
+  // on a 24 x 16 m plan the middle band is cut into cells that have no facade,
+  // so the old counter reported `blindBedrooms: 1` for a plan whose every
+  // outside bedroom does have a window -- a number that reads as a failure and
+  // is not one. `report.circulation.blindBedrooms` is compared against the
+  // ruler's `bedroom-window` check on all twelve sweep layouts, and two numbers
+  // may only be compared when they count the same thing.
+  let blind = 0;
+  for (let i = 0; i < N; i++) {
+    if (roles[i] !== 'bedroom') continue;
+    const sides = facades(i).filter((name) => perimeter[name]);
+    if (!sides.length) continue;                       // no outside wall -> out of scope
+    const lit = sides.some((name) => {
+      const run = perimeter[name];
+      for (let s = run.from; s < run.to; s++) {
+        if (run.kinds[s] === 'wallWindow' && ownerOf(name, s) === i) return true;
+      }
+      return false;
+    });
+    if (!lit) blind += 1;
+  }
+
+  return {
+    roles, doors, meta, spanning, loops: kd + extra,
+    entryIdx, entryRole: roles[entryIdx],
+    entryDegree: deg[entryIdx], maxDegree: maxDeg,
+    hops: tree.max, blind,
+  };
 }
+
 
 /**
  * The no-place zone a room needs for one of its doors: a rectangle just inside.
@@ -459,41 +835,6 @@ function doorLane(door, meta, roomIndex, U, deep) {
     if (Math.abs(U.z1 - meta.at) < 0.25) return { x0: lo, x1: hi, z0: U.z1 - deep, z1: U.z1 };
   }
   return null;
-}
-
-/* ================================================================= 4. roles */
-
-/**
- * Hand out roles: the big rooms take the big roles, the small ones the bath.
- *
- * The bath exception matters more than it looks. A 4 m2 room is the only room a
- * bath fits, and it is also the only role that stops the flat being five
- * bedrooms and a corridor. Without it, six rooms on a 10 x 8 envelope produced
- * six bedrooms, every time.
- */
-function assignRoles(rects, p, rng) {
-  const order = rects.map((r, i) => ({ i, area: rectArea(r) })).sort((a, b) => b.area - a.area);
-  const used = new Set();
-  const roles = new Array(rects.length);
-  const counts = {};
-  let extra = 0;
-
-  for (const { i, area } of order) {
-    let role = null;
-    if (area <= COMPACT_MAX_AREA && !used.has('bath') && rects.length >= 3) role = 'bath';
-    if (!role) role = ROLE_LADDER.find((c) => !used.has(c));
-    if (!role) {
-      // More rooms than roles. Repeat the residential ones -- a big building
-      // does -- but never living or kitchen: two kitchens in one flat is a bug
-      // a player would notice.
-      const repeats = ['bedroom', 'study', 'dining'];
-      role = repeats[extra++ % repeats.length];
-    }
-    used.add(role);
-    counts[role] = (counts[role] || 0) + 1;
-    roles[i] = role;
-  }
-  return { roles, counts };
 }
 
 /* ====================================================== local free-space grid */
@@ -1202,36 +1543,73 @@ export function generateFloorplan(params = {}, ctx = {}) {
   const trace = [];
   const problems = [];
 
-  /* 1. the envelope */
-  // A guillotine cut lands on an INTEGER line and every leaf keeps `minRoom` on
-  // BOTH sides, so an envelope has room for at most
-  // floor(w / ceil(minRoom)) * floor(d / ceil(minRoom)) leaves -- 2 x 1 = 2 for
-  // 7 x 5 m. Saying so BEFORE the attempt is the difference between a tool that
-  // explains why a request is impossible and one that quietly returns fewer
-  // rooms than it was asked for and leaves the caller to guess.
+  /* 1 + 3. ONE decision: bands, roles and doorways ----------------------- */
+  //
+  // These were three stages with three authors. A partition that only knew
+  // about areas, roles handed out by area afterwards, doorways chosen by wall
+  // width -- and none of the three could know that the front door has to open
+  // into a hall, so none of them could be asked. Measured on the sweep: seven
+  // of twelve flats opened their front door into a bedroom or a bathroom.
+  //
+  // They are now one search, whose accept test is the ruler's own
+  // precondition. A structure that cannot put the front door in a hub within
+  // MAX_DOOR_HOPS doorways of every room is REJECTED here rather than shipped
+  // to fail there, and `problems` says so loudly if no structure survives.
+  const { roles: programList, unknown } = roomProgram(p);
+  if (unknown.length) {
+    problems.push(`the room list names ${unknown.length} role(s) the palette does not know: `
+      + `${unknown.join(', ')} -- those rooms will be furnished as bedrooms`);
+  }
+  const n = programList.length;
+  p.rooms = n;
+
   const edge = Math.ceil(p.minRoom);
-  const fits = Math.floor(p.w / edge) * Math.floor(p.d / edge);
-  if (p.rooms > fits) {
-    problems.push(`asked for ${p.rooms} rooms of at least ${p.minRoom} m a side in ${p.w} x ${p.d} m: `
-      + `on the ${edge} m wall grid at most ${fits} fit`);
-  }
-  const rects = partition(p, rng);
-  if (rects.length < p.rooms && p.rooms <= fits) {
-    problems.push(`asked for ${p.rooms} rooms in ${p.w} x ${p.d} m with a ${p.minRoom} m minimum; `
-      + `only ${rects.length} fit`);
+  const maxCols = Math.floor(p.w / edge);
+  const rMax = Math.min(MAX_BANDS, Math.floor(p.d / edge));
+  const fits = (rMax < 1 || maxCols < 1) ? 0 : maxCols * (rMax - 1) + Math.min(3, maxCols);
+  if (n > fits) {
+    problems.push(`asked for ${n} rooms of at least ${p.minRoom} m a side in ${p.w} x ${p.d} m: `
+      + `on the ${edge} m wall grid, laid out as bands, at most ${fits} fit`);
   }
 
-  /* 2. walls */
-  const { walls, edges, perimeter } = deriveWalls(rects, p);
+  let plan = null;
+  for (let t = 0; t < BAND_TRIES && !plan; t++) {
+    const cand = bandStructure(p, rng.fork(`band${t}`), n);
+    if (!cand) continue;
+    const walls = deriveWalls(cand.rects, p);
+    const circ = planCirculation(cand.rects, walls.edges, walls.perimeter, programList, p,
+      rng.fork(`circ${t}`), t === 0 ? trace : []);
+    if (!circ) continue;
+    plan = { ...cand, ...walls, ...circ };
+  }
+  if (!plan) {
+    // LOUD, and shaped like a layout. A generator that returns five rooms when
+    // six were asked for, or a flat with no front door, must not look like a
+    // success to anything downstream -- so this is a `problem`, which the
+    // pipeline turns into a failed check, and the layout it returns is the
+    // honest degenerate case rather than a plausible-looking guess.
+    problems.push(`no band plan kept the front door in a most-connected room within `
+      + `${MAX_DOOR_HOPS} doorways of every room, in ${BAND_TRIES} attempts: `
+      + `${p.w} x ${p.d} m was not generated`);
+    const only = [{ x0: 0, z0: 0, x1: p.w, z1: p.d }];
+    plan = {
+      rects: only, rows: [], bands: 1, ...deriveWalls(only, p),
+      roles: ['living'], doors: [], meta: [], spanning: 0, loops: 0,
+      entryIdx: null, entryRole: 'living', entryDegree: 0, maxDegree: 0, hops: 0, blind: 0,
+    };
+  }
 
-  /* 3. roles, then doors (the door note reads better with role names in it) */
-  const { roles, counts } = assignRoles(rects, p, rng);
+  const rects = plan.rects;
+  const { walls, edges, perimeter, doors, meta, spanning: trees, loops } = plan;
+  const { roles } = plan;
+
   const seen = {};
   const roomIds = rects.map((r, i) => {
     seen[roles[i]] = (seen[roles[i]] || 0) + 1;
     return seen[roles[i]] === 1 ? roles[i] : `${roles[i]}${seen[roles[i]]}`;
   });
-  const { doors, meta, trees, loops } = chooseDoors(rects, roles, edges, perimeter, p, rng, trace);
+  const counts = {};
+  for (const role of roles) counts[role] = (counts[role] || 0) + 1;
 
   /* 4. furniture, on a per-room quota proportional to usable floor */
   const usable = rects.map((r) => usableRect(r, walls));
@@ -1298,6 +1676,20 @@ export function generateFloorplan(params = {}, ctx = {}) {
       roomIds,
       roles: { ...counts },
       doors: { spanning: trees, extra: loops, total: doors.length },
+      // The plan's OWN claim about its circulation, so the ruler's verdict can
+      // be held against something rather than merely believed. Two independent
+      // computations of one fact: `verify_arrangement.mjs` checks them against
+      // each other on all twelve layouts, and a divergence is a finding.
+      circulation: {
+        bands: plan.bands,
+        entry: plan.entryIdx == null ? null : roomIds[plan.entryIdx],
+        entryRole: plan.entryRole,
+        entryDegree: plan.entryDegree,
+        maxDegree: plan.maxDegree,
+        hops: plan.hops,
+        blindBedrooms: plan.blind,
+        rows: plan.rows.map((r) => ({ z0: r.z0, z1: r.z1, cells: r.widths.length })),
+      },
       walls: { runs: walls.length, segments: walls.reduce((a, w) => a + Math.round(w.to - w.from), 0) },
       items: {
         wanted: p.items,

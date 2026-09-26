@@ -57,6 +57,7 @@ import { buildWallOpenings, buildDoorStates } from '../game/arena/openings.js';
 import { buildNav } from '../game/core/nav.js';
 import { resolveRooms, applyRooms } from '../game/core/regions.js';
 import * as SHIPPED from '../js/layout.js';
+import { verdictFingerprint } from './fingerprint.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -285,7 +286,16 @@ function main() {
       prizes: r.placement.prizes.map((p) => ({ x: +p.x.toFixed(3), z: +p.z.toFixed(3), y: +p.y.toFixed(3), room: p.room, tier: p.tier })),
       prizeReport: { ...r.placement.report, covers: undefined, stats: undefined },
     }));
-    fs.writeFileSync(jp, JSON.stringify({ generatedAt: new Date().toISOString(), rows }, null, 1), 'utf8');
+    // `fingerprint` names the source tree that produced these rows. An
+    // artifact without it cannot be told apart from one written by an older
+    // generator, and `verify_arrangement.mjs` once read exactly such a file
+    // and reported the age difference as a disagreement. See
+    // scripts/fingerprint.mjs.
+    fs.writeFileSync(jp, JSON.stringify({
+      generatedAt: new Date().toISOString(),
+      fingerprint: verdictFingerprint(),
+      rows,
+    }, null, 1), 'utf8');
     say(`wrote ${path.relative(ROOT, jp).replace(/\\/g, '/')}`);
   }
 

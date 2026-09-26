@@ -52,6 +52,8 @@ import { buildWallOpenings, buildDoorStates } from '../arena/openings.js';
 import { buildNav } from '../core/nav.js';
 import { resolveRooms, applyRooms } from '../core/regions.js';
 
+import { JOIN, AGAINST_WALL, MAX_DOOR_HOPS } from './siting.js';
+
 const DEG = Math.PI / 180;
 
 /**
@@ -84,31 +86,8 @@ export function toResolvedLevel(layout, opts = {}) {
   applyRooms(level, resolveRooms(level, nav).rooms);
   return level;
 }
-/**
- * How close two footprints must be to count as ONE composition.
- *
- * 0.30 m is not tuned. The kit's bedside table is 0.30 deep and a bed/table
- * pair is the tightest legitimate composition in the flat, so a threshold under
- * it would split a real group and one over it would merge two unrelated walls
- * of shelving.
- */
-const JOIN = 0.30;
-
-/**
- * The most doorways a person should cross from the front door to any room.
- *
- * ANCHORED ON THE DESIGNED FLAT, which reads 2. Allow one more for a plan whose
- * circulation runs through a hall that is itself a room (entry -> hall -> room),
- * and three is the bound: enter, cross one space, arrive. The generated average
- * is 3.0 with a maximum of 5, so this is a real bar rather than a formality.
- */
-const MAX_DOOR_HOPS = 3;
-
 /** How near the plan boundary a room counts as having an outside wall. */
 const EXTERIOR_TOL = 0.12;
-
-/** An object this close to a wall is against it; beyond it, it stands free. */
-const AGAINST_WALL = 0.25;
 
 /** A door is "on" a room's face when its centre is within this of the span. */
 const ON_FACE_TOL = 0.30;
@@ -440,6 +419,10 @@ export function auditArrangement(layout, level, opts = {}) {
     entry,
     entryRole,
     entryDegree: entry ? degree(entry) : -1,
+    // The busiest room's degree, stated as a NUMBER as well as a name list.
+    // `floorplan.js` publishes its own `maxDegree` in `report.circulation`, and
+    // two numbers can be compared; two formatted strings cannot.
+    maxDegree: maxDeg,
     entryIsHub,
     hub: hubIds.map(baseRole).join('/'),
     maxDepth,
