@@ -166,8 +166,17 @@ glTF 规范说 `baseColorFactor` 是**线性**的。按线性读，沙发色 `(0
 # 全套验收：静态检查 → 无头渲染 → 断言 → 8 张截图 → 干净度
 node scripts/shoot.js
 
-# 只测一键启动脚本本身：起服务、抓 16 个资源、核对 MIME 与字节数
+# 只测一键启动脚本本身：起服务、抓 33 个资源、核对 MIME 与字节数，
+# 并把六张地板的快照各取一遍、核对 arena 自报名 == 名册 id
 python scripts/smoke_serve.py
+
+# 预制地图：208 条断言（逐字节重建 / 散文数字 / 房间归属 / 难度表放得满 /
+# 尺寸词汇即事实 / 名册 id == arena 自报名）+ 六枚变异会红
+node scripts/verify_maps.mjs
+
+# 地图栏：44 条断言 —— 真的构造 Hud、真的点卡片、真的按「开始」，
+# 读它把哪张地图交给了 onStart（play.js 那一半是静态断言，输出里分开标注）
+node scripts/verify_menus.mjs
 
 # 网络层取证：按 URL 聚合请求、区分「真失败」与「拿到 200 后被取消」
 node scripts/probe_net.js
@@ -579,6 +588,33 @@ node scripts/diag_open.mjs           # 诊断「页面是空壳」：同一个�
 > 现在 `--report` 连图一起带走，而 `verify_playground.mjs` 自己也会在跑完之后
 > **复查那两个文件的哈希没变** —— 这条断言以前不存在，所以「证据没被动过」
 > 当时只是我的一句话，不是一次测量。
+
+---
+
+## 预制地图（六张）
+
+设计书与读数表在 [`game/MAPS.md`](game/MAPS.md)。这里只留指路，以及四条**只有在这栋
+房子上才成立**的事实。
+
+* **六张图**：剖面公寓（`room_scene`，基准，**不改** —— `game/VERDICT.md` 里几乎每个读数
+  都是在它上面量的）+ 五张手工预制：一人间 / 藏书房（小）、两室一厅 / 茶室小院（中）、
+  大宅（大）。名册是 `game/maps/index.js`，产物是 `game/arenas/maps/*.json`
+  与 `game/maps/manifest.json`。
+* **尺寸词汇是断言，不是标签**：房间数与面积 小 < 中 < 大，而件/m² 小 > 中 > 大
+  （`1.729` > `1.085`..`1.179` > `0.976`）。三条同时成立才算数，任一条被一次布局改动作反，
+  `verify_maps.mjs` 立刻红。
+* **进游戏先选地图与难度**：`play.html` 的开始页，上排地图、下排难度。换图**是一次页面
+  重载**（`?map=` / `?difficulty=` / `?seed=` / `?markers=` / `?play=1`）—— 因为在活着的
+  场景下换地板等于把 `start()` 写第二遍，而**第二份 boot 正是整个 arena 工作要消灭的那类
+  bug**（曾出现「生成 16×14 的地板、却在 10×8 的公寓里玩，而所有量具全绿」）。
+* **名册 id 必须等于 arena 自报的 `meta.id`**。这条以前没人比过：名册把上架公寓键作
+  `origin`，`snapshot_arena.mjs` 写进产物的是 `room_scene`，于是默认落地页**六张卡片一张
+  都不高亮**，而页面看起来完全正常。现在由 `verify_maps.mjs` 逐一核对，并有一枚变异
+  （M0）专门把它打红。
+
+证据：[`reports/maps.txt`](reports/maps.txt)（读数表 / 建图 / 出生点探针 / 208 条断言 /
+六枚变异）、[`reports/menus.txt`](reports/menus.txt)（44 条断言 / 五枚变异 / 启动器把六张
+地板端出去）。两份都由 `python work/_mkreports.py` **跑出来**，不是写出来的。
 
 ---
 

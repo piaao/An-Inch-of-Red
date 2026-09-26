@@ -1,0 +1,493 @@
+# 预制地图 · 入库证据
+
+六张图（原始公寓 / 五张手工预制）的名册、平面、断言与变异。
+所有数字来自本文件里的命令在本次运行中打印的东西 —— 文档里引用的读数都能在这里 grep 到。
+
+装配：`python work/_mkreports.py`（本文件是跑出来的，不是写出来的）
+时间：2026-09-26 21:44
+
+==============================================================================
+# 每个读数都在这里：名册数字取自 manifest，其余本进程实测
+#   $ C:/Users/NING MEI/.workbuddy/binaries/node/versions/22.22.2-3/node.exe work/_maps_table.mjs
+==============================================================================
+| id | 名字 | 类别 | 平面 | m2 | 房间 | 家具 | 件/m2 | 锚点池 | 攀爬面 | 可达 | 巡逻航点 | 独立巡逻 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `room_scene` | 剖面公寓 | 原型 | 10x8 | 80 | 6 | 119 | 1.488 | 42 | 70 | 58 | 6+6 | 6 |
+| `studio` | 一人间 | 小 | 8x6 | 48 | 2 | 83 | 1.729 | 34 | 54 | 26 | 3+3 | 3 |
+| `den` | 藏书房 | 小 | 9x7 | 63 | 3 | 87 | 1.381 | 27 | 42 | 32 | 5+5 | 5 |
+| `twobed` | 两室一厅 | 中 | 14x10 | 140 | 8 | 165 | 1.179 | 41 | 99 | 43 | 9+9 | 9 |
+| `teahouse` | 茶室小院 | 中 | 13x9 | 117 | 6 | 127 | 1.085 | 50 | 68 | 52 | 7+7 | 7 |
+| `manor` | 大宅 | 大 | 18x14 | 252 | 11 | 246 | 0.976 | 102 | 141 | 119 | 21+21 | 21 |
+
+buildCore ms per map -- wall clock, so it lives outside the table (table above is deterministic): room_scene 470 · studio 155 · den 158 · twobed 572 · teahouse 364 · manor 1894
+
+rooms per map (name and resolved area, as the arena reports them):
+  room_scene  卧室 8.0 · 卫生间 3.4 · 厨房 7.6 · 客厅 21.3 · 餐厅 4.5 · 书房 8.0
+  studio      起居室 24.1 · 卫浴 7.4
+  den         卫生间 3.7 · 书斋 14.5 · 起居室 26.3
+  twobed      主卧 18.8 · 卫生间 5.1 · 洗衣房 2.6 · 次卧 10.0 · 书房 10.2 · 客厅 21.7 · 餐厅 15.1 · 厨房 12.7
+  teahouse    茶室 15.7 · 卧室 11.0 · 浴室 11.2 · 起居室 21.8 · 书房 14.0 · 厨房 9.1
+  manor       主卧 14.3 · 衣帽间 8.5 · 主卫 7.7 · 次卧 9.6 · 客卧 7.5 · 中厅 42.3 · 客厅 37.9 · 餐厅 11.3 · 厨房 20.0 · 书房 9.3 · 洗衣房 12.6
+
+the difficulty table's largest preset asks for 24 红包; the largest garrison is 2 (solo=6/1, patrol=6/1, tight=12/2, hunter=24/2)
+
+==============================================================================
+# 建图：五张预制图 + 名册
+#   $ C:/Users/NING MEI/.workbuddy/binaries/node/versions/22.22.2-3/node.exe scripts/build_maps.mjs
+==============================================================================
+build_maps
+========================================================================
+roster: room_scene, studio, den, twobed, teahouse, manor
+will rewrite:
+   game/arenas/maps/studio.json
+   game/arenas/maps/den.json
+   game/arenas/maps/twobed.json
+   game/arenas/maps/teahouse.json
+   game/arenas/maps/manor.json
+   game/maps/manifest.json
+
+=== room_scene  剖面公寓  [原型]
+   not rebuilt -- game/arenas/room_scene.json is the shipped snapshot (scripts/snapshot_arena.mjs)
+   plan 10x8  rooms 6  items 119  1.488 items/m2  walkable 21378
+
+=== studio  一人间  [小]
+   plan 8x6 (48 m2)  rooms 2  items 83 (1.729/m2)  solids 121
+   walls 36  doors 2 (shut: doorwayFront)  openings 2
+   nav  player 12614/19200 regions 2  guard 11745 regions 2
+   rooms resolved 2/2  orphan regions 0 (over the walker: 0)
+      living      起居室   area   24.1 m2  rect [0.1, 0.1] .. [5.9, 5.9]
+      bath        卫浴    area    7.4 m2  rect [6.1, 0.1] .. [7.9, 5.9]
+   spawn (5.17, 5.35) yaw 64 deg
+   wrote game/arenas/maps/studio.json  46 KB
+
+=== den  藏书房  [小]
+   plan 9x7 (63 m2)  rooms 3  items 87 (1.381/m2)  solids 137
+   walls 47  doors 3 (shut: doorwayFront)  openings 3
+   nav  player 17882/25200 regions 3  guard 16510 regions 3
+   rooms resolved 3/3  orphan regions 1 (over the walker: 0)
+      bath        卫生间   area    3.7 m2  rect [0.1, 0.1] .. [1.9, 2.9]
+      study       书斋    area   14.5 m2  rect [2.2, 0.1] .. [8.7, 2.9]
+      living      起居室   area   26.3 m2  rect [0.1, 3.2] .. [8.9, 6.9]
+   spawn (7.01, 6.45) yaw 50 deg
+   wrote game/arenas/maps/den.json  51 KB
+
+=== twobed  两室一厅  [中]
+   plan 14x10 (140 m2)  rooms 8  items 165 (1.179/m2)  solids 271
+   walls 98  doors 8 (shut: doorwayFront)  openings 8
+   nav  player 38675/56000 regions 3  guard 35697 regions 5
+   rooms resolved 8/8  orphan regions 0 (over the walker: 0)
+      master      主卧    area   18.8 m2  rect [0.1, 0.1] .. [4.9, 4.9]
+      bath        卫生间   area    5.1 m2  rect [5.1, 0.1] .. [7.9, 2.9]
+      laundry     洗衣房   area    2.6 m2  rect [5.1, 3.2] .. [7.9, 4.9]
+      second      次卧    area   10.0 m2  rect [8.1, 0.1] .. [10.9, 4.9]
+      study       书房    area   10.2 m2  rect [11.1, 0.1] .. [13.9, 4.9]
+      living      客厅    area   21.7 m2  rect [0.1, 5.2] .. [5.9, 9.9]
+      dining      餐厅    area   15.1 m2  rect [6.2, 5.2] .. [9.9, 9.9]
+      kitchen     厨房    area   12.7 m2  rect [10.2, 5.2] .. [13.9, 9.9]
+   spawn (3.00, 9.47) yaw 132 deg
+   wrote game/arenas/maps/twobed.json  98 KB
+
+=== teahouse  茶室小院  [中]
+   plan 13x9 (117 m2)  rooms 6  items 127 (1.085/m2)  solids 214
+   walls 81  doors 6 (shut: doorwayFront)  openings 6
+   nav  player 33218/46800 regions 2  guard 30556 regions 6
+   rooms resolved 6/6  orphan regions 0 (over the walker: 0)
+      tea         茶室    area   15.7 m2  rect [0.1, 0.1] .. [4.9, 3.9]
+      bed         卧室    area   11.0 m2  rect [5.1, 0.1] .. [8.9, 3.9]
+      bath        浴室    area   11.2 m2  rect [9.1, 0.1] .. [12.9, 3.9]
+      living      起居室   area   21.8 m2  rect [0.1, 4.1] .. [5.9, 8.9]
+      study       书房    area   14.0 m2  rect [6.2, 4.1] .. [9.9, 8.9]
+      kitchen     厨房    area    9.1 m2  rect [10.2, 4.1] .. [12.9, 8.9]
+   spawn (3.00, 8.46) yaw 131 deg
+   wrote game/arenas/maps/teahouse.json  76 KB
+
+=== manor  大宅  [大]
+   plan 18x14 (252 m2)  rooms 11  items 246 (0.976/m2)  solids 411
+   walls 153  doors 12 (shut: doorwayFront)  openings 12
+   nav  player 72777/100800 regions 2  guard 67403 regions 5
+   rooms resolved 11/11  orphan regions 0 (over the walker: 0)
+      master      主卧    area   14.3 m2  rect [0.1, 0.1] .. [4.9, 3.9]
+      dressing    衣帽间   area    8.5 m2  rect [5.1, 0.1] .. [7.9, 3.9]
+      masterbath  主卫    area    7.7 m2  rect [8.1, 0.1] .. [10.9, 3.9]
+      second      次卧    area    9.6 m2  rect [11.1, 0.1] .. [14.9, 3.9]
+      guest       客卧    area    7.5 m2  rect [15.1, 0.1] .. [17.9, 3.9]
+      hall        中厅    area   42.3 m2  rect [0.1, 4.1] .. [17.9, 6.9]
+      living      客厅    area   37.9 m2  rect [0.1, 7.2] .. [6.9, 13.9]
+      dining      餐厅    area   11.3 m2  rect [7.2, 7.2] .. [10.9, 10.9]
+      kitchen     厨房    area   20.0 m2  rect [11.2, 7.2] .. [17.9, 10.9]
+      study       书房    area    9.3 m2  rect [7.2, 11.2] .. [11.9, 13.9]
+      laundry     洗衣房   area   12.6 m2  rect [12.2, 11.2] .. [17.9, 13.9]
+   spawn (2.05, 13.51) yaw 137 deg
+   wrote game/arenas/maps/manor.json  148 KB
+
+wrote game/maps/manifest.json  6.2 KB
+
+========================================================================
+6/6 maps clean
+
+==============================================================================
+# 出生点探针：它在什么里面、那一格能不能走、攀爬图的家在哪
+#   $ C:/Users/NING MEI/.workbuddy/binaries/node/versions/22.22.2-3/node.exe work/_spawn_probe.mjs
+==============================================================================
+map          spawn              bodyR  cell  clear nearest solid            gap m  home reached/total
+------------------------------------------------------------------------------------------------------------
+room_scene   (4.592,7.281)       0.12     0    yes living#coatRackStanding@5.28,7.58  0.5747     0         58/70
+studio       (5.167,5.353)       0.12     0    yes living#trashcan@5.78,5.15  0.5166     0         26/54
+den          (7.014,6.454)       0.12     2    yes wall:south:7.140        0.5266     2         32/42
+twobed       (3.000,9.466)       0.12     0    yes living#coatRackStanding@3.35,9.60  0.2133     0         43/99
+teahouse     (2.997,8.463)       0.12     0    yes living#coatRackStanding@3.30,8.60  0.1669     0         52/68
+manor        (2.047,13.512)      0.12     0    yes living#cabinetTelevisionDoors@2.40,13.87  0.2277     0       119/141
+
+==============================================================================
+# 闸：verify_maps.mjs
+#   $ C:/Users/NING MEI/.workbuddy/binaries/node/versions/22.22.2-3/node.exe scripts/verify_maps.mjs --log work/_rm_maps.log
+==============================================================================
+== the roster and the artifact it produced ==
+  6 map(s) in game/maps/manifest.json
+  ok   the manifest names the script that produced it  -- scripts/build_maps.mjs
+  ok   the manifest lists every map on the roster (6)  -- 6
+  ok   the default map is one of the maps  -- room_scene
+  ok   and index.js and the manifest agree on which one it is  -- room_scene vs room_scene
+  ok   every category in the manifest is in the roster vocabulary  -- 原型 / 小 / 中 / 大
+  ok   the roster is two 小, two 中 and one 大 (plus the 原型)  -- {"原型":1,"小":2,"中":2,"大":1}
+  ok   room_scene: the manifest entry is this roster entry, field for field
+  ok   studio: the manifest entry is this roster entry, field for field
+  ok   den: the manifest entry is this roster entry, field for field
+  ok   twobed: the manifest entry is this roster entry, field for field
+  ok   teahouse: the manifest entry is this roster entry, field for field
+  ok   manor: the manifest entry is this roster entry, field for field
+
+  ok   room_scene: ./game/arenas/room_scene.json exists
+  ok   room_scene: the manifest's byte count is the file's byte count  -- 71712 vs 71712
+  ok   room_scene: the roster id is the id the arena gives itself  -- "room_scene" vs meta.id "room_scene"
+  ok   studio: ./game/arenas/maps/studio.json exists
+  ok   studio: the manifest's byte count is the file's byte count  -- 46908 vs 46908
+  ok   studio: the roster id is the id the arena gives itself  -- "studio" vs meta.id "studio"
+  ok   den: ./game/arenas/maps/den.json exists
+  ok   den: the manifest's byte count is the file's byte count  -- 51715 vs 51715
+  ok   den: the roster id is the id the arena gives itself  -- "den" vs meta.id "den"
+  ok   twobed: ./game/arenas/maps/twobed.json exists
+  ok   twobed: the manifest's byte count is the file's byte count  -- 100832 vs 100832
+  ok   twobed: the roster id is the id the arena gives itself  -- "twobed" vs meta.id "twobed"
+  ok   teahouse: ./game/arenas/maps/teahouse.json exists
+  ok   teahouse: the manifest's byte count is the file's byte count  -- 78198 vs 78198
+  ok   teahouse: the roster id is the id the arena gives itself  -- "teahouse" vs meta.id "teahouse"
+  ok   manor: ./game/arenas/maps/manor.json exists
+  ok   manor: the manifest's byte count is the file's byte count  -- 152048 vs 152048
+  ok   manor: the roster id is the id the arena gives itself  -- "manor" vs meta.id "manor"
+
+== the prose states numbers it does not own ==
+  ok   room_scene: every number in its blurb is the measured one
+  ok   studio: every number in its blurb is the measured one
+  ok   den: every number in its blurb is the measured one
+  ok   twobed: every number in its blurb is the measured one
+  ok   teahouse: every number in its blurb is the measured one
+  ok   manor: every number in its blurb is the measured one
+
+== every arena is what its source builds today ==
+
+=== room_scene  剖面公寓  [原型]
+   not rebuilt -- game/arenas/room_scene.json is the shipped snapshot (scripts/snapshot_arena.mjs)
+   plan 10x8  rooms 6  items 119  1.488 items/m2  walkable 21378
+  ..  room_scene: not rebuilt (shipped snapshot), prose only
+  ok   room_scene: the build reports no problems
+
+=== studio  一人间  [小]
+   plan 8x6 (48 m2)  rooms 2  items 83 (1.729/m2)  solids 121
+   walls 36  doors 2 (shut: doorwayFront)  openings 2
+   nav  player 12614/19200 regions 2  guard 11745 regions 2
+   rooms resolved 2/2  orphan regions 0 (over the walker: 0)
+      living      起居室   area   24.1 m2  rect [0.1, 0.1] .. [5.9, 5.9]
+      bath        卫浴    area    7.4 m2  rect [6.1, 0.1] .. [7.9, 5.9]
+   spawn (5.17, 5.35) yaw 64 deg
+   rebuilt game/arenas/maps/studio.json  (46 KB, not written)
+  ok   studio: the committed arena is byte for byte what the source builds  -- 46 KB
+  ok   studio: the build reports no problems
+
+=== den  藏书房  [小]
+   plan 9x7 (63 m2)  rooms 3  items 87 (1.381/m2)  solids 137
+   walls 47  doors 3 (shut: doorwayFront)  openings 3
+   nav  player 17882/25200 regions 3  guard 16510 regions 3
+   rooms resolved 3/3  orphan regions 1 (over the walker: 0)
+      bath        卫生间   area    3.7 m2  rect [0.1, 0.1] .. [1.9, 2.9]
+      study       书斋    area   14.5 m2  rect [2.2, 0.1] .. [8.7, 2.9]
+      living      起居室   area   26.3 m2  rect [0.1, 3.2] .. [8.9, 6.9]
+   spawn (7.01, 6.45) yaw 50 deg
+   rebuilt game/arenas/maps/den.json  (51 KB, not written)
+  ok   den: the committed arena is byte for byte what the source builds  -- 51 KB
+  ok   den: the build reports no problems
+
+=== twobed  两室一厅  [中]
+   plan 14x10 (140 m2)  rooms 8  items 165 (1.179/m2)  solids 271
+   walls 98  doors 8 (shut: doorwayFront)  openings 8
+   nav  player 38675/56000 regions 3  guard 35697 regions 5
+   rooms resolved 8/8  orphan regions 0 (over the walker: 0)
+      master      主卧    area   18.8 m2  rect [0.1, 0.1] .. [4.9, 4.9]
+      bath        卫生间   area    5.1 m2  rect [5.1, 0.1] .. [7.9, 2.9]
+      laundry     洗衣房   area    2.6 m2  rect [5.1, 3.2] .. [7.9, 4.9]
+      second      次卧    area   10.0 m2  rect [8.1, 0.1] .. [10.9, 4.9]
+      study       书房    area   10.2 m2  rect [11.1, 0.1] .. [13.9, 4.9]
+      living      客厅    area   21.7 m2  rect [0.1, 5.2] .. [5.9, 9.9]
+      dining      餐厅    area   15.1 m2  rect [6.2, 5.2] .. [9.9, 9.9]
+      kitchen     厨房    area   12.7 m2  rect [10.2, 5.2] .. [13.9, 9.9]
+   spawn (3.00, 9.47) yaw 132 deg
+   rebuilt game/arenas/maps/twobed.json  (98 KB, not written)
+  ok   twobed: the committed arena is byte for byte what the source builds  -- 98 KB
+  ok   twobed: the build reports no problems
+
+=== teahouse  茶室小院  [中]
+   plan 13x9 (117 m2)  rooms 6  items 127 (1.085/m2)  solids 214
+   walls 81  doors 6 (shut: doorwayFront)  openings 6
+   nav  player 33218/46800 regions 2  guard 30556 regions 6
+   rooms resolved 6/6  orphan regions 0 (over the walker: 0)
+      tea         茶室    area   15.7 m2  rect [0.1, 0.1] .. [4.9, 3.9]
+      bed         卧室    area   11.0 m2  rect [5.1, 0.1] .. [8.9, 3.9]
+      bath        浴室    area   11.2 m2  rect [9.1, 0.1] .. [12.9, 3.9]
+      living      起居室   area   21.8 m2  rect [0.1, 4.1] .. [5.9, 8.9]
+      study       书房    area   14.0 m2  rect [6.2, 4.1] .. [9.9, 8.9]
+      kitchen     厨房    area    9.1 m2  rect [10.2, 4.1] .. [12.9, 8.9]
+   spawn (3.00, 8.46) yaw 131 deg
+   rebuilt game/arenas/maps/teahouse.json  (76 KB, not written)
+  ok   teahouse: the committed arena is byte for byte what the source builds  -- 76 KB
+  ok   teahouse: the build reports no problems
+
+=== manor  大宅  [大]
+   plan 18x14 (252 m2)  rooms 11  items 246 (0.976/m2)  solids 411
+   walls 153  doors 12 (shut: doorwayFront)  openings 12
+   nav  player 72777/100800 regions 2  guard 67403 regions 5
+   rooms resolved 11/11  orphan regions 0 (over the walker: 0)
+      master      主卧    area   14.3 m2  rect [0.1, 0.1] .. [4.9, 3.9]
+      dressing    衣帽间   area    8.5 m2  rect [5.1, 0.1] .. [7.9, 3.9]
+      masterbath  主卫    area    7.7 m2  rect [8.1, 0.1] .. [10.9, 3.9]
+      second      次卧    area    9.6 m2  rect [11.1, 0.1] .. [14.9, 3.9]
+      guest       客卧    area    7.5 m2  rect [15.1, 0.1] .. [17.9, 3.9]
+      hall        中厅    area   42.3 m2  rect [0.1, 4.1] .. [17.9, 6.9]
+      living      客厅    area   37.9 m2  rect [0.1, 7.2] .. [6.9, 13.9]
+      dining      餐厅    area   11.3 m2  rect [7.2, 7.2] .. [10.9, 10.9]
+      kitchen     厨房    area   20.0 m2  rect [11.2, 7.2] .. [17.9, 10.9]
+      study       书房    area    9.3 m2  rect [7.2, 11.2] .. [11.9, 13.9]
+      laundry     洗衣房   area   12.6 m2  rect [12.2, 11.2] .. [17.9, 13.9]
+   spawn (2.05, 13.51) yaw 137 deg
+   rebuilt game/arenas/maps/manor.json  (148 KB, not written)
+  ok   manor: the committed arena is byte for byte what the source builds  -- 148 KB
+  ok   manor: the build reports no problems
+  (rebuild took 0.9 s)
+
+== the floor plan means what the core thinks it means ==
+  ok   room_scene: validateLevel is clean
+  ok   room_scene: the arena carries no problems of its own
+  ok   room_scene: every room resolved a rectangle
+  ok   room_scene: the arena's own room census agrees with its room list  -- {"total":6,"resolved":6,"orphans":1,"sealedOpenings":6}
+  ok   room_scene: the manifest's room/item/area numbers are the arena's  -- manifest 6/119/80 vs arena 6/119/80
+  ok   room_scene: no two room rectangles share floor
+  ok   room_scene: the spawn is inside exactly one room  -- living
+  ok   room_scene: nothing solid is inside the spawn's body
+  ok   room_scene: no walkable pocket belongs to no room (over 0.0452 m2)  --  (+1 under the bar, recorded)
+  ok   room_scene: resolveRooms is happy
+  ok   studio: validateLevel is clean
+  ok   studio: the arena carries no problems of its own
+  ok   studio: every room resolved a rectangle
+  ok   studio: the arena's own room census agrees with its room list  -- {"total":2,"resolved":2,"orphans":0,"sealedOpenings":2}
+  ok   studio: the manifest's room/item/area numbers are the arena's  -- manifest 2/83/48 vs arena 2/83/48
+  ok   studio: no two room rectangles share floor
+  ok   studio: the spawn is inside exactly one room  -- living
+  ok   studio: nothing solid is inside the spawn's body
+  ok   studio: no walkable pocket belongs to no room (over 0.0452 m2)
+  ok   studio: resolveRooms is happy
+  ok   den: validateLevel is clean
+  ok   den: the arena carries no problems of its own
+  ok   den: every room resolved a rectangle
+  ok   den: the arena's own room census agrees with its room list  -- {"total":3,"resolved":3,"orphans":1,"sealedOpenings":3}
+  ok   den: the manifest's room/item/area numbers are the arena's  -- manifest 3/87/63 vs arena 3/87/63
+  ok   den: no two room rectangles share floor
+  ok   den: the spawn is inside exactly one room  -- living
+  ok   den: nothing solid is inside the spawn's body
+  ok   den: no walkable pocket belongs to no room (over 0.0452 m2)  --  (+1 under the bar, recorded)
+  ok   den: resolveRooms is happy
+  ok   twobed: validateLevel is clean
+  ok   twobed: the arena carries no problems of its own
+  ok   twobed: every room resolved a rectangle
+  ok   twobed: the arena's own room census agrees with its room list  -- {"total":8,"resolved":8,"orphans":0,"sealedOpenings":8}
+  ok   twobed: the manifest's room/item/area numbers are the arena's  -- manifest 8/165/140 vs arena 8/165/140
+  ok   twobed: no two room rectangles share floor
+  ok   twobed: the spawn is inside exactly one room  -- living
+  ok   twobed: nothing solid is inside the spawn's body
+  ok   twobed: no walkable pocket belongs to no room (over 0.0452 m2)
+  ok   twobed: resolveRooms is happy
+  ok   teahouse: validateLevel is clean
+  ok   teahouse: the arena carries no problems of its own
+  ok   teahouse: every room resolved a rectangle
+  ok   teahouse: the arena's own room census agrees with its room list  -- {"total":6,"resolved":6,"orphans":0,"sealedOpenings":6}
+  ok   teahouse: the manifest's room/item/area numbers are the arena's  -- manifest 6/127/117 vs arena 6/127/117
+  ok   teahouse: no two room rectangles share floor
+  ok   teahouse: the spawn is inside exactly one room  -- living
+  ok   teahouse: nothing solid is inside the spawn's body
+  ok   teahouse: no walkable pocket belongs to no room (over 0.0452 m2)
+  ok   teahouse: resolveRooms is happy
+  ok   manor: validateLevel is clean
+  ok   manor: the arena carries no problems of its own
+  ok   manor: every room resolved a rectangle
+  ok   manor: the arena's own room census agrees with its room list  -- {"total":11,"resolved":11,"orphans":0,"sealedOpenings":12}
+  ok   manor: the manifest's room/item/area numbers are the arena's  -- manifest 11/246/252 vs arena 11/246/252
+  ok   manor: no two room rectangles share floor
+  ok   manor: the spawn is inside exactly one room  -- living
+  ok   manor: nothing solid is inside the spawn's body
+  ok   manor: no walkable pocket belongs to no room (over 0.0452 m2)
+  ok   manor: resolveRooms is happy
+
+== the difficulty table can be dealt on every map ==
+  the table's largest preset asks for 24 红包 (solo=6, patrol=6, tight=12, hunter=24);  the largest garrison is 2
+  ok   room_scene: the climb graph is not empty (eye height on something, or every packet on a table top measures hidden)  -- 58/70 surfaces reachable, home region 0
+  ok   room_scene: 6 红包 are dealt as 6  -- pool 42
+  ok   room_scene/6: every 红包 is owned by the room it was placed in
+  ok   room_scene/6: nothing is lying on the floor  -- 0 of 6
+  ok   room_scene: 12 红包 are dealt as 12  -- pool 42
+  ok   room_scene/12: every 红包 is owned by the room it was placed in
+  ok   room_scene/12: nothing is lying on the floor  -- 0 of 12
+  ok   room_scene: 24 红包 are dealt as 24  -- pool 42
+  ok   room_scene/24: every 红包 is owned by the room it was placed in
+  ok   room_scene/24: nothing is lying on the floor  -- 0 of 24
+  ok   room_scene: its anchor pool can host the largest preset  -- 42 anchors for 24 红包
+  ok   room_scene: two patrols are built  -- 2
+  ok   room_scene: both patrols have a route  -- 6 + 6
+  ok   room_scene: every patrol stop is a place the guard's body fits
+  ok   room_scene: the second guard does not walk the first one's route  -- 6 vs 6 stops
+  ok   room_scene: patrol[0] is bit-for-bit the same with or without patrol[1]  -- 6 vs 6 stops
+  ok   studio: the climb graph is not empty (eye height on something, or every packet on a table top measures hidden)  -- 26/54 surfaces reachable, home region 0
+  ok   studio: 6 红包 are dealt as 6  -- pool 34
+  ok   studio/6: every 红包 is owned by the room it was placed in
+  ok   studio/6: nothing is lying on the floor  -- 0 of 6
+  ok   studio: 12 红包 are dealt as 12  -- pool 34
+  ok   studio/12: every 红包 is owned by the room it was placed in
+  ok   studio/12: nothing is lying on the floor  -- 0 of 12
+  ok   studio: 24 红包 are dealt as 24  -- pool 34
+  ok   studio/24: every 红包 is owned by the room it was placed in
+  ok   studio/24: nothing is lying on the floor  -- 0 of 24
+  ok   studio: its anchor pool can host the largest preset  -- 34 anchors for 24 红包
+  ok   studio: two patrols are built  -- 2
+  ok   studio: both patrols have a route  -- 3 + 3
+  ok   studio: every patrol stop is a place the guard's body fits
+  ok   studio: the second guard does not walk the first one's route  -- 3 vs 3 stops
+  ok   studio: patrol[0] is bit-for-bit the same with or without patrol[1]  -- 3 vs 3 stops
+  ok   den: the climb graph is not empty (eye height on something, or every packet on a table top measures hidden)  -- 32/42 surfaces reachable, home region 2
+  ok   den: 6 红包 are dealt as 6  -- pool 27
+  ok   den/6: every 红包 is owned by the room it was placed in
+  ok   den/6: nothing is lying on the floor  -- 0 of 6
+  ok   den: 12 红包 are dealt as 12  -- pool 27
+  ok   den/12: every 红包 is owned by the room it was placed in
+  ok   den/12: nothing is lying on the floor  -- 0 of 12
+  ok   den: 24 红包 are dealt as 24  -- pool 27
+  ok   den/24: every 红包 is owned by the room it was placed in
+  ok   den/24: nothing is lying on the floor  -- 0 of 24
+  ok   den: its anchor pool can host the largest preset  -- 27 anchors for 24 红包
+  ok   den: two patrols are built  -- 2
+  ok   den: both patrols have a route  -- 5 + 5
+  ok   den: every patrol stop is a place the guard's body fits
+  ok   den: the second guard does not walk the first one's route  -- 5 vs 5 stops
+  ok   den: patrol[0] is bit-for-bit the same with or without patrol[1]  -- 5 vs 5 stops
+  ok   twobed: the climb graph is not empty (eye height on something, or every packet on a table top measures hidden)  -- 43/99 surfaces reachable, home region 0
+  ok   twobed: 6 红包 are dealt as 6  -- pool 41
+  ok   twobed/6: every 红包 is owned by the room it was placed in
+  ok   twobed/6: nothing is lying on the floor  -- 0 of 6
+  ok   twobed: 12 红包 are dealt as 12  -- pool 41
+  ok   twobed/12: every 红包 is owned by the room it was placed in
+  ok   twobed/12: nothing is lying on the floor  -- 0 of 12
+  ok   twobed: 24 红包 are dealt as 24  -- pool 41
+  ok   twobed/24: every 红包 is owned by the room it was placed in
+  ok   twobed/24: nothing is lying on the floor  -- 0 of 24
+  ok   twobed: its anchor pool can host the largest preset  -- 41 anchors for 24 红包
+  ok   twobed: two patrols are built  -- 2
+  ok   twobed: both patrols have a route  -- 9 + 9
+  ok   twobed: every patrol stop is a place the guard's body fits
+  ok   twobed: the second guard does not walk the first one's route  -- 9 vs 9 stops
+  ok   twobed: patrol[0] is bit-for-bit the same with or without patrol[1]  -- 9 vs 9 stops
+  ok   teahouse: the climb graph is not empty (eye height on something, or every packet on a table top measures hidden)  -- 52/68 surfaces reachable, home region 0
+  ok   teahouse: 6 红包 are dealt as 6  -- pool 50
+  ok   teahouse/6: every 红包 is owned by the room it was placed in
+  ok   teahouse/6: nothing is lying on the floor  -- 0 of 6
+  ok   teahouse: 12 红包 are dealt as 12  -- pool 50
+  ok   teahouse/12: every 红包 is owned by the room it was placed in
+  ok   teahouse/12: nothing is lying on the floor  -- 0 of 12
+  ok   teahouse: 24 红包 are dealt as 24  -- pool 50
+  ok   teahouse/24: every 红包 is owned by the room it was placed in
+  ok   teahouse/24: nothing is lying on the floor  -- 0 of 24
+  ok   teahouse: its anchor pool can host the largest preset  -- 50 anchors for 24 红包
+  ok   teahouse: two patrols are built  -- 2
+  ok   teahouse: both patrols have a route  -- 7 + 7
+  ok   teahouse: every patrol stop is a place the guard's body fits
+  ok   teahouse: the second guard does not walk the first one's route  -- 7 vs 7 stops
+  ok   teahouse: patrol[0] is bit-for-bit the same with or without patrol[1]  -- 7 vs 7 stops
+  ok   manor: the climb graph is not empty (eye height on something, or every packet on a table top measures hidden)  -- 119/141 surfaces reachable, home region 0
+  ok   manor: 6 红包 are dealt as 6  -- pool 102
+  ok   manor/6: every 红包 is owned by the room it was placed in
+  ok   manor/6: nothing is lying on the floor  -- 0 of 6
+  ok   manor: 12 红包 are dealt as 12  -- pool 102
+  ok   manor/12: every 红包 is owned by the room it was placed in
+  ok   manor/12: nothing is lying on the floor  -- 0 of 12
+  ok   manor: 24 红包 are dealt as 24  -- pool 102
+  ok   manor/24: every 红包 is owned by the room it was placed in
+  ok   manor/24: nothing is lying on the floor  -- 0 of 24
+  ok   manor: its anchor pool can host the largest preset  -- 102 anchors for 24 红包
+  ok   manor: two patrols are built  -- 2
+  ok   manor: both patrols have a route  -- 21 + 21
+  ok   manor: every patrol stop is a place the guard's body fits
+  ok   manor: the second guard does not walk the first one's route  -- 21 vs 21 stops
+  ok   manor: patrol[0] is bit-for-bit the same with or without patrol[1]  -- 21 vs 21 stops
+
+== the size vocabulary is a fact, not a label ==
+  小 rooms 2,3  area 48,63  items/m2 1.729,1.381
+  中 rooms 8,6  area 140,117  items/m2 1.179,1.085
+  大 rooms 11  area 252  items/m2 0.976
+  ok   five maps carry a size category  -- 5
+  ok   小 has fewer rooms than 中 (small maps are few-roomed)  -- 3 < 6
+  ok   中 has fewer rooms than 大  -- 8 < 11
+  ok   the floor area grows 小 < 中 < 大  -- 48..63 < 117..140 < 252
+  ok   item density falls 小 > 中 > 大 (small maps are packed, big ones are open)  -- 1.729 > 1.085..1.179 > 0.976
+
+========================================================================
+  208/208 checks passed
+========================================================================
+  VERDICT: PASS
+  log: work/_rm_maps.log
+
+==============================================================================
+# 尺子自校：六枚变异各自都要红，且产物逐字节不变
+#   $ C:\Users\NING MEI\.workbuddy\binaries\python\versions\3.13.12\python.exe work/_mapsmut.py
+==============================================================================
+M0 the arena names itself differently from its roster key rc=1  RED (expected check)
+    FAILED: room_scene: the manifest's byte count is the file's byte count — 71708 vs 71712
+    FAILED: room_scene: the roster id is the id the arena gives itself — "room_scene" vs meta.id "origin"
+
+M1 arena drift                             rc=1  RED (expected check)
+    FAILED: den: the committed arena is byte for byte what the source builds — at byte 5238: on disk "30,\"plan\":{\"w\":9,\"d\":7},\"cell\"" vs rebuilt "
+
+M2 prose drift                             rc=1  RED (expected check)
+    FAILED: studio: the manifest entry is this roster entry, field for field — manifest {"id":"studio","name":"一人间","tier":1} vs roster {"id":"studio","na
+    FAILED: studio: every number in its blurb is the measured one — studio blurb: says "82件家具" but the measured item count is 83
+    FAILED: studio: the build reports no problems — studio blurb: says "82件家具" but the measured item count is 83
+
+M3 second guard is a rename                rc=1  RED (expected check)
+    FAILED: studio: the second guard does not walk the first one's route — IDENTICAL -- the second guard is a shadow
+
+M4 nothing can hide (OFF_GROUND out of reach) rc=1  RED (expected check)
+    FAILED: studio: 6 红包 are dealt as 6 — only 2 placed, from a pool of 2
+    FAILED: studio: 12 红包 are dealt as 12 — only 2 placed, from a pool of 2
+    FAILED: studio: 24 红包 are dealt as 24 — only 2 placed, from a pool of 2
+    FAILED: studio: its anchor pool can host the largest preset — 2 anchors for 24 红包
+
+M5 the climb graph is empty                rc=1  RED (expected check)
+    FAILED: room_scene: the climb graph is not empty (eye height on something, or every packet on a table top measures hidden) — 0/70 surfaces reachable, 
+    FAILED: room_scene: 12 红包 are dealt as 12 — only 7 placed, from a pool of 7
+    FAILED: room_scene: 24 红包 are dealt as 24 — only 7 placed, from a pool of 7
+    FAILED: room_scene: its anchor pool can host the largest preset — 7 anchors for 24 红包
+
+==============================================================================
+  M0 the arena names itself differently from its roster key RED (expected check)     2 failing check(s)
+  M1 arena drift                             RED (expected check)     1 failing check(s)
+  M2 prose drift                             RED (expected check)     3 failing check(s)
+  M3 second guard is a rename                RED (expected check)     1 failing check(s)
+  M4 nothing can hide (OFF_GROUND out of reach) RED (expected check)     4 failing check(s)
+  M5 the climb graph is empty                RED (expected check)     22 failing check(s)
+==============================================================================
+  artifacts identical before/after: True
+  mutations detected: 6/6

@@ -89,6 +89,21 @@ export const GUARD_MODES = {
  */
 export function buildPatrol(level, nav, rng, opts = {}) {
   const extraPerRoom = opts.extraPerRoom != null ? opts.extraPerRoom : 1;
+  // WHICH STOP EACH ROOM'S WALK STARTS FROM. 0 -- the default -- is the first
+  // guard, and it is bit-for-bit what it always was.
+  //
+  // WHY IT EXISTS. The only thing this function draws from `rng` is the ROOM
+  // ORDER, and inside a room the tour is nearest-neighbour from wherever the
+  // guard already is. On the six-room apartment that draw has 720 outcomes, so
+  // two independent streams never collided and "a second guard is not a
+  // rename" looked structural. On a two-room floor it has TWO outcomes, and
+  // the collision is a coin flip: measured on 一人间, `guard-<seed>` and
+  // `guard2-<seed>` produced 3 waypoints each and the SAME three -- the second
+  // guard stood where the first stood and walked where the first walked, i.e.
+  // 紧张 and 硬核 promised two guards and shipped one with extra geometry.
+  // `scripts/verify_maps.mjs` asserts the two routes differ on every map now,
+  // which is what turned a coin flip into a red build.
+  const alt = opts.alt != null ? opts.alt : 0;
   // Stops scale with FLOOR AREA, not with room count. A flat one-per-room
   // rule gave the 22.9 m2 living room and the 5.2 m2 dining room the same
   // treatment, and the guard ended up crossing the living room 24 times in
@@ -141,6 +156,13 @@ export function buildPatrol(level, nav, rng, opts = {}) {
   let cur = { x: level.spawn.x, z: level.spawn.z };
   for (const id of rooms) {
     const mine = stops.filter((s) => s.room === id);
+    // `alt` enters the room at a different stop and continues nearest-neighbour
+    // from there. Guard 1 (alt 0) never takes this branch.
+    if (alt && mine.length > 1) {
+      const s = mine.splice(alt % mine.length, 1)[0];
+      ordered.push(s);
+      cur = s;
+    }
     while (mine.length) {
       let best = 0;
       let bestD = Infinity;

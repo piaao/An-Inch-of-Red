@@ -433,6 +433,39 @@ html, body {
   padding-top: 6px;
 }
 
+/* map rail -- one card per floor on the roster. Same vocabulary as a
+   difficulty card, one rank quieter: this is the choice you make once. */
+#start-maps { display: grid; grid-template-columns: repeat(auto-fit, minmax(206px, 1fr)); gap: 10px; }
+.mapcard {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 11px 13px;
+  text-align: left;
+  font: inherit;
+  color: var(--ink);
+  background: rgba(255,255,255,.035);
+  border: 1px solid var(--panel-line);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 160ms ease, border-color 160ms ease, transform 160ms ease, opacity 160ms ease;
+}
+.mapcard:hover { background: rgba(255,255,255,.07); transform: translateY(-1px); }
+/* A floor that has to be loaded is drawn quieter, but never disabled. Declared
+   BEFORE `.on`, and that order is load-bearing: the two selectors have the same
+   specificity, so whichever is written last wins -- and a card can perfectly
+   well be both. Pick 大宅 while 一人间 is standing and it is the SELECTED card
+   and still one reload away. Selected has to win. */
+.mapcard.elsewhere { opacity: .74; }
+.mapcard.elsewhere:hover { opacity: 1; }
+/* the floor already standing: pick it and 开始 starts straight away */
+.mapcard.on { border-color: var(--gold); background: rgba(200, 16, 46, .14); opacity: 1; }
+.map-top { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.map-top b { font-size: 15px; letter-spacing: .06em; }
+.map-top em { font-style: normal; font-family: var(--mono); font-size: 11px; color: var(--warm); }
+.map-spec { font-size: 11px; line-height: 1.5; color: var(--ink-dim); font-variant-numeric: tabular-nums; }
+.map-rooms { font-size: 10.5px; line-height: 1.5; color: var(--ink-faint); }
+
 /* seed row */
 .seedrow { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
 .seednote { margin: 7px 0 0; font-size: 12px; line-height: 1.6; color: var(--ink-faint); }

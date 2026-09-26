@@ -65,15 +65,114 @@ const SESSION_ARENA_PREFIX = 'session:';
 // some other page on this origin cannot be mistaken for an arena.
 const SESSION_STORE_PREFIX = 'an-inch-of-red:';
 
+/* --------------------------------------------------------------- roster */
+
+/**
+ * The map rail's source of truth, and it is the ARTIFACT.
+ *
+ * `game/maps/manifest.json` is written by scripts/build_maps.mjs out of the
+ * MEASURED numbers, and `scripts/verify_maps.mjs` checks it against the roster
+ * source. The page must not re-derive room and item counts from the layout
+ * modules: that would be a second measurement of facts that already have one,
+ * and the menu would then be free to disagree with the gate.
+ */
+const MAP_MANIFEST_URL = './game/maps/manifest.json';
+
+async function loadManifest() {
+  try {
+    const res = await fetch(MAP_MANIFEST_URL, { cache: 'no-store' });
+    if (!res.ok) return null;
+    const m = await res.json();
+    return Array.isArray(m && m.maps) ? m : null;
+  } catch (err) {
+    // A menu with no map rail is a smaller loss than a page that will not boot,
+    // and `?arena=` -- the workbench's path -- has no roster to show anyway.
+    console.warn('map manifest unavailable, no map rail:', err && err.message);
+    return null;
+  }
+}
+
+/**
+ * Picking a map is a RELOAD, and the URL is what carries the choice.
+ *
+ * `start()` builds the scene graph once, out of the floor plan: the ground
+ * plane, the lights, the model set it downloads, the apartment mesh. Swapping
+ * the level under a live scene would mean tearing down and rebuilding every one
+ * of them -- i.e. writing `start()` a second time, which is the exact mistake
+ * the arena work was about (a generated 16x14 floor used to be played inside
+ * the shipped 10x8 apartment and every harness stayed green).
+ *
+ * So the choice round-trips through the query string:
+ *
+ *   ?map=<id>          which floor (default: the manifest's defaultMap)
+ *   ?difficulty=<id>   which card is pre-selected
+ *   ?seed=<s>          a pinned seed, so a reload is the same layout
+ *   ?markers=0         the red-dot checkbox, carried too
+ *   ?play=1            start the run as soon as the floor is built
+ */
+function bootQuery() {
+  return new URLSearchParams(location.search);
+}
+
+function runURL(mapId, presetId) {
+  const q = bootQuery();
+  q.delete('arena');                    // a roster map is not the workbench's
+  q.set('map', mapId);
+  q.set('difficulty', presetId);
+  if (seedPinned && seed) q.set('seed', seed); else q.delete('seed');
+  if (markersOn) q.delete('markers'); else q.set('markers', '0');
+  q.set('play', '1');
+  return `${location.pathname}?${q.toString()}`;
+}
+
+/**
+ * `?map=<id>` -- the map rail's floor, resolved THROUGH THE ROSTER.
+ *
+ * Not by building a path out of the id. An id the roster does not have must not
+ * become a fetch for a file that does not exist, and it must not quietly become
+ * the shipped apartment either: a page that boots, renders, places its 红包 and
+ * reports a healthy nav while describing a DIFFERENT floor than the one asked
+ * for is the exact failure `verify_gen_play.mjs` was written to catch. So this
+ * throws, and says which ids exist.
+ *
+ * `?arena=` is the map rail's opposite -- a direct pointer, used by
+ * procgen.html to hand over a floor generated in the browser, and by
+ * `scripts/*.mjs --arena` to point at a file. It carries no roster id, so it
+ * cannot go through here.
+ */
+function arenaPathForMap(id) {
+  const maps = (roster && roster.maps) || null;
+  if (!maps) {
+    throw new Error('?map=' + id + ': the map manifest could not be read, so nothing'
+      + ' says which arena "' + id + '" names. Booting the shipped apartment instead'
+      + ' would show you a different floor than the one you asked for.');
+  }
+  const m = maps.find((x) => x.id === id);
+  if (!m) {
+    throw new Error('?map=' + id + ': not on the roster ('
+      + maps.map((x) => x.id).join(', ') + '). An id the roster does not have is not a'
+      + ' floor, and booting a different one is worse than refusing.');
+  }
+  return m.arena;
+}
+
 function resolveArenaURL() {
   let q = null;
+  let wantMap = null;
   try {
-    q = new URLSearchParams(location.search).get('arena');
+    const search = new URLSearchParams(location.search);
+    q = search.get('arena');
+    wantMap = search.get('map');
   } catch {
     // No `location`: play.js's dependencies are imported headlessly too, and a
     // module that cannot be imported outside a browser is a worse module.
     return './game/arenas/room_scene.json';
   }
+  // `?map=` IS CHECKED FIRST. `runURL` deletes `?arena=` when the player picks a
+  // roster floor, so the two should never be present together -- but if a stale
+  // `?arena=` did survive, honouring it would ignore the card the player just
+  // pressed, and the page would look exactly like a working one.
+  if (wantMap) return arenaPathForMap(wantMap);
   if (!q) return './game/arenas/room_scene.json';
   if (q.indexOf(SESSION_ARENA_PREFIX) !== 0) return q;
 
@@ -231,6 +330,8 @@ let seed = '2026-09-25';
  * answer, and it is readable from `info().seedPolicy`.
  */
 let seedPinned = false;
+/** The roster artifact, or null when it could not be read (see loadManifest). */
+let roster = null;
 // The seed the core IN MEMORY was built for. `seed` alone cannot answer "is the
 // layout on screen the one this seed names", and conflating the two made a
 // pinned replay show a different seed's 红包 -- see `beginRun`.
@@ -304,6 +405,10 @@ export async function start() {
   // and none of that can be known until the arena has been read.
   hud.loading('正在读取竞技场…', 0.02);
   await frame();
+  // WITH NO ?arena=, THE QUERY STRING PICKS THE FLOOR. Resolved from the
+  // manifest rather than from a name built out of the id, so an id the roster
+  // does not have cannot become a fetch for a file that does not exist.
+  roster = await loadManifest();
   level = await loadArena(resolveArenaURL());
   const plan = level.meta.plan;
   const floorLayout = requireLayout(level);
@@ -342,8 +447,16 @@ export async function start() {
   apartment = await buildApartment(kit, { layout: floorLayout });
   scene.add(apartment.root);
 
-  seed = todaySeed();
-  preset = DIFFICULTIES.find((d) => d.id === DEFAULT_DIFFICULTY) || DIFFICULTIES[0];
+  // The query string first, so a reload can carry the player's choice across:
+  // choosing another map IS a page load, and dropping the difficulty, the seed
+  // or the intent to start on the way would make the rail unusable.
+  const boot = bootQuery();
+  seed = boot.get('seed') || todaySeed();
+  seedPinned = !!boot.get('seed');
+  if (boot.get('markers') === '0') markersOn = false;
+  preset = DIFFICULTIES.find((d) => d.id === boot.get('difficulty'))
+    || DIFFICULTIES.find((d) => d.id === DEFAULT_DIFFICULTY)
+    || DIFFICULTIES[0];
 
   hud.loading('正在建导航网格…', 0.94);
   await frame();
@@ -380,14 +493,34 @@ export async function start() {
     onSeed: (v) => { reseed(v); },
     onOptions: (o) => { if (o.markers != null) { markersOn = o.markers; if (!markersOn) glints.hideAll(); } },
   });
+  // ...and the box has to SHOW what the boot was told. `?markers=0` travels
+  // with a map change, and a checkbox that reads "on" while the game behaves
+  // as if it were off is the kind of small lie this file otherwise avoids.
+  if (hud.el.markers) hud.el.markers.checked = markersOn;
   hud.bindPause({
     onResume: () => togglePause(),
     onRestart: () => { hud.hidePause(); beginRun(preset.id); },
     onMenu: () => { hud.hidePause(); S.phase = 'ready'; openMenu(); },
   });
   hud.hideLoading();
-  openMenu();
-  S.phase = 'ready';
+  if (boot.get('play')) {
+    // `?play=1` is how the map rail's reload finishes: the player already chose
+    // the floor and the difficulty on the previous page, so asking again would
+    // be a menu that ignores the button that opened it.
+    //
+    // ...and it is CONSUMED, because a handoff is not a state. Left in the URL,
+    // pressing reload would start a run nobody asked for, and the only way back
+    // to the menu would be a key the player has to already know. What is kept is
+    // the map, the difficulty and the seed, so a reload lands on the menu with
+    // the same choices showing.
+    boot.delete('play');
+    const rest = boot.toString();
+    history.replaceState(null, '', rest ? `${location.pathname}?${rest}` : location.pathname);
+    await beginRun(preset.id);
+  } else {
+    S.phase = 'ready';
+    openMenu();
+  }
 
   requestAnimationFrame(loop);
 
@@ -440,17 +573,34 @@ async function reseed(v) {
 /* ----------------------------------------------------------------- menu */
 
 function openMenu() {
+  // WHICH FLOOR IS STANDING, asked of the level rather than of a variable: a
+  // generated arena has an id the roster does not know, and then NO map card is
+  // marked -- which is the truth, and better than marking the wrong one.
+  const here = (level.meta && level.meta.id) || null;
+  const maps = (roster && roster.maps) || [];
+  const current = maps.some((m) => m.id === here) ? here : null;
+
   hud.showStart({
     // `spec` is derived HERE, from the same helpers the run itself uses, so a
     // card cannot advertise a cone or a packet size the game does not use.
     difficulties: DIFFICULTIES.map((d) => ({
       ...d, spec: difficultySpec(d, GUARD_MODES, level.collectible),
     })),
-    defaultId: DEFAULT_DIFFICULTY,
+    defaultId: (preset && preset.id) || DEFAULT_DIFFICULTY,
     seed,
     seedPinned,
     summary: placementSummary(level, core),
-    onStart: (id) => beginRun(id),
+    maps,
+    currentMap: current,
+    onStart: (id, mapId) => {
+      if (mapId && mapId !== here) {
+        // A different floor: the choice goes in the URL and the page reloads
+        // into it. See `runURL`.
+        window.location.href = runURL(mapId, id);
+        return;
+      }
+      beginRun(id);
+    },
   });
 }
 

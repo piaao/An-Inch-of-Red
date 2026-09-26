@@ -1,0 +1,178 @@
+# 地图栏 · 入库证据
+
+"进游戏先选地图与难度" 的接线证据： DOM 契约、URL 契约、变异、以及
+serve.py 真的把六张地板端出去（地图栏是页面上唯一会静默消失的东西）。
+
+装配：`python work/_mkreports.py`（本文件是跑出来的，不是写出来的）
+时间：2026-09-26 21:45
+
+==============================================================================
+# 闸：verify_menus.mjs（真构造 Hud、真点卡片、真按开始）
+#   $ C:/Users/NING MEI/.workbuddy/binaries/node/versions/22.22.2-3/node.exe scripts/verify_menus.mjs --log work/_rm_menus.log
+==============================================================================
+== the rail has three ends and all of them are connected ==
+   (STATIC: the slot, the lookup and the rule are read out of the files)
+  ok   play.html declares the slot the rail is drawn into  -- id="start-maps"
+  ok   game/play/hud.js looks that slot up by the same id  -- startMaps: $('start-maps')
+  ok   css/play.css styles it (an unstyled grid is a column of raw buttons)  -- #start-maps {
+  ok   play.html still has the button the selection is handed to  -- id="start-go"
+   -- the page manifest constant is the artifact on disk
+  ok   game/play/play.js names the manifest it fetches  -- ./game/maps/manifest.json
+  ok   and it is the artifact this harness checks, not a second copy of it  -- game/maps/manifest.json
+
+== the rail renders the roster ==
+   (BEHAVIOURAL: the real Hud, a stub DOM, the real showStart)
+  ok   one card per map on the roster (6)  -- 6
+  ok   exactly one card is marked as the loaded floor, and it is the default map  -- room_scene
+  ok   every other card is marked as one reload away  -- 5
+  ok   the cards are in roster order, so the rail reads the same way twice
+  ok   a card states the measured facts it was built from, not adjectives  -- 大宅 · 11 房间 · 0.976/m²
+  ok   every card prints the measured room/item/density numbers of its own floor
+
+== pressing 开始 hands over the card that was CHOSEN ==
+  ok   clicking a card selects it  -- mapcard elsewhere on
+  ok   and only it
+  ok   and it is still one reload away, because clicking is not loading
+  ok   the 开始 button has a handler attached
+  ok   what reaches onStart is the card that was clicked, not the floor that was loaded  -- {"id":"patrol","mapId":"manor"}
+  ok   and the difficulty with it  -- patrol
+  ok   the previous selection did not stay lit
+  ok   the selected rule is written AFTER the reload rule, so selection wins the cascade  -- .elsewhere at 13326, .on at 13474
+  ok   and it states an opacity, or 74% would still apply to a selected card  -- .mapcard.on { border-color: var(--gold); background: rgba(200, 16, 46, .14); opacity: 1;
+
+== the meta strip counts the floor it is actually on ==
+   (BEHAVIOURAL: a summary whose two counts differ on purpose)
+  ok   a summary of 3 rooms out of 11 prints 3/11 -- a typed denominator cannot do this  -- 布局</i>6 个红包 · 3/11 房间 · spread
+  ok   the denominator, and it is a count of the floor: ${s.rooms}/${s.roomsTotal}  -- typed=false measured=true
+  ok   studio: placementSummary reports the level's own room count  -- 2 vs 2
+  ok   studio: the strip prints 2/2  -- 布局</i>6 个红包 · 2/2 房间 · spread
+  ok   twobed: placementSummary reports the level's own room count  -- 8 vs 8
+  ok   twobed: the strip prints 3/8  -- 布局</i>6 个红包 · 3/8 房间 · spread
+  ok   two floors print two different denominators, which is what MEASURED means  -- 2 vs 8
+
+== the wiring play.js cannot be imported for ==
+   (STATIC: `three` is a browser import map, so these are reads, not runs)
+  ok   the boot resolves ?map through the roster, never by building a path
+  ok   and an id that is not on the roster is refused, not swapped for another floor
+  ok   ?map is read from the query string
+  ok   and it is consulted before ?arena, so a stale pointer cannot override a card
+  ok   the rail writes ?map into the reload URL
+  ok   the reload carries the difficulty
+  ok   it drops ?arena, because a roster map is not the workbench floor
+  ok   and it asks the boot to start, rather than showing the menu again
+  ok   the boot consumes ?play once it has been read
+  ok   openMenu hands the roster to the rail
+  ok   and a different card is a reload, while the loaded one starts at once
+  ok   the boot reads the difficulty back out of the query string
+  ok   the marker checkbox is restored to what the boot was told
+
+== the roster answers to its own names ==
+  ok   every roster map has a manifest entry  -- 6 vs 6
+  ok   every roster arena is a file that exists (a card that 404s is a dead card)
+  ok   and every manifest id resolves through mapById, which is how ?map= looks it up
+
+========================================================================
+  44/44 checks passed
+========================================================================
+  VERDICT: PASS
+  log: work/_rm_menus.log
+
+==============================================================================
+# 尺子自校：五枚变异各自都要红
+#   $ C:\Users\NING MEI\.workbuddy\binaries\python\versions\3.13.12\python.exe work/_menumut.py
+==============================================================================
+== baseline ==
+  verify_menus rc=0  failures=0
+
+== mutations ==
+  CAUGHT  M6     rc=1  4 failed check(s)
+         the denominator is typed again -- the exact regression the strip was fixed for
+           FAILED: a summary of 3 rooms out of 11 prints 3/11 -- a typed denominator cannot do this — 布局</i>6 个红包 · 3/6 房间 · spread
+           FAILED: the denominator, and it is a count of the floor: ${s.rooms}/${s.roomsTotal} — typed=true measured=false
+  CAUGHT  M7     rc=1  1 failed check(s)
+         the rail slot is removed from the page (an empty div looks identical)
+           FAILED: play.html declares the slot the rail is drawn into — id="start-maps"
+  CAUGHT  M8     rc=1  1 failed check(s)
+         the start button forwards only the difficulty, dropping the chosen map
+           FAILED: what reaches onStart is the card that was clicked, not the floor that was loaded — {"id":"patrol"}
+  CAUGHT  M9     rc=1  1 failed check(s)
+         the rail writes the choice into the URL and the boot never sees it
+           FAILED: the rail writes ?map into the reload URL —
+  CAUGHT  M10    rc=1  2 failed check(s)
+         the reload rule is written last, so a selected card is still dimmed
+           FAILED: the selected rule is written AFTER the reload rule, so selection wins the cascade — .elsewhere at 13405, .on at 13326
+           FAILED: and it states an opacity, or 74% would still apply to a selected card — .mapcard.on { border-color: var(--gold); background: rgba(200, 16, 46,
+
+== after restore ==
+  verify_menus rc=0 (must be 0)
+  every anchor is back exactly once: True
+
+RESULT: all 5 mutations caught, all files restored
+
+==============================================================================
+# 启动器冒烟：六张地板都要在 HTTP 上取得到，且自报名 == 名册 id
+#   $ C:\Users\NING MEI\.workbuddy\binaries\python\versions\3.13.12\python.exe scripts/smoke_serve.py
+==============================================================================
+smoke port 8791 -- verified free before launch
+serve.py is up on http://127.0.0.1:8791
+the responder is our own serve.py  ok
+path                                           status content-type           bytes
+--------------------------------------------------------------------------------------------
+/index.html                                    200    text/html                  2710 ok  (disk 2710)
+/procgen.html                                  200    text/html                  6951 ok  (disk 6951)
+/css/procgen.css                               200    text/css; charset=utf-8    13842 ok  (disk 13842)
+/game/procgen/playground.js                    200    text/javascript; charset=utf-8    28121 ok  (disk 28121)
+/game/procgen/pipeline.js                      200    text/javascript; charset=utf-8    14821 ok  (disk 14821)
+/game/procgen/arrangement.js                   200    text/javascript; charset=utf-8    23888 ok  (disk 23888)
+/game/procgen/draw.js                          200    text/javascript; charset=utf-8     7989 ok  (disk 7989)
+/js/app.js                                     200    text/javascript; charset=utf-8    10122 ok  (disk 10122)
+/js/kit.js                                     200    text/javascript; charset=utf-8    12201 ok  (disk 12201)
+/js/layout.js                                  200    text/javascript; charset=utf-8    17727 ok  (disk 17727)
+/js/build.js                                   200    text/javascript; charset=utf-8     6623 ok  (disk 6623)
+/js/env.js                                     200    text/javascript; charset=utf-8     4870 ok  (disk 4870)
+/js/ui.js                                      200    text/javascript; charset=utf-8     7943 ok  (disk 7943)
+/css/style.css                                 200    text/css; charset=utf-8     8963 ok  (disk 8963)
+/vendor/three.module.js                        200    text/javascript; charset=utf-8  1304820 ok  (disk 1304820)
+/vendor/addons/controls/OrbitControls.js       200    text/javascript; charset=utf-8    32134 ok  (disk 32134)
+/vendor/addons/loaders/GLTFLoader.js           200    text/javascript; charset=utf-8   110029 ok  (disk 110029)
+/vendor/addons/utils/BufferGeometryUtils.js    200    text/javascript; charset=utf-8    31768 ok  (disk 31768)
+/assets/models/tableCoffee.glb                 200    model/gltf-binary          8256 ok  (disk 8256)
+/assets/models/wallWindow.glb                  200    model/gltf-binary         10744 ok  (disk 10744)
+/assets/models/bedDouble.glb                   200    model/gltf-binary         23368 ok  (disk 23368)
+/assets/models/floorFull.glb                   200    model/gltf-binary          2260 ok  (disk 2260)
+/play.html                                     200    text/html                  6236 ok  (disk 6236)
+/css/play.css                                  200    text/css; charset=utf-8    16102 ok  (disk 16102)
+/game/play/play.js                             200    text/javascript; charset=utf-8    54628 ok  (disk 54628)
+/game/play/hud.js                              200    text/javascript; charset=utf-8    12938 ok  (disk 12938)
+/game/play/boot.js                             200    text/javascript; charset=utf-8     6111 ok  (disk 6111)
+/game/play/config.js                           200    text/javascript; charset=utf-8    19168 ok  (disk 19168)
+/game/maps/index.js                            200    text/javascript; charset=utf-8     5287 ok  (disk 5287)
+/game/maps/prose.js                            200    text/javascript; charset=utf-8     4066 ok  (disk 4066)
+/game/maps/studio.js                           200    text/javascript; charset=utf-8     9564 ok  (disk 9564)
+/game/maps/manifest.json                       200    application/json; charset=utf-8     6325 ok  (disk 6325)
+/game/arenas/maps/manor.json                   200    application/json; charset=utf-8   152048 ok  (disk 152048)
+glb MIME is model/gltf-binary  ok
+procgen.html carries the workbench markup  ok
+
+launch words                   port   page           result
+--------------------------------------------------------------------------------------------
+(no arguments)                 8777   play.html      ok
+game                           8777   play.html      ok
+viewer                         8777   index.html     ok
+workbench                      8777   procgen.html   ok
+9000                           9000   play.html      ok
+9100 workbench                 9100   procgen.html   ok
+workbench 9200                 9200   procgen.html   ok
+play.html carries the map rail markup  ok
+served manifest lists 6 maps  ok
+each card floor                          status meta.id == roster id   bytes
+--------------------------------------------------------------------------------------------
+game/arenas/room_scene.json              200    True                      71712  ok
+game/arenas/maps/studio.json             200    True                      46908  ok
+game/arenas/maps/den.json                200    True                      51715  ok
+game/arenas/maps/twobed.json             200    True                     100832  ok
+game/arenas/maps/teahouse.json           200    True                      78198  ok
+game/arenas/maps/manor.json              200    True                     152048  ok
+missing file -> 404  ok
+--------------------------------------------------------------------------------------------
+SMOKE PASS

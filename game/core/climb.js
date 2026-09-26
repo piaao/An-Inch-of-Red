@@ -140,11 +140,41 @@ export function climbPlan(level, nav, opts = {}) {
   const step = opts.step != null ? opts.step : CLIMB.step;
 
   const surfaces = standableSurfaces(level, nav, { ceil: ceiling, radius });
-  const home = nav.componentAt(level.spawn.x, level.spawn.z);
+
+  /**
+   * WHICH REGION IS THIS POINT IN? -- asked the way the nav defines it.
+   *
+   * `componentAt` is a CELL query and `clear` is CONTINUOUS, so a point can be
+   * legally clear while its own cell's centre is pinched. `componentAt` then
+   * answers -1, a region no walkable cell belongs to, and any comparison
+   * against it matches NOTHING. `nav.nodeOf` exists precisely to bridge that
+   * gap ("the cell it sits in, or the nearest walkable cell centre when that
+   * cell is not walkable"), so it is what this asks -- both for the spawn and
+   * for every pad, because the pad search has the same `clear` shortcut in it.
+   *
+   * MEASURED, on 一人间, before this line changed. `home` was -1, so `grounded`
+   * was false for every cell in the flat, so `reached` came back EMPTY, so
+   * `climbViewpoints` handed `measureExposure` no climbed standpoint -- and a
+   * packet on a table top is inside that table's own footprint, so from an eye
+   * on the floor its sight line always crosses the table. Effect: 49 candidates
+   * went in, 41 came back `hidden`, 7 anchors came out (work/_diag_map.mjs).
+   * 紧张 asks for 12 红包 and 硬核 for 24, and neither could be dealt -- with no
+   * error anywhere, only a difficulty card that promised more than the map
+   * could hold. `scripts/verify_maps.mjs` now asserts the pool size, so the
+   * next time it is the BUILD that complains and not a player.
+   */
+  const regionOf = (x, z) => {
+    const direct = nav.componentAt(x, z);
+    if (direct >= 0) return direct;
+    const node = nav.nodeOf(x, z);
+    return node ? nav.componentAt(node.x, node.z) : -1;
+  };
+
+  const home = regionOf(level.spawn.x, level.spawn.z);
 
   /** Standing on the floor, in the room the player starts in. */
   const grounded = (x, z) => nav.clear(x, z, radius, 0)
-    && nav.componentAt(x, z) === home;
+    && regionOf(x, z) === home;
 
   /**
    * A launch pad for a surface: a floor cell next to it, connected to the

@@ -76,7 +76,8 @@ An-Inch-of-Red/            ← 本目录就是仓库根
 ├── game/                  ★ 玩法
 │   ├── core/              纯逻辑核心：导航 / 视锥 / 藏点 / 守卫 / 模拟（零 three.js / DOM）
 │   ├── arena/fromLayout.js   唯一知道「这是一间公寓」的适配器
-│   ├── arenas/room_scene.json 场景快照（70 KB，换一栋楼只换它）
+│   ├── arenas/            场景快照：room_scene.json（原始公寓 70 KB）+ maps/*.json（五张预制图）
+│   ├── maps/              ★ 六张预制地图：名册 / 平面数据 / 实测清单（菜单读 manifest.json）
 │   ├── procgen/           ★ 参数化户型生成：floorplan / pipeline / draw / playground
 │   └── play/              渲染层：输入→意图、状态→画面、结束判定
 ├── js/  css/              查看器与 HUD：模型装载 / 布局数据 / 场景图 / 环境 / 打开守卫
@@ -114,7 +115,8 @@ node scripts/verify_world.mjs
 #       以及「代号没有从该留的地方消失」）
 python scripts/verify_name.py
 
-# 启动器本身：起服务、抓 16 个资源、核对 MIME 与字节数、缺失文件必须 404
+# 启动器本身：起服务、抓 33 个资源、核对 MIME 与字节数、缺失文件必须 404，
+#       并把六张地板的快照各取一遍、核对 arena 自报名 == 名册 id
 python scripts/smoke_serve.py
 
 # 查看器：静态检查 → 无头渲染 → 断言 → 8 张截图 → 干净度
@@ -130,6 +132,14 @@ node scripts/procgen.mjs --sweep
 # 玩法设计：可达性 + 藏点普查 + 预算×配置矩阵
 node scripts/verify_game.mjs 24
 
+# 预制地图：208 条断言 —— 逐字节重建 / 散文数字 / 房间归属 / 难度表放得满 /
+#       尺寸词汇即事实 / 名册 id == arena 自报名；六枚变异会红
+node scripts/verify_maps.mjs
+
+# 地图栏：44 条断言 —— 真构造 Hud、真点卡片、真按「开始」，看它把哪张地图交出去
+#       （play.js 那一半是静态断言，输出里分开标注）
+node scripts/verify_menus.mjs
+
 # 红包尺寸 / 守备 / 两条巡逻，以及缩略图的迷雾与标识 —— 都不需要浏览器，本机直接跑
 node scripts/verify_packets.mjs
 node scripts/verify_minimap.mjs
@@ -141,8 +151,13 @@ node scripts/verify_minimap.mjs
 verify_play.mjs     70/70 PASS      红包 6/6 都不在房间地板上，6/6 都够得着，其中 3 个必须爬
 verify_world.mjs    25/25 PASS      三栋楼三个平面：包围盒 == 平面 + 墙厚，房间 id 逐个点名
 verify_name.py      25/25 PASS      代号 寻红 6/6 处点名命中，仓库门面带着名字
-smoke_serve.py      SMOKE PASS      22 个资源（= smoke_serve.py 里 CHECKS 的行数）
-                                    MIME 与字节数全部与磁盘一致，缺失文件 404
+smoke_serve.py      SMOKE PASS      33 个资源（= smoke_serve.py 里 CHECKS 的行数）
+                                    MIME 与字节数全部与磁盘一致，缺失文件 404，
+                                    六张地板的快照在 HTTP 上取得到且 arena 自报名 == 名册 id
+verify_maps.mjs     208/208 PASS    六张图：五张逐字节重建、散文数字全对、房间矩形不重叠、
+                                    6/12/24 三档都放得满；六枚变异全红（M0 就是那个上过线的）
+verify_menus.mjs    44/44 PASS      真的点一张地图卡再按「开始」，onStart 收到的是点的那张；
+                                    数字带用「3 / 11」反证分母是算出来的；五枚变异全红
 verify_arrangement.mjs 28/28 PASS   第二条判决轴：尺子对参照物 6/6、六个问题各自都有一枚
                                     反例能把它判红、八枚反例没一枚动得了可玩性、
                                     审计路与管线路 12/12 逐位一致、规划器自称的结构与
@@ -155,6 +170,36 @@ verify_arrangement.mjs 28/28 PASS   第二条判决轴：尺子对参照物 6/6�
 ```bash
 node scripts/snapshot_arena.mjs      # 读 data/ → 写 game/arenas/room_scene.json
 ```
+
+---
+
+## 地图
+
+进游戏先选**地图**与**难度**，两排卡片在同一个开始页上，最上面一条实测数字带。
+
+| 类别 | 图 | 平面 | 房间 | 家具 | 件/m2 |
+|---|---|---|---|---|---|
+| 原型 | 剖面公寓 `room_scene` | 10x8 | 6 | 119 | 1.488 |
+| 小 | 一人间 `studio` | 8x6 | 2 | 83 | **1.729** |
+| 小 | 藏书房 `den` | 9x7 | 3 | 87 | 1.381 |
+| 中 | 两室一厅 `twobed` | 14x10 | 8 | 165 | 1.179 |
+| 中 | 茶室小院 `teahouse` | 13x9 | 6 | 127 | 1.085 |
+| 大 | 大宅 `manor` | 18x14 | 11 | 246 | **0.976** |
+
+| 类别 | 一句话 |
+|---|---|
+| 小 | 房间少、东西密 —— 找起来最难读（一室到底 / 书墙围合） |
+| 中 | 平衡。两张**形状相反**：一张动线成树、能跑起来；一张长廊把北侧切三间、先远后窄 |
+| 大 | 房间多、地方大 —— 一次扫描走不完西半边 |
+
+**「小 / 中 / 大」是可断言的单调性，不是标签**：房间数与面积 小 < 中 < 大，而件/m²
+小 > 中 > 大，三条同时成立才发牌（`scripts/verify_maps.mjs`）。换一张地图**是一次页面
+重载**（`?map=` / `?difficulty=` / `?seed=` / `?markers=` / `?play=1`）—— 场景图（地板、
+灯光、要下哪些模型、公寓网格）全是平面尺寸的函数，在活着的场景下换地板等于把 `start()`
+写第二遍，而那正是整个 arena 工作要消灭的那类 bug。
+
+设计书与全部读数见 [`game/MAPS.md`](game/MAPS.md)；证据在 `reports/maps.txt`
+与 `reports/menus.txt`（两份都由 `python work/_mkreports.py` 跑出来）。
 
 ---
 

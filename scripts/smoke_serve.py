@@ -15,6 +15,7 @@ four things the browser depends on:
 Exits non-zero if anything disagrees.
 """
 import io
+import json
 import os
 import socket
 import subprocess
@@ -85,6 +86,18 @@ CHECKS = [
     ('/assets/models/wallWindow.glb', 'model/gltf-binary', False),
     ('/assets/models/bedDouble.glb', 'model/gltf-binary', False),
     ('/assets/models/floorFull.glb', 'model/gltf-binary', False),
+    # the game page and the map rail
+    ('/play.html', 'text/html', False),
+    ('/css/play.css', 'text/css', False),
+    ('/game/play/play.js', 'javascript', False),
+    ('/game/play/hud.js', 'javascript', False),
+    ('/game/play/boot.js', 'javascript', False),
+    ('/game/play/config.js', 'javascript', False),
+    ('/game/maps/index.js', 'javascript', False),
+    ('/game/maps/prose.js', 'javascript', False),
+    ('/game/maps/studio.js', 'javascript', False),
+    ('/game/maps/manifest.json', 'application/json', False),
+    ('/game/arenas/maps/manor.json', 'application/json', False),
 ]
 
 fail = []
@@ -206,6 +219,45 @@ def main():
                 label, want_port, want_page,
                 'ok' if good else 'MISMATCH got %r rc=%d %s'
                 % (got, r.returncode, (r.stderr or '').strip().splitlines()[-1:][:1])))
+
+        # --- the map rail, over the wire -------------------------------------
+        # See scripts/_smokemaps.py for why this block exists: a rail that
+        # cannot fetch its manifest does not break the page, it just disappears.
+        page = urllib.request.urlopen(base + '/play.html', timeout=5).read()
+        want_markup = [b'id="start-maps"', b'id="start-cards"', b'id="start-go"']
+        gone = [w.decode() for w in want_markup if w not in page]
+        if gone:
+            print('FAIL: served play.html is missing %s' % ', '.join(gone))
+            fail.append('play-markup')
+        else:
+            print('play.html carries the map rail markup  ok')
+
+        man = json.loads(urllib.request.urlopen(
+            base + '/game/maps/manifest.json', timeout=5).read().decode('utf-8'))
+        if len(man.get('maps', [])) < 2:
+            print('FAIL: the served manifest lists %d map(s)'
+                  % len(man.get('maps', [])))
+            fail.append('manifest-small')
+        else:
+            print('served manifest lists %d maps  ok' % len(man['maps']))
+
+        print('%-40s %-6s %-22s %s' % ('each card floor', 'status',
+                                       'meta.id == roster id', 'bytes'))
+        print('-' * 92)
+        for m in man.get('maps', []):
+            rel = m['arena'].lstrip('./')
+            try:
+                r = urllib.request.urlopen(base + '/' + rel, timeout=5)
+                raw = r.read()
+                lvl = json.loads(raw.decode('utf-8'))
+                same = lvl.get('meta', {}).get('id') == m['id']
+                print('%-40s %-6d %-22s %8d  %s' % (
+                    rel, r.status, str(same), len(raw), 'ok' if same else 'MISMATCH'))
+                if not same:
+                    fail.append('arena-id:' + m['id'])
+            except Exception as e:
+                print('%-40s %s' % (rel, 'ERROR ' + str(e)))
+                fail.append('arena:' + m['id'])
 
         # and a 404 must really be a 404
         try:

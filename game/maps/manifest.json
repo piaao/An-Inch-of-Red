@@ -1,0 +1,312 @@
+{
+ "generatedBy": "scripts/build_maps.mjs",
+ "defaultMap": "room_scene",
+ "maps": [
+  {
+   "id": "room_scene",
+   "name": "剖面公寓",
+   "category": "原型",
+   "tier": 0,
+   "style": "两带六室 · 10×8 m",
+   "blurb": "最早的那张图：6 个房间、119 件家具塞进 80 m²。它的每一个数字都是 game/VERDICT.md 里被量过的那一套，所以它也是判断别的图好不好玩的基准。",
+   "arena": "./game/arenas/room_scene.json",
+   "plan": {
+    "w": 10,
+    "d": 8
+   },
+   "area": 80,
+   "roomCount": 6,
+   "itemCount": 119,
+   "itemDensity": 1.488,
+   "walkable": 21378,
+   "bytes": 71712,
+   "rooms": [
+    {
+     "id": "bedroom",
+     "name": "卧室",
+     "area": 8.02
+    },
+    {
+     "id": "bath",
+     "name": "卫生间",
+     "area": 3.42
+    },
+    {
+     "id": "kitchen",
+     "name": "厨房",
+     "area": 7.63
+    },
+    {
+     "id": "living",
+     "name": "客厅",
+     "area": 21.29
+    },
+    {
+     "id": "dining",
+     "name": "餐厅",
+     "area": 4.48
+    },
+    {
+     "id": "study",
+     "name": "书房",
+     "area": 8.02
+    }
+   ]
+  },
+  {
+   "id": "studio",
+   "name": "一人间",
+   "category": "小",
+   "tier": 1,
+   "style": "一室到底 · 8×6 m · 物品最密",
+   "blurb": "2 个房间、83 件家具挤在 48 m² 里。厨房、床、书桌、沙发全在同一片地上：没有门框告诉你走到哪了，因为只有一个地方可去。单件物品最密的一张图。",
+   "arena": "./game/arenas/maps/studio.json",
+   "plan": {
+    "w": 8,
+    "d": 6
+   },
+   "area": 48,
+   "roomCount": 2,
+   "itemCount": 83,
+   "itemDensity": 1.729,
+   "walkable": 12614,
+   "bytes": 46908,
+   "rooms": [
+    {
+     "id": "living",
+     "name": "起居室",
+     "area": 24.09
+    },
+    {
+     "id": "bath",
+     "name": "卫浴",
+     "area": 7.41
+    }
+   ]
+  },
+  {
+   "id": "den",
+   "name": "藏书房",
+   "category": "小",
+   "tier": 1,
+   "style": "书墙围合 · 9×7 m",
+   "blurb": "3 个房间、87 件家具铺在 63 m² 上，书架沿墙排满。地面被薄家具切碎，每一条视线都被书脊挡住 —— 和「一人间」同量级，但走起来像迷宫。",
+   "arena": "./game/arenas/maps/den.json",
+   "plan": {
+    "w": 9,
+    "d": 7
+   },
+   "area": 63,
+   "roomCount": 3,
+   "itemCount": 87,
+   "itemDensity": 1.381,
+   "walkable": 17882,
+   "bytes": 51715,
+   "rooms": [
+    {
+     "id": "bath",
+     "name": "卫生间",
+     "area": 3.71
+    },
+    {
+     "id": "study",
+     "name": "书斋",
+     "area": 14.47
+    },
+    {
+     "id": "living",
+     "name": "起居室",
+     "area": 26.34
+    }
+   ]
+  },
+  {
+   "id": "twobed",
+   "name": "两室一厅",
+   "category": "中",
+   "tier": 2,
+   "style": "中轴对称 · 14×10 m · 八间",
+   "blurb": "南北两带、8 个房间，165 件家具，140 m²。动线是一棵树：客厅是枢纽，每间房都与你已经进过的某间房只隔一道门。近七成的地面是空的 —— 能跑起来。",
+   "arena": "./game/arenas/maps/twobed.json",
+   "plan": {
+    "w": 14,
+    "d": 10
+   },
+   "area": 140,
+   "roomCount": 8,
+   "itemCount": 165,
+   "itemDensity": 1.179,
+   "walkable": 38675,
+   "bytes": 100832,
+   "rooms": [
+    {
+     "id": "master",
+     "name": "主卧",
+     "area": 18.84
+    },
+    {
+     "id": "bath",
+     "name": "卫生间",
+     "area": 5.13
+    },
+    {
+     "id": "laundry",
+     "name": "洗衣房",
+     "area": 2.62
+    },
+    {
+     "id": "second",
+     "name": "次卧",
+     "area": 9.97
+    },
+    {
+     "id": "study",
+     "name": "书房",
+     "area": 10.19
+    },
+    {
+     "id": "living",
+     "name": "客厅",
+     "area": 21.69
+    },
+    {
+     "id": "dining",
+     "name": "餐厅",
+     "area": 15.07
+    },
+    {
+     "id": "kitchen",
+     "name": "厨房",
+     "area": 12.69
+    }
+   ]
+  },
+  {
+   "id": "teahouse",
+   "name": "茶室小院",
+   "category": "中",
+   "tier": 2,
+   "style": "东西长廊 · 13×9 m · 六间",
+   "blurb": "同样是「平衡」，形状却相反：6 个房间、127 件家具摆在 117 m² 上，一条东西向的长廊把北侧切成三间。先是大房间的远视线，后是小房间的窄拐角 —— 和两室一厅的节奏正好倒过来。",
+   "arena": "./game/arenas/maps/teahouse.json",
+   "plan": {
+    "w": 13,
+    "d": 9
+   },
+   "area": 117,
+   "roomCount": 6,
+   "itemCount": 127,
+   "itemDensity": 1.085,
+   "walkable": 33218,
+   "bytes": 78198,
+   "rooms": [
+    {
+     "id": "tea",
+     "name": "茶室",
+     "area": 15.68
+    },
+    {
+     "id": "bed",
+     "name": "卧室",
+     "area": 10.96
+    },
+    {
+     "id": "bath",
+     "name": "浴室",
+     "area": 11.2
+    },
+    {
+     "id": "living",
+     "name": "起居室",
+     "area": 21.83
+    },
+    {
+     "id": "study",
+     "name": "书房",
+     "area": 13.97
+    },
+    {
+     "id": "kitchen",
+     "name": "厨房",
+     "area": 9.08
+    }
+   ]
+  },
+  {
+   "id": "manor",
+   "name": "大宅",
+   "category": "大",
+   "tier": 3,
+   "style": "中厅为轴 · 18×14 m · 十一间",
+   "blurb": "11 个房间、246 件家具，252 m²，是原始公寓的三倍多。入户门在西南角，主卧在西北角，中间隔着一间横贯全宅的中厅 —— 只够扫完西半边。",
+   "arena": "./game/arenas/maps/manor.json",
+   "plan": {
+    "w": 18,
+    "d": 14
+   },
+   "area": 252,
+   "roomCount": 11,
+   "itemCount": 246,
+   "itemDensity": 0.976,
+   "walkable": 72777,
+   "bytes": 152048,
+   "rooms": [
+    {
+     "id": "master",
+     "name": "主卧",
+     "area": 14.31
+    },
+    {
+     "id": "dressing",
+     "name": "衣帽间",
+     "area": 8.51
+    },
+    {
+     "id": "masterbath",
+     "name": "主卫",
+     "area": 7.66
+    },
+    {
+     "id": "second",
+     "name": "次卧",
+     "area": 9.65
+    },
+    {
+     "id": "guest",
+     "name": "客卧",
+     "area": 7.52
+    },
+    {
+     "id": "hall",
+     "name": "中厅",
+     "area": 42.33
+    },
+    {
+     "id": "living",
+     "name": "客厅",
+     "area": 37.91
+    },
+    {
+     "id": "dining",
+     "name": "餐厅",
+     "area": 11.31
+    },
+    {
+     "id": "kitchen",
+     "name": "厨房",
+     "area": 20.03
+    },
+    {
+     "id": "study",
+     "name": "书房",
+     "area": 9.31
+    },
+    {
+     "id": "laundry",
+     "name": "洗衣房",
+     "area": 12.61
+    }
+   ]
+  }
+ ]
+}

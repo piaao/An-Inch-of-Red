@@ -25,6 +25,24 @@ export function formatClock(sec) {
   return `${Math.floor(s / 60)}:${pad2(s % 60)}`;
 }
 
+/**
+ * The measured-numbers strip under the difficulty cards.
+ *
+ * ONE definition, called by both `showStart` and `setSummary`. It used to be
+ * two identical copies, which is how `/6 房间` survived the roster growing to
+ * an eleven-room map: the denominator was typed, and a typed number cannot
+ * notice a new floor plan.
+ */
+function metaHTML(s) {
+  return `
+      <span><i>布局</i>${s.count} 个红包 · ${s.rooms}/${s.roomsTotal} 房间 · ${s.policy}</span>
+      <span><i>暴露度</i>${(s.coverMin * 100).toFixed(1)}% – ${(s.coverMax * 100).toFixed(1)}%</span>
+      <span><i>分层</i>${Object.entries(s.byTier).map(([k, v]) => `${k} ${v}`).join(' · ') || '—'}</span>
+      <span><i>导航</i>${s.walkable} 格 · ${s.regions} 连通域</span>
+      <span><i>巡逻</i>${s.waypoints} 航点 · 丢 ${s.legsDropped} 段</span>
+      <span><i>构建</i>${s.buildMs} ms</span>`;
+}
+
 export class Hud {
   constructor() {
     this.el = {
@@ -51,6 +69,7 @@ export class Hud {
       loadPct: $('load-pct'),
       start: $('ov-start'),
       startCards: $('start-cards'),
+      startMaps: $('start-maps'),
       startMeta: $('start-meta'),
       seed: $('seed-input'),
       seedNote: $('seed-note'),
@@ -121,7 +140,10 @@ export class Hud {
    * @param summary       placementSummary() output -- printed so the player can
    *                      tell a nasty layout from a routine one
    */
-  showStart({ difficulties, defaultId, seed, seedPinned, summary, onStart }) {
+  showStart({ difficulties, defaultId, seed, seedPinned, summary,
+    maps, currentMap, onStart }) {
+    this._renderMaps(maps || [], currentMap || null);
+
     this.el.startCards.innerHTML = '';
     for (const d of difficulties) {
       const card = document.createElement('button');
@@ -149,30 +171,55 @@ export class Hud {
         : '每局开始重新藏红包。把某一局的种子填进来，可以复现那一局。';
     }
 
-    const s = summary;
-    this.el.startMeta.innerHTML = `
-      <span><i>布局</i>${s.count} 个红包 · ${s.rooms}/6 房间 · ${s.policy}</span>
-      <span><i>暴露度</i>${(s.coverMin * 100).toFixed(1)}% – ${(s.coverMax * 100).toFixed(1)}%</span>
-      <span><i>分层</i>${Object.entries(s.byTier).map(([k, v]) => `${k} ${v}`).join(' · ') || '—'}</span>
-      <span><i>导航</i>${s.walkable} 格 · ${s.regions} 连通域</span>
-      <span><i>巡逻</i>${s.waypoints} 航点 · 丢 ${s.legsDropped} 段</span>
-      <span><i>构建</i>${s.buildMs} ms</span>`;
+    this.el.startMeta.innerHTML = metaHTML(summary);
 
-    $('start-go').onclick = () => onStart(this._preset);
+    $('start-go').onclick = () => onStart(this._preset, this._map);
     this.el.start.classList.remove('hidden');
   }
 
   /** Update just the meta strip, without rebuilding the cards. */
   setSummary(summary) {
-    const s = summary;
     if (!this.el.startMeta) return;
-    this.el.startMeta.innerHTML = `
-      <span><i>布局</i>${s.count} 个红包 · ${s.rooms}/6 房间 · ${s.policy}</span>
-      <span><i>暴露度</i>${(s.coverMin * 100).toFixed(1)}% – ${(s.coverMax * 100).toFixed(1)}%</span>
-      <span><i>分层</i>${Object.entries(s.byTier).map(([k, v]) => `${k} ${v}`).join(' · ') || '—'}</span>
-      <span><i>导航</i>${s.walkable} 格 · ${s.regions} 连通域</span>
-      <span><i>巡逻</i>${s.waypoints} 航点 · 丢 ${s.legsDropped} 段</span>
-      <span><i>构建</i>${s.buildMs} ms</span>`;
+    this.el.startMeta.innerHTML = metaHTML(summary);
+  }
+
+  /**
+   * The map rail: one card per floor on the roster.
+   *
+   * THE LOADED FLOOR IS THE ONLY ONE THAT CAN START WITHOUT A PAGE LOAD. The
+   * plan decides the ground plane, the lights, which models get downloaded and
+   * the apartment mesh, and `start()` builds all of that once. Swapping floors
+   * under a live scene would mean writing a second boot -- see the header of
+   * scripts/_mapmenu.py, and the note in play.js above `loadArena`.
+   *
+   * So picking a different card RECORDS the choice and play.js reloads with
+   * `?map=`. To the player it reads as "choose a map, choose a difficulty,
+   * press 开始"; the cards that will cause a reload are drawn a shade quieter,
+   * because that is the one thing about them the player can feel.
+   */
+  _renderMaps(maps, currentId) {
+    this._map = currentId;
+    const host = this.el.startMaps;
+    if (!host) return;
+    host.innerHTML = '';
+    for (const m of maps) {
+      const card = document.createElement('button');
+      card.type = 'button';
+      card.className = 'mapcard';
+      card.dataset.id = m.id;
+      card.classList.toggle('on', m.id === currentId);
+      card.classList.toggle('elsewhere', m.id !== currentId);
+      card.innerHTML = `
+        <span class="map-top"><b>${m.name}</b><em>${m.category} · ${m.plan.w}×${m.plan.d}</em></span>
+        <span class="map-spec">${m.roomCount} 房间 · ${m.itemCount} 件 · ${m.itemDensity}/m²</span>
+        <span class="map-rooms">${(m.rooms || []).map((r) => r.name).join(' · ')}</span>`;
+      card.addEventListener('click', () => {
+        for (const c of host.children) c.classList.remove('on');
+        card.classList.add('on');
+        this._map = m.id;
+      });
+      host.appendChild(card);
+    }
   }
 
   hideStart() {

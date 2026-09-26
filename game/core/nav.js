@@ -458,7 +458,7 @@ export function buildNav(level, opts = {}) {
     sealedOpenings: blockers.length - level.solids.length,
     walkable, walkableCount,
     index, cellOf, centreOf, clear, los, contains,
-    components, componentAt, nearestWalkable,
+    components, componentAt, nearestWalkable, nearestCentre, nodeOf,
     astar, pathLength,
   };
 }

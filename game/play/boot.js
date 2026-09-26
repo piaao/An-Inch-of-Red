@@ -95,7 +95,11 @@ export function buildCore(level, { seed, count, guards = MAX_GUARDS, onStage } =
   const patrols = [];
   for (let i = 0; i < Math.max(1, guards); i++) {
     const stream = i === 0 ? `guard-${seed}` : `guard${i + 1}-${seed}`;
-    patrols.push(buildPatrol(level, guardNav, new Rng(stream), {}));
+    // `alt` only for the second and later guards: guard 1's route is the one
+    // game/VERDICT.md measured, and `opts.alt` is 0 for it. See the note in
+    // game/core/guard.js -- on a two-room floor the room-order draw alone
+    // cannot keep two guards apart.
+    patrols.push(buildPatrol(level, guardNav, new Rng(stream), i === 0 ? {} : { alt: i }));
   }
   ms.patrol = performance.now() - t;
   stage(`巡逻路线 ${patrols.map((p) => p.waypoints.length).join(' + ')} 个航点`);
@@ -120,6 +124,10 @@ export function placementSummary(level, core) {
   return {
     count: core.prizes.length,
     rooms: rooms.size,
+    // The denominator the menu prints. It used to be the literal 6 -- right for
+    // the shipped apartment, a lie on the eleven-room 大宅. The menu reads this
+    // number now, so the two cannot disagree.
+    roomsTotal: level.rooms.length,
     roomIds: [...rooms],
     byTier,
     coverMin: covers.length ? covers[0] : 0,
