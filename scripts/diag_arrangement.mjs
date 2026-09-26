@@ -32,6 +32,14 @@
  * (it is entered through a 1 m open bay in a wall, which is a hole rather than
  * a door). Both times the tell was the same: THE REFERENCE FAILED. So the
  * reference is now asserted, out loud, every run.
+ *
+ * AND IT GATES ONE THING. The six questions say whether a floor is a PLACE.
+ * The composition readings say whether the furniture in it reads as
+ * furniture, and for one release they were printed with the footnote
+ * "measured now, gated in the next stage". They are gated now: see the
+ * verdict at the bottom of this file, which is also where the bounds and
+ * their provenance are written down. A reading that is never allowed to fail
+ * is a decoration.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -131,7 +139,7 @@ if (!quiet) {
   /* ------------------------------------------------- furniture composition */
   const t = dRead.totals;
   console.log('');
-  console.log('8. FURNITURE COMPOSITION  (measured now, gated in the next stage)');
+  console.log('8. FURNITURE COMPOSITION  (0-3 items budgeted below; the bounds are in the verdict)');
   console.log(row('furniture pieces per group', t.piecesPerGroup.toFixed(2), avg((a) => a.readings.totals.piecesPerGroup).toFixed(2)));
   console.log(row('lone items / all furniture', share(t.singletons, t.measured), avg((a) => a.readings.totals.loneShare).toFixed(3)));
   console.log(row('objects on open floor', t.floating, avg((a) => a.readings.totals.floating).toFixed(2) + ' avg'));
@@ -158,6 +166,48 @@ if (!quiet) {
   }
 }
 
+/* ------------------------------------------------- P2: the composition gate */
+
+/*
+ * THE THREE NUMBERS P2 PROMISED, GATED HERE.
+ *
+ * They are readings about the furniture, not questions about the plan, so they
+ * do not belong in `arrangement.js` beside the six -- that file answers "is
+ * this floor a PLACE", and these answer "does the furniture in it read as
+ * furniture". The two are independent and stay separate: the six are green on
+ * a flat whose every chair stands alone in the middle of a room.
+ *
+ * THE BOUND IS ON THE FAMILY, NOT ON ONE LAYOUT, and that is a measurement
+ * rather than a convenience. Over six parameter families x eight seeds the
+ * worst single layout reads 2.13 pieces/group, on a 2-room 24-item flat where
+ * one misplaced wardrobe moves the ratio by 0.2; a per-layout bound of 2.50
+ * would fail a layout that is not wrong. So the promise is gated where it is
+ * made -- averaged over the seeds -- and the WORST SINGLE LAYOUT is printed
+ * beside it, so that a pass cannot hide a disaster.
+ *
+ * `floating` is the exception: "no more than two objects alone on open floor"
+ * is a claim about ONE flat, so it is gated per flat.
+ *
+ * Provenance of the bounds is the designed flat, measured by the same ruler on
+ * the same run: 3.61 pieces/group, 13 % lone, 1 on open floor. The bounds are
+ * deliberately LOOSER than the reference and not tuned to the generator's own
+ * reading -- 2.50 is below every family average ever measured here, and a bound
+ * set to whatever the code happens to print is not a bound.
+ */
+const comp = {
+  pieces: avg((a) => a.readings.totals.piecesPerGroup),
+  lone: avg((a) => a.readings.totals.loneShare),
+  worstPieces: Math.min(...ok.map((g) => g.a.readings.totals.piecesPerGroup)),
+  worstLone: Math.max(...ok.map((g) => g.a.readings.totals.loneShare)),
+  mostFloor: Math.max(...ok.map((g) => g.a.readings.totals.floating)),
+};
+const compGate = [
+  ['pieces per group, averaged over the seeds', comp.pieces.toFixed(2), comp.pieces >= 2.5, '>= 2.50'],
+  ['lone items / all furniture, averaged', comp.lone.toFixed(3), comp.lone <= 0.25, '<= 0.250'],
+  ['objects alone on open floor, worst single flat', String(comp.mostFloor), comp.mostFloor <= 2, '<= 2'],
+];
+const compBad = compGate.filter((g) => !g[2]);
+
 /* ------------------------------------------------------------- the verdict */
 
 const allGreen = ok.filter((g) => g.a.checks.every((c) => c.pass)).length;
@@ -174,8 +224,14 @@ console.log(`arrangement  ${green}/${total} checks green   ${allGreen}/${ok.leng
 console.log(`   weakest question: ${worstId.id} (${worstId.n}/${ok.length} layouts fail it)`);
 console.log(`   reference flat:   ${designed.checks.length - dFails}/${designed.checks.length}`
   + `${dFails ? '   BROKEN RULER — on ' + designed.checks.filter((c) => !c.pass).map((c) => c.id).join(', ') : ''}`);
+console.log(`composition  pieces/group ${comp.pieces.toFixed(2)} (worst seed ${comp.worstPieces.toFixed(2)})`
+  + `   lone ${comp.lone.toFixed(3)} (worst seed ${comp.worstLone.toFixed(3)})`
+  + `   open floor ${comp.mostFloor} max   ${compBad.length ? 'FAIL' : 'PASS'}`);
+for (const [label, got, , want] of compBad) console.log(`   FAIL  ${label}: ${got}, wants ${want}`);
 console.log('='.repeat(96));
 console.log('');
 
-// A ruler that cannot pass the reference is not evidence about anything else.
-process.exit(dFails ? 2 : 0);
+// A ruler that cannot pass the reference is not evidence about anything else,
+// and a composition promise the generator misses is a second, separate failure
+// -- two exit codes, because they are two different things to go and fix.
+process.exit(dFails ? 2 : compBad.length ? 3 : 0);

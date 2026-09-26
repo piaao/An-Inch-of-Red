@@ -57,6 +57,7 @@ export const VERDICT_SOURCES = [
   'game/core/vision.js',
   'game/procgen/arrangement.js',
   'game/procgen/floorplan.js',
+  'game/procgen/furnishing.js',
   'game/procgen/palette.js',
   'game/procgen/pipeline.js',
   'game/procgen/required.js',

@@ -75,7 +75,14 @@ import {
 // The bar the RULER judges by, imported rather than copied. A placer that aims
 // at 0.28 while the ruler judges at 0.30 makes rooms that are "almost
 // grouped", and nothing in the system would say so.
-import { MAX_DOOR_HOPS } from './siting.js';
+import { MAX_DOOR_HOPS, AGAINST_WALL } from './siting.js';
+// ...and the same three answers the placer has to AIM at. `furnishing.js` owns
+// "how far apart are two footprints", "is this piece against a wall" and "does
+// it butt against that piece", so the two hands cannot disagree about what a
+// group is.
+import {
+  halfExtents, boxAt, againstWall, joined, buttedSpots,
+} from './furnishing.js';
 
 const DEG = Math.PI / 180;
 
@@ -152,17 +159,9 @@ function sizeOf(sizes, m) {
   return e && e.size ? e.size : null;
 }
 
-/** World-frame half extents of a rotated footprint. Mirrors level.js aabbOf. */
-function halfExtents(size, deg, scale) {
-  const s = scale || 1;
-  const hx = (size[0] * s) / 2;
-  const hz = (size[2] * s) / 2;
-  const c = Math.abs(Math.cos(deg * DEG));
-  const n = Math.abs(Math.sin(deg * DEG));
-  return { ex: hx * c + hz * n, ez: hx * n + hz * c };
-}
-
-const boxAt = (x, z, ex, ez) => ({ x0: x - ex, z0: z - ez, x1: x + ex, z1: z + ez });
+// `halfExtents` and `boxAt` are imported from ./furnishing.js. They used to be
+// defined here AND in arrangement.js, which meant one footprint measured two
+// ways: a group placed on this answer and judged on that one.
 
 const overlapXZ = (a, b, gap) => !(a.x1 + gap <= b.x0 || b.x1 + gap <= a.x0
                                 || a.z1 + gap <= b.z0 || b.z1 + gap <= a.z0);
@@ -1029,13 +1028,17 @@ function placeRoom(role, U, lanes, p, rng, sizeOfBound, quota, state) {
   const list = PALETTES[role] || PALETTES.bedroom;
   const items = [];
   const placed = [];
+  // The same footprints as `placed`, without the per-call `map`. Both are
+  // appended in `commit` and nowhere else, so they cannot drift.
+  const boxes = [];
   const occupied = { north: [], south: [], west: [], east: [] };
   const space = new RoomSpace(U);
   const anchors = lanes
     .map((L) => ({ i: space.i((L.x0 + L.x1) / 2), j: space.j((L.z0 + L.z1) / 2) }))
     .filter((a) => !space.blocked(a.j * space.w + a.i));
 
-  const rejected = { overlap: 0, outside: 0, lane: 0, slot: 0, sealed: 0, noHost: 0, noModel: 0, budget: 0, seed: 0 };
+  const rejected = { overlap: 0, outside: 0, lane: 0, slot: 0, sealed: 0, noHost: 0,
+                     noModel: 0, budget: 0, seed: 0, floating: 0 };
   let filled = 0;
 
   /**
@@ -1062,6 +1065,32 @@ function placeRoom(role, U, lanes, p, rng, sizeOfBound, quota, state) {
   };
 
   /**
+   * Would this piece be left standing on its own, touching nothing?
+   *
+   * THE RULE THE P2 NUMBERS ARE ABOUT. A room whose pieces each sit at a random
+   * legal spot measures 1.29 pieces per group and leaves 10.8 pieces per flat on
+   * open floor -- and an object alone in the middle of a room is the loudest
+   * "this was generated" tell there is. So a candidate that is neither against a
+   * wall nor butted against something already down is not a legal position AT
+   * ALL: the generator cannot express it, and no later pass has to notice it.
+   *
+   * Three exemptions, each with a reason rather than a mood
+   *   * flat things (rugs) are floor coverings, not pieces of furniture;
+   *   * anything with y above the floor stands ON something, so it is joined to
+   *     its host by construction;
+   *   * a host -- a model some palette entry names in its `on`, `near` or `of`
+   *     -- is the CENTRE of an arrangement, and the walk places its companions
+   *     the moment it lands (see `ordered`), so it is not a loner even when
+   *     nothing is near it yet.
+   */
+  const floating = (cand) => {
+    if (flatUntil(cand) || cand.y > 0.02) return false;
+    if (hostModels.has(cand.m)) return false;
+    if (againstWall(cand.box, U)) return false;
+    return !joined(cand.box, boxes);
+  };
+
+  /**
    * A reason string if this candidate may not go here, else null.
    *
    * THE ORDER IS A COST DECISION, not a style one. `deadSlot` is the only test
@@ -1082,6 +1111,7 @@ function placeRoom(role, U, lanes, p, rng, sizeOfBound, quota, state) {
       const bTop = o.y + o.size[1] * o.s;
       if (cand.y < bTop + 0.01 && o.y < aTop + 0.01) return 'overlap';
     }
+    if (floating(cand)) return 'floating';
     return deadSlot(cand);
   };
 
@@ -1120,7 +1150,34 @@ function placeRoom(role, U, lanes, p, rng, sizeOfBound, quota, state) {
     it.alongHi = it.alongLo + cand.alongHalf * 2;
     items.push(it);
     placed.push(it);
-    if (cand.side) occupied[cand.side].push([it.alongLo, it.alongHi]);
+    boxes.push(it.box);
+    // EVERY FLOOR PIECE AGAINST A WALL TAKES THAT WALL'S SPAN, whoever put it
+    // there.
+    //
+    // This was `if (cand.side) occupied[cand.side].push(...)` -- only `tryWall`
+    // registered. A sofa set down by `tryFloor` three centimetres off the north
+    // wall, a bedside table butted by `tryBeside`, a worktop laid by
+    // `tryCounter` from the west: none was recorded, so the NEXT wall item
+    // computed a free span that was already taken, aimed at its flush end, and
+    // collided. Measured over twelve flats: 397 flush shots tried, **132 of
+    // them rejected as `overlap`, 18 landing**. The wall model was not wrong
+    // about geometry -- it was wrong about WHO COUNTS, and the price was that
+    // those 132 placements went back to the middle of an empty wall.
+    //
+    // Flat things are exempt: a rug is a floor covering and a wall run may
+    // cross one. So is anything lifted off the floor -- a wall lamp or an upper
+    // cabinet leaves the floor along that wall clear.
+    if (it.y <= 0.02 && !flatUntil(it)) {
+      const b = it.box;
+      const near = {
+        north: b.z0 - U.z0, south: U.z1 - b.z1,
+        west: b.x0 - U.x0, east: U.x1 - b.x1,
+      };
+      for (const side of ['north', 'south', 'west', 'east']) {
+        if (near[side] > AGAINST_WALL) continue;
+        occupied[side].push(side === 'north' || side === 'south' ? [b.x0, b.x1] : [b.z0, b.z1]);
+      }
+    }
     filled += 1;
     // The global budget is spent HERE rather than by the caller afterwards, so
     // that a room's own filler pass sees an honest remaining count instead of
@@ -1159,23 +1216,63 @@ function placeRoom(role, U, lanes, p, rng, sizeOfBound, quota, state) {
       const half = wallAlongHalf(side, ex, ez);
       for (const [a, b] of freeIntervals(occupied[side], lo, hi)) {
         if (b - a < half * 2 + p.gap * 2) continue;
-        options.push({ side, a: a + half + p.gap, b: b - half - p.gap, ex, ez, w: b - a });
+        // WHICH END MATTERS, and it is not a detail. An end of this free span
+        // that coincides with a piece already down is an end that continues a
+        // RUN; the other ends are the room's own corners. Sorting by span width
+        // alone -- which is what this did -- sends the second piece to a
+        // DIFFERENT and wider wall, and a wall holding one thing reads exactly
+        // like an empty one. Measured before the fix: 14 of 92 neighbouring
+        // pairs along a wall were within JOIN.
+        const taken = occupied[side];
+        const nearLo = taken.some(([, hi2]) => Math.abs(hi2 - a) < 1e-6);
+        const nearHi = taken.some(([lo2]) => Math.abs(lo2 - b) < 1e-6);
+        options.push({ side, a: a + half + p.gap, b: b - half - p.gap, ex, ez,
+          w: b - a, nearLo, nearHi });
       }
     }
     if (!options.length) { rejected.outside += 1; return null; }
-    options.sort((x, y) => y.w - x.w);
+    // Runs first, then the widest span. Both halves earn their place: without
+    // the first, nothing ever joins a run; without the second, everything piles
+    // onto one wall and the rest of the room stays bare.
+    options.sort((x, y) => ((y.nearLo || y.nearHi) ? 1 : 0) - ((x.nearLo || x.nearHi) ? 1 : 0)
+      || (y.w - x.w));
 
+    // FLUSH SPOTS ON EVERY WALL, BEFORE ANY COLD SPOT ON ANY WALL.
+    //
+    // This ordering is the P2 fix, and the counter that found it: of 216 wall
+    // placements, 158 calls had a spot flush against a piece already down
+    // available and **102 placements still came back standing on their own**.
+    // The cause was the shape of the loop, not the palette. One span was
+    // exhausted -- its flush end, its other end, then random spots inside it --
+    // before the next span was looked at at all, so a wall whose flush end was
+    // blocked (a door lane crosses it, the slot behind it would seal) got its
+    // piece dropped in the middle of THAT SAME WALL, a metre and a half from
+    // anything. Sorting the spans does not fix that; the singles have to be
+    // tried across all four walls first, which is what this does.
+    //
+    // A cold spot is still reachable, so a room that already has a piece on
+    // every wall still gets its next one -- the flush pass is a preference,
+    // never a filter.
+    const shots = [];
     for (const o of options) {
-      for (let t = 0; t < 6; t++) {
-        const along = o.a + (o.b - o.a) * (t === 0 ? 0.5 : rng.next());
-        const pos = wallPlace(o.side, U, along, o.ex, o.ez);
-        const cand = candidate(m, pos.x, pos.z, wallRot(o.side), 0, sc, o.side);
-        if (!cand) return null;
-        const why = whyBad(cand);
-        if (why) { rejected[why] += 1; continue; }
-        if (!take(cand)) { rejected.sealed += 1; continue; }
-        return commit(cand, 'wall', null);
-      }
+      const flush = [];
+      if (o.nearLo) flush.push(o.a);
+      if (o.nearHi) flush.push(o.b);
+      for (const along of flush) shots.push({ o, along, flush: true });
+      for (const along of [o.a, o.b]) if (!flush.includes(along)) shots.push({ o, along, flush: false });
+      for (let t = 0; t < 2; t++) shots.push({ o, along: null, flush: false });
+    }
+    shots.sort((x, y) => (y.flush ? 1 : 0) - (x.flush ? 1 : 0));
+
+    for (const { o, along } of shots) {
+      const at = along == null ? o.a + (o.b - o.a) * rng.next() : along;
+      const pos = wallPlace(o.side, U, at, o.ex, o.ez);
+      const cand = candidate(m, pos.x, pos.z, wallRot(o.side), 0, sc, o.side);
+      if (!cand) return null;
+      const why = whyBad(cand);
+      if (why) { rejected[why] += 1; continue; }
+      if (!take(cand)) { rejected.sealed += 1; continue; }
+      return commit(cand, 'wall', null);
     }
     return null;
   };
@@ -1204,6 +1301,45 @@ function placeRoom(role, U, lanes, p, rng, sizeOfBound, quota, state) {
         if (why) { rejected[why] += 1; continue; }
         if (!take(cand)) { rejected.sealed += 1; continue; }
         return commit(cand, 'surface', host.m);
+      }
+    }
+    return null;
+  };
+
+  /**
+   * Butt a companion against the host it belongs to.
+   *
+   * The palette already says which pieces belong together -- `near: [bedDouble]`
+   * on a bedside table is that statement. This is what turns it into geometry.
+   * The old code read the same field and then tried the SAME WALL at a random
+   * spot, which is not the same thing at all: a table at the far end of the bed's
+   * wall is two unrelated objects, and measured as such.
+   *
+   * The companion is placed FLUSH (`p.gap` away, two orders of magnitude under
+   * `JOIN`), so the pair is a group by arithmetic. The host's two ENDS are tried
+   * before its two faces -- a bed's table continues the wall run the bed
+   * started, it does not stand in front of the bed -- and the biggest host is
+   * tried first, so a table looked for by several things goes to the main one.
+   */
+  const tryBeside = (m, s, hosts) => {
+    const size = sizeOfBound(m);
+    if (!size) { rejected.noModel += 1; return null; }
+    const sc = s || 1;
+    const pool = placed.filter((o) => hosts.includes(o.m));
+    if (!pool.length) { rejected.noHost += 1; return null; }
+    pool.sort((a, b) => (b.ex * b.ez) - (a.ex * a.ez));
+    for (const host of pool) {
+      // Same rotation as the host on its ends (a pair of tables flanking a bed
+      // face the way the bed does) and a quarter turn on its faces.
+      for (const r of [host.r, host.r + 90]) {
+        for (const spot of buttedSpots(host.box, size, r, sc, p.gap)) {
+          const cand = candidate(m, spot.x, spot.z, r, 0, sc, null);
+          if (!cand) return null;
+          const why = whyBad(cand);
+          if (why) { rejected[why] += 1; continue; }
+          if (!take(cand)) { rejected.sealed += 1; continue; }
+          return commit(cand, 'beside', host.m);
+        }
       }
     }
     return null;
@@ -1257,9 +1393,32 @@ function placeRoom(role, U, lanes, p, rng, sizeOfBound, quota, state) {
     // the loop either way: `take` is what refuses a sofa that would cut the room
     // in two, and a shortlist that skipped it would accept exactly the placement
     // this generator exists to avoid.
+    //
+    // And for anything else, THE SPOTS THAT TOUCH SOMETHING COME FIRST. A sofa
+    // dropped at a random legal spot is legal and reads as a mistake; the same
+    // sofa with its coffee table butted against it reads as a room. This is a
+    // PREFERENCE, never a filter -- every candidate in `spots` has already
+    // passed `whyBad`, so a room with nothing else in it still gets its first
+    // piece down.
+    const touching = spots.filter((c) => joined(c.box, boxes));
+    const wallside = spots.filter((c) => againstWall(c.box, U));
+    // A CORNER PIECE EARNS ITS CORNER.
+    //
+    // `touching` was skipped for `corner` mode: the eight nearest corners were
+    // shuffled and one of them was taken. That is why the plants, the coat rack
+    // and the washer/dryer were still standing on their own after every other
+    // rule had been repaired -- a corner is where a plant goes when it stands
+    // BESIDE something, and the code was treating "the corner" as the whole
+    // requirement. Measured after the first two P2 levers: they were the top of
+    // the lone-item census. The nearest corners are still the shortlist; the
+    // ones that touch something simply come first, and a room whose corners are
+    // all empty keeps its first piece exactly as before.
+    const nearby = spots.slice().sort((a, b) => cornerDist(a, U) - cornerDist(b, U)).slice(0, 10);
+    const tucked = nearby.filter((c) => joined(c.box, boxes));
     const pool = mode === 'corner'
-      ? rng.shuffle(spots.slice().sort((a, b) => cornerDist(a, U) - cornerDist(b, U)).slice(0, 8))
-      : rng.shuffle(spots);
+      ? rng.shuffle(tucked.length ? tucked : nearby)
+      : touching.length ? rng.shuffle(touching)
+        : wallside.length ? rng.shuffle(wallside) : rng.shuffle(spots);
     for (const cand of pool) {
       if (!take(cand)) { rejected.sealed += 1; continue; }
       return commit(cand, mode === 'rug' ? 'rug' : mode === 'corner' ? 'corner' : 'floor', null);
@@ -1344,7 +1503,9 @@ function placeRoom(role, U, lanes, p, rng, sizeOfBound, quota, state) {
 
     const r = wallRot(best.side);
     const laid = [];
-    let cursor = best.a + 0.5;
+    // Flush with the end of the span, not half a metre along it: a worktop that
+    // starts 0.5 m off the corner is a worktop that is against no wall.
+    let cursor = best.a;
     for (const m of spec.sequence) {
       const size = sizeOfBound(m);
       if (!size) continue;
@@ -1404,7 +1565,40 @@ function placeRoom(role, U, lanes, p, rng, sizeOfBound, quota, state) {
 
   /* ------------------------------------------------------------ the walk */
   const wants = Array.isArray(list) ? list : [];
-  for (const entry of wants) {
+
+  /** Is this entry a companion -- a piece that belongs to another one? */
+  const isCompanion = (e) => e.where === 'surface' || !!e.near;
+
+  /**
+   * Every model some palette entry names as its host.
+   *
+   * Read off the palette's own `on` / `near` / `of` fields, so "what goes with
+   * what" keeps exactly one source. Used by `floating`: a host is the centre of
+   * an arrangement and is not disqualified for having nothing near it yet.
+   */
+  const hostModels = new Set();
+  for (const e of wants) {
+    for (const k of ['on', 'near', 'of']) {
+      for (const h of e[k] || []) hostModels.add(h);
+    }
+  }
+
+  /**
+   * THE ORDER IS THE ARRANGEMENT. Each companion is placed immediately after the
+   * entry that can host it, so a bed and its bedside tables are ONE ACT rather
+   * than two that might never meet. Everything else keeps the palette's order,
+   * which is itself load-bearing (rugs before the things that stand on them,
+   * structure before decoration).
+   */
+  const ordered = [];
+  const taken = new Set();
+  const push = (e) => { if (!taken.has(e)) { taken.add(e); ordered.push(e); } };
+  const companionsOf = (models) => wants.filter((c) => isCompanion(c) && !taken.has(c)
+    && (c.on || c.near).some((h) => models.includes(h)));
+  for (const e of wants) if (!isCompanion(e)) { push(e); for (const c of companionsOf(Array.isArray(e.m) ? e.m : [e.m])) push(c); }
+  for (const e of wants) push(e);
+
+  for (const entry of ordered) {
     if (tooMany()) { rejected.budget += 1; break; }
     if (entry.prob != null && !rng.chance(entry.prob)) continue;
     for (let n = 0; n < (entry.repeat || 1); n++) {
@@ -1423,26 +1617,11 @@ function placeRoom(role, U, lanes, p, rng, sizeOfBound, quota, state) {
       else if (entry.where === 'corner') tryFloor(m, entry.s, 'corner');
       else if (entry.where === 'floor') tryFloor(m, entry.s, 'floor');
       else {
-        const it = tryWall(m, entry.s, entry.side && entry.side !== 'any' ? entry.side : null);
-        if (!it && entry.near) {
-          // Bedside table: sit it beside the bed, on the bed's own wall.
-          const host = placed.find((o) => entry.near.includes(o.m));
-          const size2 = host ? sizeOfBound(m) : null;
-          if (host && host.side && size2) {
-            const r2 = wallRot(host.side);
-            const { ex, ez } = halfExtents(size2, r2, entry.s || 1);
-            const half = wallAlongHalf(host.side, ex, ez);
-            const [lo, hi] = wallSpan(host.side, U);
-            for (const along of [host.alongLo - half - p.gap, host.alongHi + half + p.gap]) {
-              if (along - half < lo || along + half > hi) continue;
-              const pos = wallPlace(host.side, U, along, ex, ez);
-              const cand = candidate(m, pos.x, pos.z, r2, 0, entry.s, host.side);
-              if (!cand || whyBad(cand) || !take(cand)) continue;
-              commit(cand, 'wall', null);
-              break;
-            }
-          }
-        }
+        // `near` is the palette saying "this piece belongs to that one", so BUTT
+        // IT AGAINST THE HOST first and only then fall back to a wall at large.
+        const it = (entry.near ? tryBeside(m, entry.s, entry.near) : null)
+          || tryWall(m, entry.s, entry.side && entry.side !== 'any' ? entry.side : null);
+        void it;
       }
     }
   }

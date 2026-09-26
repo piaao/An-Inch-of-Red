@@ -52,7 +52,13 @@ import { buildWallOpenings, buildDoorStates } from '../arena/openings.js';
 import { buildNav } from '../core/nav.js';
 import { resolveRooms, applyRooms } from '../core/regions.js';
 
-import { JOIN, AGAINST_WALL, MAX_DOOR_HOPS } from './siting.js';
+import { JOIN, MAX_DOOR_HOPS } from './siting.js';
+// `boxGap` / `againstWall` / the rotated footprint are the SAME three
+// answers the placer needs to aim at, so they live in one place and both
+// hands call them. Two copies would let the placer aim at 0.28 while this
+// judged at 0.30 -- and that failure reads as "almost grouped", which is
+// the most flattering way a generator can be wrong.
+import { itemBox as footprintBox, boxGap, againstWall } from './furnishing.js';
 
 const DEG = Math.PI / 180;
 
@@ -119,37 +125,15 @@ const sizeOfIn = (sizes, m) => {
 };
 
 /**
- * World-frame AABB of one placed item, or null when the model is unmeasured.
+ * The world-frame AABB of one placed item, or null when the model is
+ * unmeasured.
  *
- * Mirrors `level.js aabbOf` and `floorplan.js halfExtents`: the rotation's
- * absolute cosine/sine gives the world extent of the rotated footprint. An
- * unmeasured model returns null rather than a zero box, because a zero box
+ * An unmeasured model returns null rather than a zero box, because a zero box
  * would silently join whatever it stands next to and make a group look composed
- * when nothing is known about it.
+ * when nothing is known about it. The rotation itself is `furnishing.js`'s
+ * business now -- this only supplies the measured size.
  */
-function itemBox(it, sizes) {
-  const size = sizeOfIn(sizes, it.m);
-  if (!size) return null;
-  const s = it.s && it.s !== 1 ? it.s : 1;
-  const hx = (size[0] * s) / 2;
-  const hz = (size[2] * s) / 2;
-  const c = Math.abs(Math.cos((it.r || 0) * DEG));
-  const n = Math.abs(Math.sin((it.r || 0) * DEG));
-  const ex = hx * c + hz * n;
-  const ez = hx * n + hz * c;
-  return { x0: it.x - ex, x1: it.x + ex, z0: it.z - ez, z1: it.z + ez };
-}
-
-/** Straight-line gap between two boxes on whichever axis separates them. */
-const boxGap = (a, b) => {
-  const dx = Math.max(0, Math.max(a.x0 - b.x1, b.x0 - a.x1));
-  const dz = Math.max(0, Math.max(a.z0 - b.z1, b.z0 - a.z1));
-  return Math.hypot(dx, dz);
-};
-
-const distToRectEdge = (b, rect) => Math.min(
-  Math.abs(b.x0 - rect.x0), Math.abs(rect.x1 - b.x1),
-  Math.abs(b.z0 - rect.z0), Math.abs(rect.z1 - b.z1));
+const itemBox = (it, sizes) => footprintBox(it, sizeOfIn(sizes, it.m));
 
 /**
  * Furniture composition inside one room.
@@ -181,7 +165,7 @@ function compose(items, rect, sizes) {
   let floating = 0;
   for (const g of groups) {
     if (g.length !== 1) continue;
-    if (distToRectEdge(g[0].b, rect) <= AGAINST_WALL) continue;
+    if (againstWall(g[0].b, rect)) continue;   // close enough to a wall to be "put there"
     floating += 1;
   }
   return {
