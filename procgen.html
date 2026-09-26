@@ -29,6 +29,42 @@
       <fieldset>
         <legend>参数</legend>
         <div id="primary" class="grid"></div>
+
+        <!-- THE ROOM LIST. The 房间数 knob above says HOW MANY rooms; this says
+             WHICH ONES. The generator has read `params.program` since P1 and
+             nothing in this page could reach it, so every six-room flat was the
+             same six rooms.
+
+             WHAT IT DOES NOT DO, written down because this comment claimed it
+             for one draft and the claim was false: the position of an entry in
+             the list is NOT the position of the room in the flat.
+             `planCirculation()` spends the list as a MULTISET and places the
+             roles by rule -- the room you walk into is always the living room,
+             the bathroom is always a leaf off it, the kitchen is always beside
+             the dining room, bedrooms take the cells that have an outside wall.
+             Measured in work/_p3b_program.mjs: a list with 客厅 written LAST
+             still puts the front door in the living room, and a list and its
+             reverse produce the same plan. Position is a tie-break among the
+             roles the four rules did not place, and nothing more.
+
+             With the box unticked the rows below are what `roomProgram()` itself
+             returns for the current 房间数 -- printed, not re-derived, so the
+             preview cannot disagree with the generator about what "6 rooms"
+             means. See game/procgen/playground.js for the wiring. -->
+        <div id="program-block">
+          <div class="prow head">
+            <span class="fl">房间清单</span>
+            <label class="pauto"><input type="checkbox" id="program-use"> 自定义</label>
+          </div>
+          <ol id="program" aria-label="房间清单"></ol>
+          <div class="prow foot">
+            <select id="program-add" aria-label="要加入的角色"></select>
+            <button type="button" id="program-add-btn" class="mini">加一个</button>
+            <button type="button" id="program-auto" class="mini ghost">按房间数</button>
+          </div>
+          <p id="program-note" class="fhn"></p>
+        </div>
+
         <div id="seed-field" class="grid"></div>
       </fieldset>
 

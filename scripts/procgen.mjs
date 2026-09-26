@@ -3,6 +3,8 @@
  *
  *     node scripts/procgen.mjs                       a small sweep + a SVG contact sheet
  *     node scripts/procgen.mjs --w 12 --d 9 --rooms 7 --items 90 --seed flatA
+ *     node scripts/procgen.mjs --w 12 --d 9 --items 90 --program living,bedroom,bath
+ *                                                     the room list; overrides --rooms
  *     node scripts/procgen.mjs --sweep                the full parameter grid
  *     node scripts/procgen.mjs --count 8              eight seeds at the base params
  *     node scripts/procgen.mjs --sweep --strict-arrangement
@@ -97,6 +99,29 @@ function knobArgs(args) {
   return out;
 }
 
+/**
+ * The room list, from the command line: `--program living,bedroom,bath`.
+ *
+ * `program` has been in DEFAULTS since P1, and the workbench could set it from
+ * P3 -- but the CLI could not say it at all, which left a knob in DEFAULTS with
+ * no way to reach it from a shell. The two front ends are supposed to differ
+ * only in where their strings end up.
+ *
+ * COMMAS, not repeated flags, because order is not information here: the
+ * generator spends the list as a MULTISET (see roomProgram / planCirculation).
+ *
+ * NOT APPLIED TO `--sweep`, on purpose. The sweep is a fixed grid whose whole
+ * value is that each row is a DIFFERENT building; one list handed to all twelve
+ * would override `rooms` in every row and turn the grid into twelve copies of
+ * the same flat. `--sweep` keeps its own room counts.
+ */
+function roomListArg(args) {
+  const v = args.program;
+  if (v == null || v === true) return null;
+  const roles = String(v).split(',').map((s) => s.trim()).filter((s) => s.length);
+  return roles.length ? roles : null;
+}
+
 function presetSets(args) {
   const knobs = knobArgs(args);
   if (args.sweep) {
@@ -126,12 +151,18 @@ function presetSets(args) {
     rooms: num(args.rooms, DEFAULTS.rooms),
     items: num(args.items, DEFAULTS.items),
   };
+  const program = roomListArg(args);
+  if (program) base.program = program;
   const count = num(args.count, 1);
   const merged = { ...base, ...knobs };
-  if (count <= 1) return [{ label: `${merged.w}x${merged.d} ${merged.rooms}r ${merged.items}i`, p: { ...merged, seed: args.seed || DEFAULTS.seed } }];
+  // With a list, `rooms` no longer decides the room count -- the list does, and
+  // `roomProgram` says so. A label that kept printing the `rooms` value would be
+  // a label about the wrong number.
+  const what = program ? `${program.length}r[${program.join('+')}]` : `${merged.rooms}r`;
+  if (count <= 1) return [{ label: `${merged.w}x${merged.d} ${what} ${merged.items}i`, p: { ...merged, seed: args.seed || DEFAULTS.seed } }];
   const out = [];
   for (let i = 0; i < count; i++) {
-    out.push({ label: `${merged.w}x${merged.d} ${merged.rooms}r ${merged.items}i #${i + 1}`, p: { ...merged, seed: `${args.seed || 'procgen'}-${i + 1}` } });
+    out.push({ label: `${merged.w}x${merged.d} ${what} ${merged.items}i #${i + 1}`, p: { ...merged, seed: `${args.seed || 'procgen'}-${i + 1}` } });
   }
   return out;
 }

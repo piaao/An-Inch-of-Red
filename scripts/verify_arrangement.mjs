@@ -477,6 +477,48 @@ console.log('    Node\'s answer — run it from a normal terminal.)');
     /arrangement: last\.v\.arrangement \?/.test(js));
 }
 
+/* ------------------------------------------- 7c. the room list is a control */
+console.log('');
+console.log('-- 7c. the room list reaches params WITHOUT becoming a number ---------');
+{
+  // Read the three files again rather than reaching into the block above: those
+  // `const`s are scoped to it, and a section that only works because of another
+  // section's locals is a section that breaks the moment the other one moves.
+  const html = fs.readFileSync(path.join(ROOT, 'procgen.html'), 'utf8');
+  const js = fs.readFileSync(path.join(ROOT, 'game', 'procgen', 'playground.js'), 'utf8');
+  const css = fs.readFileSync(path.join(ROOT, 'css', 'procgen.css'), 'utf8');
+
+  const progIds = ['program-block', 'program', 'program-use', 'program-add',
+                   'program-add-btn', 'program-auto', 'program-note'];
+  check('procgen.html declares the room-list mount points',
+    progIds.every((s) => html.includes(`id="${s}"`)),
+    progIds.filter((s) => !html.includes(`id="${s}"`)).join(', ') || progIds.join(', '));
+  check('playground.js builds, renders and wires the list',
+    ['programRoles', 'function renderProgram', 'function wireProgram',
+     'function effectiveProgram'].every((s) => js.includes(s)),
+    ['programRoles', 'function renderProgram', 'function wireProgram',
+     'function effectiveProgram'].filter((s) => !js.includes(s)).join(', ') || 'all four');
+  // THE ONE THAT MATTERS. `p.program` must come from the array. A `Number()` on
+  // its way in turns the list into NaN, the NaN into the default, and the whole
+  // control into decoration that passes every other check in this file.
+  check('and `params.program` comes from the array, never from the number reader',
+    /p\.program = programRoles/.test(js) && !/p\.program = read(Number)?\(/.test(js),
+    'p.program = programRoles ... expected; a number reader here would NaN it');
+  // The vocabulary is the generator's. A hand-typed copy of six role names is a
+  // second list of legal words, and the two drift the first time one changes.
+  const imp = (js.match(/import \{([^}]*)\} from '\.\/floorplan\.js'/) || [])[1] || '';
+  check('the role vocabulary is the generator\'s, not a copy typed here',
+    ['PROGRAM', 'KNOWN_ROLES', 'roomProgram'].every((n) => new RegExp('\\b' + n + '\\b').test(imp)),
+    `imported from floorplan.js:${imp.replace(/\s+/g, ' ')}`);
+  // And the list must not sit in a `.field`: verify_playground.mjs counts
+  // `#params .field input` and expects fourteen. A static `.field` here would
+  // break that count in a way that reads as a drifted knob.
+  check('the list is not a .field, so the fourteen-knob count stays a knob count',
+    !html.includes('class="field"') && !html.includes('name="program"'),
+    'procgen.html must declare no static .field and no name=program box');
+  check('css styles the list', css.includes('#program-block') && css.includes('#program select'));
+}
+
 console.log('');
 console.log('='.repeat(78));
 console.log(`  ${passed}/${passed + failed} checks passed`);

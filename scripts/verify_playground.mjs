@@ -484,7 +484,103 @@ async function main() {
   const shot1 = await sess.shot(path.join(SHOTS, `00-workbench-${P.seed}.png`));
   check('a screenshot of the workbench itself', shot1.ok && shot1.bytes > 20000, `${shot1.bytes} B`);
 
-  /* ------------------------ 9. the committed sweep evidence survived --------- */
+  /* ---------------------------------- 9. the room list, and what it means */
+  say('');
+  say('-- 9. the room list: does naming the rooms change the building ---------');
+  {
+    // A LIST, AND THE SAME LIST REVERSED, AND A DIFFERENT ONE. Three runs,
+    // because "the control works" needs a positive, a null result and a
+    // negative. The null one is the interesting one: `planCirculation()` spends
+    // the list as a MULTISET -- entry = living, bath = a leaf off it, kitchen
+    // beside dining, bedrooms to the cells with an outside wall -- so reversing
+    // the list MUST change nothing, and the first draft of the workbench's own
+    // note claimed the opposite until this was measured.
+    const LIST = ['living', 'bedroom', 'bedroom', 'study', 'bath'];
+    const REV = LIST.slice().reverse();
+    const OTHER = ['living', 'bedroom', 'kitchen', 'bath'];
+    const RSEED = 'roomlist';
+
+    const runRoomlist = (program, arena, tag) => {
+      const r = spawnSync(process.execPath, [
+        'scripts/procgen.mjs',
+        '--w', String(P.w), '--d', String(P.d), '--items', '30', '--seed', RSEED,
+        '--program', program.join(','),
+        '--arena', arena,
+        '--report', `work/_ui_roomlist_${tag}.txt`, '--svg', `work/_ui_roomlist_${tag}.svg`,
+      ], { cwd: ROOT, encoding: 'utf8' });
+      const out = (r.stdout || '') + (r.stderr || '');
+      const okRun = r.status === 0 && /1\/1 PASS/.test(out);
+      return { ok: okRun, out,
+        level: okRun ? JSON.parse(fs.readFileSync(path.join(ROOT, arena), 'utf8')) : null };
+    };
+
+    const a = runRoomlist(LIST, 'work/_ui_roomlist_a.json', 'a');
+    check('the CLI can build an explicit room list at all',
+      a.ok, a.ok ? 'exit 0, 1/1 PASS' : `exit/output: ${String(a.out).slice(-200)}`);
+
+    if (a.ok) {
+      const refRL = buildCore(a.level, { seed: RSEED, count: 6 });
+      say(`   ${JSON.stringify(LIST)} -> ${a.level.rooms.length} rooms, `
+        + `${a.level.solids.length} solids, nav ${refRL.nav.walkableCount} cells`);
+
+      // THE PAGE, driven through the control's own API -- and with the knobs
+      // put back to what the CLI run used, because section 5 moved `w` and a
+      // comparison across two different flats would pass for the wrong reason.
+      await sess.evalAsync(`__procgen.set(${JSON.stringify({ w: P.w, d: P.d, items: 30, seed: RSEED })});
+        __procgen.setProgram(${JSON.stringify(LIST)}); return 1;`);
+      await sess.evalAsync('document.getElementById("go").click(); return 1;');
+      const stRL = await waitState((s) => s.params.program
+        && s.params.program.length === LIST.length && s.params.seed === RSEED, 60000);
+
+      check('the workbench sends the list through to the generator',
+        !!stRL && JSON.stringify(stRL.params.program) === JSON.stringify(LIST),
+        stRL ? `params.program = ${JSON.stringify(stRL.params.program)}` : 'no state');
+      check('naming the rooms changes the building the page holds',
+        !!stRL && stRL.rooms === a.level.rooms.length,
+        stRL ? `${stRL.rooms} rooms on screen / ${a.level.rooms.length} from Node` : 'no state');
+      check('and the page\'s floor is the CLI\'s floor for the same list',
+        !!stRL && stRL.walkable === refRL.nav.walkableCount
+          && stRL.solids === a.level.solids.length,
+        stRL ? `${stRL.walkable}/${refRL.nav.walkableCount} nav cells, `
+          + `${stRL.solids}/${a.level.solids.length} solids` : 'no state');
+
+      // THE CONTROL IS ON SCREEN, not merely reachable from the console.
+      const dom = await sess.evalJs(`(function () {
+        const rows = document.querySelectorAll('#program li.pr');
+        const sels = document.querySelectorAll('#program select');
+        const box = document.getElementById('program-use');
+        const note = document.getElementById('program-note');
+        const fieldInputs = document.querySelectorAll('#params .field input');
+        return { rows: rows.length, sels: sels.length, checked: !!box && box.checked,
+                 note: note ? note.textContent : '', fields: fieldInputs.length };
+      })()`);
+      check('the list is on screen: one row and one <select> per room, box ticked',
+        dom.rows === LIST.length && dom.sels === LIST.length && dom.checked === true,
+        `${dom.rows} rows, ${dom.sels} selects, custom box ${dom.checked}`);
+      check('the note describes what the control DOES, not what an ordered widget invites',
+        /规则/.test(String(dom.note)) && !/顺序/.test(String(dom.note)),
+        `"${String(dom.note).slice(0, 130)}"`);
+      check('and the room list did NOT become a numeric knob (13 + seed would become 15)',
+        dom.fields === 14, `${dom.fields} .field inputs, expected 14`);
+
+      // NEGATIVE CONTROL 1: the multiset, not the order.
+      const rev = runRoomlist(REV, 'work/_ui_roomlist_rev.json', 'rev');
+      const samePlan = rev.ok && JSON.stringify(rev.level) === JSON.stringify(a.level);
+      check('reversing the list changes NOTHING -- the generator reads a multiset',
+        samePlan, rev.ok ? (samePlan ? 'byte-identical arena' : 'DIFFER') : 'generator failed');
+
+      // NEGATIVE CONTROL 2: a different multiset must move the building.
+      const other = runRoomlist(OTHER, 'work/_ui_roomlist_other.json', 'other');
+      const differs = other.ok && JSON.stringify(other.level) !== JSON.stringify(a.level);
+      check('a DIFFERENT list DOES change the building (so the knob is not inert)',
+        differs, other.ok
+          ? `${other.level.rooms.length} rooms vs ${a.level.rooms.length}; `
+            + (differs ? 'arenas differ' : 'arenas IDENTICAL -- the list is being ignored')
+          : 'generator failed');
+    }
+  }
+
+  /* ------------------------ 10. the committed sweep evidence survived -------- */
   say('');
   say('-- 9. the committed sweep evidence still exists ------------------------');
 

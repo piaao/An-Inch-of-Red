@@ -21,7 +21,7 @@
  * merged. This file paints both and never averages them: a floor that is
  * walkable and uninhabitable must not be able to read as either one alone.
  */
-import { generateFloorplan, DEFAULTS } from './floorplan.js';
+import { generateFloorplan, DEFAULTS, PROGRAM, KNOWN_ROLES, roomProgram } from './floorplan.js';
 import { validateLayout, PRIZE_COUNT } from './pipeline.js';
 import { planSVG } from './draw.js';
 import { buildLevel } from '../arena/fromLayout.js';
@@ -45,7 +45,12 @@ const PRIMARY = [
   { name: 'w', label: '整体宽', unit: 'm', min: 5, max: 30, step: 1, hint: '户型东西向尺寸' },
   { name: 'd', label: '整体深', unit: 'm', min: 5, max: 30, step: 1, hint: '户型南北向尺寸' },
   { name: 'rooms', label: '房间数', unit: '', min: 1, max: 20, step: 1, hint: '装不下时会报 FAIL，不会静默少给' },
-  { name: 'items', label: '物品数', unit: '', min: 0, max: 400, step: 5, hint: '家具件数上限' },
+  // Not "an upper bound on the count" -- that is `roomCap`, which lives under
+  // 高级旋钮. This is the number of pieces to place, full stop, and it is spread
+  // over the rooms by usable floor. The hint says so, because a knob whose label
+  // has to be reverse-engineered is a knob that gets set wrong.
+  { name: 'items', label: '家具总数', unit: '', min: 0, max: 400, step: 5,
+    hint: '一共摆几件，按各房间可用地面分配；单个房间的上限是「单房间物品上限」' },
 ];
 
 const ADVANCED = [
@@ -59,6 +64,45 @@ const ADVANCED = [
   { name: 'roomCap', label: '单房间物品上限', unit: '', min: 1, max: 80, step: 1, hint: '防止一个房间塞满' },
   { name: 'floorTries', label: '落地采样预算', unit: '', min: 1, max: 120, step: 1, hint: '独立家具的拒绝采样次数' },
 ];
+
+/* ------------------------------------------------------------- the room list */
+
+/**
+ * `rooms` says HOW MANY rooms; this list says WHICH ONES.
+ *
+ * IT IS A MULTISET, NOT A MAP. This docblock said "entry 1 is the room the
+ * front door opens into" until the claim was measured, and it is not true:
+ * `planCirculation()` picks the entry cell from the WALLS (the most-connected
+ * cell on the front edge), marks it `living`, and then draws each role out of
+ * the list by name. The four rules are
+ *
+ *     entry          -> living
+ *     off the entry  -> bath
+ *     adjacent pair  -> kitchen + dining
+ *     leftover       -> bedrooms first, to the cells with an outside wall
+ *
+ * and everything left over is spilled into whatever cells remain. So position
+ * in this list is a TIE-BREAK among those leftovers and nothing else. Measured
+ * in work/_p3b_program.mjs: 'living' written last still ends up as the room you
+ * walk into, and a list and its reverse give the same plan.
+ *
+ * THE CONTROL IS STILL A LIST, because the multiset has to be expressible --
+ * ['bedroom','bedroom','study'] and ['bedroom','study','study'] are different
+ * buildings. But the note under it describes what it does, not what an
+ * ordered-looking widget suggests it does.
+ *
+ * THE AUTO PREVIEW IS PRINTED, NOT RE-DERIVED. With no explicit list the rows
+ * below show what `roomProgram()` returns for the current `rooms`, so this page
+ * cannot form its own opinion about what a 6-room flat contains.
+ */
+const ROLE_LABEL = {
+  living: '客厅', bedroom: '卧室', kitchen: '厨房',
+  bath: '卫生间', dining: '餐厅', study: '书房',
+};
+const roleName = (r) => ROLE_LABEL[r] || r;
+
+/** null = follow `rooms`; an array = the explicit room list. */
+let programRoles = null;
 
 const SEED_CHARS = 'abcdefghjkmnpqrstuvwxyz23456789';
 const randomSeed = () => {
@@ -118,22 +162,137 @@ function buildControls() {
   const seedInput = document.querySelector('input[name=seed]');
   seedInput.type = 'text';
   seedInput.value = DEFAULTS.seed;
+
+  // Fills the role <select> above with every role the palette knows, so the
+  // list of legal words is the generator's own list rather than a second one
+  // typed here.
+  $('program-add').innerHTML = PROGRAM.map((r) =>
+    '<option value="' + r + '">' + escapeHtml(roleName(r)) + '</option>').join('');
+
+  renderProgram();
+}
+
+/* -------------------------------------------------------------- room list */
+
+function readNumber(name, dflt) {
+  const el = document.querySelector('input[name=' + name + ']');
+  if (!el) return dflt;
+  const v = String(el.value).trim();
+  if (v === '') return dflt;
+  const n = Number(v);
+  return Number.isFinite(n) ? n : dflt;
+}
+
+/** The list the generator would build right now: explicit if set, else `rooms`. */
+function effectiveProgram() {
+  if (programRoles && programRoles.length) return programRoles.slice();
+  return roomProgram({ rooms: readNumber('rooms', DEFAULTS.rooms), program: null }).roles;
+}
+
+function renderProgram() {
+  const custom = !!(programRoles && programRoles.length);
+  const list = effectiveProgram();
+
+  $('program').innerHTML = list.map((role, i) => {
+    const ix = '<span class="ix">' + (i + 1) + '</span>';
+    if (!custom) return '<li class="pr auto">' + ix + '<span class="rl">'
+      + escapeHtml(roleName(role)) + '</span></li>';
+    // An unknown role can only arrive through the script API (`set({
+    // program: [...] })`). Showing it as a blank row would hide the generator's
+    // own "the palette does not know this word" problem; showing it as an
+    // option makes it visible and fixable.
+    const unknown = KNOWN_ROLES.has(role)
+      ? '' : '<option value="' + escapeHtml(role) + '" selected>'
+        + escapeHtml(role) + '（生成器不认识）</option>';
+    return '<li class="pr">' + ix
+      + '<select data-i="' + i + '" aria-label="第 ' + (i + 1) + ' 个房间">' + unknown
+      + PROGRAM.map((r) => '<option value="' + r + '"' + (r === role ? ' selected' : '') + '>'
+        + escapeHtml(roleName(r)) + '</option>').join('')
+      + '</select>'
+      + '<button type="button" class="mini" data-mv="' + i + '" data-dir="-1" title="上移"'
+      + (i === 0 ? ' disabled' : '') + '>↑</button>'
+      + '<button type="button" class="mini" data-mv="' + i + '" data-dir="1" title="下移"'
+      + (i === list.length - 1 ? ' disabled' : '') + '>↓</button>'
+      + '<button type="button" class="mini ghost" data-rm="' + i + '" title="删掉">✕</button>'
+      + '</li>';
+  }).join('');
+
+  $('program-use').checked = custom;
+  // THE COPY IS A CLAIM ABOUT THE GENERATOR, so it is written from the
+  // measurement in work/_p3b_program.mjs rather than from what the widget looks
+  // like. A reorderable list invites "position means position"; it does not, and
+  // a control that lies about itself is worse than no control.
+  const noLiving = custom && !list.includes('living');
+  $('program-note').textContent = !custom
+    ? '按房间数自动：' + list.length + ' 间，由生成器决定。勾选「自定义」可以自己排。'
+    : noLiving
+      ? '自定义 ' + list.length + ' 间 —— 但没有客厅。每套户型的入户门都必须开进客厅，'
+        + '缺了它生成器会当场报告「生成不出」。'
+      : '自定义 ' + list.length + ' 间。有哪几种房间、各几间，由这张清单决定；'
+        + '哪一间落在哪个位置由规则决定（入户那间一定是客厅）。';
+}
+
+function wireProgram() {
+  const kick = () => { renderProgram(); if ($('auto').checked) schedule(); };
+
+  $('program-use').addEventListener('change', () => {
+    if ($('program-use').checked) {
+      // Start from what is already drawn, so ticking the box is an edit rather
+      // than a reset to some other six rooms.
+      if (!programRoles || !programRoles.length) programRoles = effectiveProgram();
+    } else {
+      programRoles = null;
+    }
+    kick();
+  });
+
+  $('program').addEventListener('change', (e) => {
+    const sel = e.target.closest('select[data-i]');
+    if (!sel || !programRoles) return;
+    programRoles[Number(sel.dataset.i)] = sel.value;
+    kick();
+  });
+
+  $('program').addEventListener('click', (e) => {
+    if (!programRoles) return;
+    const mv = e.target.closest('button[data-mv]');
+    const rm = e.target.closest('button[data-rm]');
+    if (mv) {
+      const i = Number(mv.dataset.mv);
+      const j = i + Number(mv.dataset.dir);
+      if (j < 0 || j >= programRoles.length) return;
+      const t = programRoles[i];
+      programRoles[i] = programRoles[j];
+      programRoles[j] = t;
+      kick();
+    } else if (rm) {
+      // A flat needs at least one room; the last row's ✕ is refused rather than
+      // producing a zero-room plan that every downstream check would call a bug.
+      if (programRoles.length <= 1) return;
+      programRoles.splice(Number(rm.dataset.rm), 1);
+      kick();
+    }
+  });
+
+  $('program-add-btn').addEventListener('click', () => {
+    if (!programRoles) programRoles = effectiveProgram();
+    programRoles.push($('program-add').value);
+    kick();
+  });
+
+  $('program-auto').addEventListener('click', () => { programRoles = null; kick(); });
 }
 
 /* -------------------------------------------------------------- read form */
 
 function paramsFromForm() {
-  const read = (name, dflt) => {
-    const el = document.querySelector('input[name=' + name + ']');
-    if (!el) return dflt;
-    const v = String(el.value).trim();
-    if (v === '') return dflt;
-    const n = Number(v);
-    return Number.isFinite(n) ? n : dflt;
-  };
   const p = { w: DEFAULTS.w, d: DEFAULTS.d, rooms: DEFAULTS.rooms, items: DEFAULTS.items };
-  for (const f of PRIMARY) p[f.name] = read(f.name, DEFAULTS[f.name]);
-  for (const f of ADVANCED) p[f.name] = read(f.name, DEFAULTS[f.name]);
+  for (const f of PRIMARY) p[f.name] = readNumber(f.name, DEFAULTS[f.name]);
+  for (const f of ADVANCED) p[f.name] = readNumber(f.name, DEFAULTS[f.name]);
+  // THE ONE PARAMETER THAT IS NOT A NUMBER, and it must not go through the
+  // number reader: `Number(["living"])` is NaN, the NaN would fall back to the
+  // default, and the control would be wired, look right and do nothing.
+  p.program = programRoles && programRoles.length ? programRoles.slice() : null;
   const seedEl = document.querySelector('input[name=seed]');
   p.seed = (seedEl && String(seedEl.value).trim()) || DEFAULTS.seed;
   return p;
@@ -230,9 +389,20 @@ function paint() {
 
   /* readings */
   const r = gen.report;
+  // WITH A ROOM LIST THE ASK IS THE LIST, not the `rooms` box -- `roomProgram()`
+  // says the list wins, so the strip has to ask the generator's question or a
+  // six-room flat built from a list would be reported as three missing rooms.
+  const wantRooms = params.program && params.program.length
+    ? params.program.length : params.rooms;
+  const it = r.items;
   const readings = [
-    ['房间', r.rooms + ' / 要求 ' + params.rooms, r.rooms === params.rooms ? 'ok' : 'bad'],
-    ['家具', r.items.placed + ' / ' + r.items.wanted, r.items.placed > 0 ? 'ok' : 'bad'],
+    ['房间', r.rooms + ' / 要求 ' + wantRooms, r.rooms === wantRooms ? 'ok' : 'bad'],
+    // `placed / wanted` is always the ASK. When the ask is past what the flat
+    // can hold, the ceiling rides along on the same chip, so a shortfall cannot
+    // be on screen without its reason also being on screen.
+    ['家具', it.placed + ' / ' + it.wanted
+      + (it.wanted > it.ceiling ? '（上限 ' + it.ceiling + '）' : ''),
+      it.placed > 0 ? 'ok' : 'bad'],
     ['可攀爬台面', String(r.climbTops), ''],
     ['空余地面', (r.freeFraction * 100).toFixed(0) + '%', ''],
     ['门', String(r.doors.total), ''],
@@ -252,7 +422,10 @@ function paint() {
     const scale = planScale(plan);
     $('plan').innerHTML = planSVG({
       level: v.level, placement: v.placement, checks: v.checks,
-      label: params.w + '×' + params.d + ' m · ' + params.rooms + ' 房 · ' + params.items + ' 件',
+      // The caption describes the DRAWING, so it prints what was built rather
+      // than what was asked for -- `params.items` is an ask, and an ask printed
+      // under a picture reads as a result.
+      label: params.w + '×' + params.d + ' m · ' + r.rooms + ' 房 · ' + r.items.placed + ' 件',
       sub: 'seed ' + params.seed + ' · ' + r.items.placed + ' 件家具落位 · '
         + r.climbTops + ' 个可攀爬台面 · 空余 ' + (r.freeFraction * 100).toFixed(0) + '%',
     }, { scale, showLabels: true });
@@ -351,8 +524,14 @@ function wire() {
       document.querySelector('input[name=' + f.name + ']').value = String(DEFAULTS[f.name]);
     }
     document.querySelector('input[name=seed]').value = DEFAULTS.seed;
+    // The room list is a parameter too. A 恢复默认 that leaves one knob where it
+    // was is a 恢复默认 that lies.
+    programRoles = null;
+    renderProgram();
     generate();
   });
+
+  wireProgram();
 }
 
 let timer = 0;
@@ -412,9 +591,25 @@ function expose() {
       : null),
     set: (obj) => {
       for (const [k, val] of Object.entries(obj)) {
+        // The room list is the one parameter that is not a string in a box, so
+        // it is the one parameter that needs its own door in.
+        if (k === 'program') {
+          programRoles = Array.isArray(val) && val.length ? val.slice() : null;
+          continue;
+        }
         const el = document.querySelector('input[name=' + k + ']');
         if (el) el.value = String(val);
       }
+      renderProgram();          // the auto preview follows `rooms`
+      return paramsFromForm();
+    },
+    // The room list gets its own handles: the acceptance run cannot drive it
+    // with a string, and a control the harness cannot reach is a control nobody
+    // proves works.
+    program: () => (programRoles ? programRoles.slice() : null),
+    setProgram: (list) => {
+      programRoles = Array.isArray(list) && list.length ? list.slice() : null;
+      renderProgram();
       return paramsFromForm();
     },
     generate,

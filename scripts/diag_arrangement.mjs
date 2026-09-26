@@ -67,7 +67,13 @@ const OPT = { sizes, surfaces, passages };
 const designed = auditArrangement(
   shipLayout, toResolvedLevel(shipLayout, { ...OPT, tag: 'js/layout.js' }), { sizes });
 
-const N = Number(process.argv[2] || 12);
+// THE COUNT IS THE FIRST NUMBER ON THE COMMAND LINE, NOT argv[2].
+//
+// `Number(process.argv[2] || 12)` reads `--quiet` as NaN when the flag comes
+// first, so `node scripts/diag_arrangement.mjs --quiet` audited ZERO layouts
+// -- and printed a verdict about them. Found while trying to make the P3 ask
+// gate go red: the run said "0/0 checks green" and "over-placed 0 PASS".
+const N = Number(process.argv.slice(2).find((a) => /^\d+$/.test(a)) || 12);
 const quiet = process.argv.includes('--quiet') || process.argv.includes('-q');
 const base = { w: 10, d: 8, rooms: 6, items: 60 };
 const gens = [];
@@ -75,7 +81,11 @@ for (let i = 0; i < N; i++) {
   const p = { ...base, seed: `procgen-${i + 1}` };
   try {
     const gen = generateFloorplan(p, { sizes });
-    gens.push({ tag: p.seed, a: auditArrangement(gen.layout, toResolvedLevel(gen.layout, { ...OPT, tag: p.seed }), { sizes }) });
+    // `gen` rides along as well as the audit: the ask gate below reads the
+    // generator's OWN report (asked / ceiling / placed), and re-deriving those
+    // from the layout would be a second implementation of the thing being
+    // checked.
+    gens.push({ tag: p.seed, gen, a: auditArrangement(gen.layout, toResolvedLevel(gen.layout, { ...OPT, tag: p.seed }), { sizes }) });
   } catch (err) {
     gens.push({ tag: p.seed, crash: String((err && err.message) || err) });
   }
@@ -84,6 +94,69 @@ for (let i = 0; i < N; i++) {
 const ok = gens.filter((g) => !g.crash && g.a && g.a.ready);
 const share = (n, d) => `${d ? Math.round((n / d) * 100) : 0}%`;
 const avg = (f) => (ok.length ? ok.reduce((s, g) => s + f(g.a), 0) / ok.length : 0);
+
+/* `items` is a promise, and this is the evidence for it. Collected here
+   because the verdict below prints even under --quiet: a gate that only
+   reports in verbose mode is a gate that gets forgotten. */
+const ask = ok.map((g) => {
+  const it = g.gen.report.items;
+  const trace = g.gen.report.trace || [];
+  return {
+    tag: g.tag,
+    asked: it.wanted, placed: it.placed, ceiling: it.ceiling, target: it.target,
+    short: it.placed < it.wanted,
+    explained: trace.some((t) => t.includes('items asked for')),
+    blamesCap: trace.some((t) => t.includes('roomCap')),
+  };
+});
+
+/*
+ * THE SMALL-ASK SWEEP, and it is not decoration.
+ *
+ * On the grid above `items` is 60 and no layout has ever over-placed, so an
+ * "over-placed == 0" bound computed from that grid alone COULD NEVER FIRE. The
+ * asks that did break it are the tiny ones -- before P3, `--items 6` on a
+ * 10x8 m / 6-room flat placed NINE, because the budget was tested once per
+ * wish-list entry while one call to a placer can commit several items. Those
+ * asks are not in the base grid, so they are measured here.
+ *
+ * Kept OUT of `gens`, deliberately: these are 2..13-item flats, and feeding them
+ * to the composition audit would drag the pieces-per-group average down with
+ * layouts that are supposed to be nearly empty.
+ */
+const SMALL_ASKS = [0, 1, 2, 5, 6, 11, 12, 13];
+const smallAsk = [];
+for (const items of SMALL_ASKS) {
+  for (let i = 0; i < 4; i++) {
+    const seed = `ask-${items}-${i + 1}`;
+    try {
+      const g = generateFloorplan({ ...base, items, seed }, { sizes });
+      const it = g.report.items;
+      const trace = g.report.trace || [];
+      smallAsk.push({
+        tag: seed, items,
+        asked: it.wanted, placed: it.placed, ceiling: it.ceiling, target: it.target,
+        short: it.placed < it.wanted,
+        explained: trace.some((t) => t.includes('items asked for')),
+        blamesCap: trace.some((t) => t.includes('roomCap')),
+        crash: null,
+      });
+    } catch (err) {
+      smallAsk.push({ tag: seed, items, crash: String((err && err.message) || err) });
+    }
+  }
+}
+const smallCrash = smallAsk.filter((a) => a.crash);
+
+/* Every reading the gate is allowed to look at, from both samples. */
+const askAll = ask.concat(smallAsk.filter((a) => !a.crash));
+
+/* Declared HERE, not down in the gate section, because the verbose block above
+   the gate prints them: as `const`s below that block they were in the temporal
+   dead zone, and only the un-quieted run threw. */
+const smallOver = smallAsk.filter((a) => !a.crash && a.placed > a.asked).length;
+const smallWorst = smallAsk.filter((a) => !a.crash)
+  .sort((a, b) => (b.placed - b.asked) - (a.placed - a.asked))[0];
 const dRead = designed.readings;
 const row = (label, a, b) => `  ${label.padEnd(34)} ${String(a).padEnd(22)} ${b}`;
 const check = (a, id) => a.checks.find((c) => c.id === id);
@@ -164,6 +237,27 @@ if (!quiet) {
       + ` hops ${r.maxDepth}  bath ${JSON.stringify(r.bathDoors)}  `
       + `pieces/group ${r.totals.piecesPerGroup.toFixed(2)}  lone ${r.totals.loneShare.toFixed(2)}  floor ${r.totals.floating}`);
   }
+
+  /* ------------------------------------------------------------- the ask */
+  console.log('');
+  console.log('9. THE ASK  (does `items` mean what it says)');
+  // Three different things, so three columns with words over them. And the
+  // ceiling is printed defensively: running this against a generator older than
+  // P3 gives `60undefined`, which is how the red-test demonstration looked the
+  // first time.
+  const cel = (a) => String(a.ceiling == null ? '?' : a.ceiling).padStart(9);
+  console.log(`  ${''.padEnd(16)}  asked  ceiling   placed`);
+  for (const a of ask) {
+    console.log(`  ${a.tag.padEnd(16)}${String(a.asked).padStart(6)}${cel(a)}`
+      + String(a.placed).padStart(8)
+      + (a.placed > a.asked ? '   OVER-PLACED'
+        : a.short ? `   short ${a.asked - a.placed}${a.asked > a.ceiling ? ' (ask past the ceiling)' : ''}`
+          : '   exact'));
+  }
+  console.log(`  small asks ${JSON.stringify(SMALL_ASKS)} x4 seeds:`
+    + ` ${smallAsk.length - smallCrash.length} layouts, ${smallOver} over-placed,`
+    + ` worst ask ${smallWorst ? `${smallWorst.asked} -> ${smallWorst.placed}` : 'n/a'}`);
+  for (const a of smallCrash) console.log(`  ${a.tag.padEnd(16)} CRASH ${a.crash}`);
 }
 
 /* ------------------------------------------------- P2: the composition gate */
@@ -208,6 +302,55 @@ const compGate = [
 ];
 const compBad = compGate.filter((g) => !g[2]);
 
+/* ----------------------------------------------------------- P3: the ask gate */
+
+/*
+ * THE ONE PROMISE `items` MAKES, GATED HERE.
+ *
+ * `items` says "place this many pieces of furniture". Measured on this very
+ * grid before P3, that sentence was false in two directions at once:
+ *
+ *   * MORE than asked. `--items 6` on a 10x8 m / 6-room flat placed NINE: the
+ *     budget was tested once per wish-list entry, and one call to a placer can
+ *     commit several items (`tryRing` lays two or three, `tryCounter` a run).
+ *   * a shortfall with the WRONG REASON attached. Every shortfall read "the
+ *     envelope ran out of legal floor", and on the twelve-room preset asking
+ *     220 items that was false -- `roomCap` stopped it, with 100 items of
+ *     headroom sitting unused in the other eleven rooms.
+ *
+ * So: `placed <= asked` is absolute, on every layout. `placed == asked` is
+ * NOT -- the envelope is allowed to run out. What is not allowed is a
+ * shortfall that does not say why, or that blames the walls when the knob it
+ * should be blaming is `roomCap`.
+ *
+ * AND THE BOUND IS CHECKED EVEN WHEN THE NUMBER IS ZERO. "0 layouts
+ * over-placed" is the reading that must hold as much as "12/12 arranged" -- a
+ * bound that only exists when it is already violated is not a bound.
+ */
+const over = askAll.filter((a) => a.placed > a.asked);
+const silent = askAll.filter((a) => a.short && !a.explained);
+const misnamed = askAll.filter((a) => a.short && a.asked > a.ceiling && !a.blamesCap);
+const askGate = [
+  // FIRST, BECAUSE A GATE THAT MEASURED NOTHING MUST NOT PASS. Every bound
+  // below counts violations, and zero violations out of zero layouts is a
+  // perfect score for a run that did nothing. This line is what makes the
+  // other three mean something.
+  ['the gate measured some layouts at all',
+    `${askAll.length} (${ask.length} base + ${smallAsk.length - smallCrash.length} small)`,
+    askAll.length > ask.length && ask.length > 0, `> ${ask.length}`],
+  ['no generator threw on a tiny ask',
+    `${smallCrash.length}`, smallCrash.length === 0, '0'],
+  [`never place more than was asked for (tiny asks ${SMALL_ASKS} included)`,
+    `${over.length} of ${askAll.length}`, over.length === 0, '0'],
+  ['every shortfall carries a trace line saying so',
+    `${silent.length} of ${askAll.length} unexplained`, silent.length === 0, '0'],
+  ['a shortfall past rooms x roomCap blames roomCap, not the walls',
+    String(misnamed.length), misnamed.length === 0, '0'],
+];
+const askBad = askGate.filter((g) => !g[2]);
+const askAsked = askAll.reduce((s, a) => s + a.asked, 0);
+const askPlaced = askAll.reduce((s, a) => s + a.placed, 0);
+
 /* ------------------------------------------------------------- the verdict */
 
 const allGreen = ok.filter((g) => g.a.checks.every((c) => c.pass)).length;
@@ -228,10 +371,16 @@ console.log(`composition  pieces/group ${comp.pieces.toFixed(2)} (worst seed ${c
   + `   lone ${comp.lone.toFixed(3)} (worst seed ${comp.worstLone.toFixed(3)})`
   + `   open floor ${comp.mostFloor} max   ${compBad.length ? 'FAIL' : 'PASS'}`);
 for (const [label, got, , want] of compBad) console.log(`   FAIL  ${label}: ${got}, wants ${want}`);
+console.log(`the ask      placed ${askPlaced}/${askAsked} (${askAsked ? Math.round(askPlaced / askAsked * 100) : 0}%)`
+  + `   over-placed ${over.length}   unexplained ${silent.length}   mis-attributed ${misnamed.length}`
+  + `   ${askBad.length ? 'FAIL' : 'PASS'}`);
+for (const [label, got, , want] of askBad) console.log(`   FAIL  ${label}: ${got}, wants ${want}`);
 console.log('='.repeat(96));
 console.log('');
 
 // A ruler that cannot pass the reference is not evidence about anything else,
-// and a composition promise the generator misses is a second, separate failure
-// -- two exit codes, because they are two different things to go and fix.
-process.exit(dFails ? 2 : compBad.length ? 3 : 0);
+// a composition promise the generator misses is a second failure, and an
+// `items` promise it misses is a third -- three exit codes, because they are
+// three different things to go and fix, and a single code would let the
+// newest gate hide behind the oldest failure.
+process.exit(dFails ? 2 : compBad.length ? 3 : askBad.length ? 4 : 0);

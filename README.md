@@ -139,7 +139,7 @@ verify_world.mjs    25/25 PASS      三栋楼三个平面：包围盒 == 平面 
 verify_name.py      25/25 PASS      代号 寻红 6/6 处点名命中，仓库门面带着名字
 smoke_serve.py      SMOKE PASS      22 个资源（= smoke_serve.py 里 CHECKS 的行数）
                                     MIME 与字节数全部与磁盘一致，缺失文件 404
-verify_arrangement.mjs 22/22 PASS   第二条判决轴：尺子对参照物 6/6、六个问题各自都有一枚
+verify_arrangement.mjs 28/28 PASS   第二条判决轴：尺子对参照物 6/6、六个问题各自都有一枚
                                     反例能把它判红、八枚反例没一枚动得了可玩性、
                                     审计路与管线路 12/12 逐位一致、规划器自称的结构与
                                     尺子实测逐项相符（不需要浏览器，本机可跑）

@@ -1099,6 +1099,20 @@ function placeRoom(role, U, lanes, p, rng, sizeOfBound, quota, state) {
    * keeps a free-standing search over 2300 positions affordable.
    */
   const whyBad = (cand) => {
+    // THE BUDGET, ASKED FIRST BECAUSE IT IS FREE AND IT IS FINAL.
+    //
+    // `tooMany()` guards each wish-list entry and each filler iteration --
+    // one check per item -- but a placer can commit SEVERAL items in a single
+    // call: `tryRing` lays two or three around its host, `trySurface` lands a
+    // companion on one, `tryCounter` builds a whole run. So the piece that
+    // took the count to the limit could be followed by three more. Measured
+    // before this line: `--items 6` on a 10x8 m / 6-room flat placed NINE.
+    //
+    // Refusing here rather than inside `commit` also keeps the refusal
+    // HONEST: every blocking placer asks `whyBad` before it calls `take`, so
+    // the reason lands in `rejected.budget` by name, and no reservation is
+    // left behind by a placement that never happened.
+    if (state.remaining() <= 0) return 'budget';
     if (!insideBox(cand.box, U, 1e-6)) return 'outside';
     for (const q of lanes) if (overlapXZ(cand.box, q, p.gap)) return 'lane';
     for (const o of placed) {
@@ -1141,6 +1155,15 @@ function placeRoom(role, U, lanes, p, rng, sizeOfBound, quota, state) {
   };
 
   const commit = (cand, kind, host) => {
+    // THE LAST DOOR, and it is here because `whyBad` is not the only way in:
+    // the `ceiling` branch of the wish-list builds its candidate and commits
+    // it directly, with no legality test and no reservation. This line makes
+    // "never more than was asked for" a property of the module rather than a
+    // property of nine call sites -- and the refusal can return null without
+    // leaking anything, because the only paths that reach here without `take`
+    // are the ones that never reserved in the first place (`take` returns
+    // true early, without marking, for anything that does not block).
+    if (state.remaining() <= 0) { rejected.budget += 1; return null; }
     const it = {
       m: cand.m, x: +cand.x.toFixed(4), z: +cand.z.toFixed(4), r: +cand.r.toFixed(2),
       y: +cand.y.toFixed(4), s: cand.s, size: cand.size,
@@ -1519,7 +1542,9 @@ function placeRoom(role, U, lanes, p, rng, sizeOfBound, quota, state) {
       const why = whyBad(cand);
       if (why) { rejected[why] += 1; cursor = centre + half; continue; }
       if (!take(cand)) { rejected.sealed += 1; break; }
-      laid.push(commit(cand, 'counter', null));
+      const it = commit(cand, 'counter', null);
+      if (!it) break;              // the global budget ran out mid-run
+      laid.push(it);
       cursor = centre + half;
     }
     if (!laid.length) return null;
@@ -1702,6 +1727,73 @@ function makeZones(rooms, roles, seeds) {
   });
 }
 
+/**
+ * Spread `target` items over the rooms by usable floor area, with no room
+ * over `cap` -- and sum to exactly `target` whenever the geometry allows.
+ *
+ * THE ASK IS THE ASK. `items` used to be distributed as
+ * `Math.max(2, Math.round(share))` followed by a top-up loop that only ever
+ * ADDED. Three measured consequences, all in `rejected.budget`'s blind spot:
+ *
+ *   * the quotas summed to MORE than the ask -- 61 for 60 on the default
+ *     10x8 m / 6-room flat, because `round` rounds up and nothing took the
+ *     surplus back;
+ *   * a small ask was silently inflated before it started: every room got
+ *     at least 2, so `--items 6` began from a budget of 12;
+ *   * `cap` was applied to the FLAT rather than to a room. On the twelve-
+ *     room preset one room's proportional share came to 56 against a cap of
+ *     26, so the cap swallowed 30 items while the other eleven rooms sat 8
+ *     to 15 below their own ceilings -- 100 items of headroom, unused, and
+ *     nothing said so.
+ *
+ * Overflow is pushed to the rooms that still have headroom instead, which is
+ * what makes `cap` mean "this one room may not hold more than N" rather than
+ * "this flat may not hold more than rooms x N".
+ *
+ * @returns {number[]} one quota per room, summing to min(target, sum of
+ *          headroom), and to less only when every room is at its cap.
+ */
+function allocateQuotas(areas, target, cap) {
+  const out = areas.map(() => 0);
+  let left = Math.max(0, Math.floor(target));
+  let open = areas.map((a, i) => i).filter((i) => areas[i] > 0);
+
+  // BOUNDED, and the bound is not a mood: every pass either fills a room to
+  // its cap (removing it from `open`) or moves at least one item, so the
+  // loop cannot spin. The `!moved` branch below is the tie-break that makes
+  // a SMALL ask exact -- with 6 items over 6 rooms every proportional share
+  // floors to zero, and without it the flat would quietly come up short.
+  for (let guard = 0; guard < areas.length + 2 && left > 0 && open.length; guard++) {
+    const denom = open.reduce((a, i) => a + areas[i], 0) || open.length;
+    let moved = 0;
+    const stillOpen = [];
+    for (const i of open) {
+      const want = Math.floor((left * areas[i]) / denom);
+      const take = Math.min(want, cap - out[i]);
+      if (take <= 0) { stillOpen.push(i); continue; }
+      out[i] += take;
+      moved += take;
+      if (out[i] < cap) stillOpen.push(i);
+    }
+    left -= moved;
+    open = stillOpen;
+    if (!moved) {
+      // Every share rounded to nothing. Hand the last few items to the
+      // largest rooms, one each. This is the ONLY place a room receives
+      // without a proportional claim, and it is why the small asks add up.
+      const byArea = open.slice().sort((x, y) => areas[y] - areas[x]);
+      for (const i of byArea) {
+        if (left <= 0) break;
+        if (out[i] >= cap) continue;
+        out[i] += 1;
+        left -= 1;
+      }
+      break;
+    }
+  }
+  return out;
+}
+
 /* ================================================================ the entry */
 
 /**
@@ -1738,6 +1830,18 @@ export function generateFloorplan(params = {}, ctx = {}) {
   if (unknown.length) {
     problems.push(`the room list names ${unknown.length} role(s) the palette does not know: `
       + `${unknown.join(', ')} -- those rooms will be furnished as bedrooms`);
+  }
+  // THE FRONT DOOR NEEDS SOMEWHERE TO OPEN, and that is a precondition, not a
+  // band-search failure. `planCirculation` marks the entry cell `living` and
+  // then draws 'living' out of this list; a list that never named one makes all
+  // ${BAND_TRIES} plans return null for a reason that has nothing to do with
+  // bands, and the reader is told "no band plan kept the front door in a
+  // most-connected room ... in ${BAND_TRIES} attempts" -- a true sentence about
+  // the wrong cause. Measured in work/_p3b_program.mjs section D: the message
+  // named bands and the fault was the list. Named here instead.
+  if (!programList.includes('living')) {
+    problems.push(`the room list has no living room: every plan puts the front door in one, `
+      + `so not one of the ${programList.length} room(s) asked for can be built`);
   }
   const n = programList.length;
   p.rooms = n;
@@ -1797,12 +1901,17 @@ export function generateFloorplan(params = {}, ctx = {}) {
     .filter(Boolean));
 
   const areaOf = usable.map((U) => Math.max(0, (U.x1 - U.x0) * (U.z1 - U.z0)));
-  const totalArea = areaOf.reduce((a, b) => a + b, 0) || 1;
-  const quota = areaOf.map((a) => Math.max(2, Math.round((a / totalArea) * p.items)));
-  // Largest-remainder top-up so the quotas sum to what was asked for.
-  let left = p.items - quota.reduce((a, b) => a + b, 0);
-  const byArea = areaOf.map((a, i) => ({ i, a })).sort((x, y) => y.a - x.a);
-  for (let n = 0; left > 0 && n < byArea.length * 4; n++, left--) quota[byArea[n % byArea.length].i] += 1;
+  // THE CEILING IS A FACT ABOUT THE FLAT, NOT A FAILURE MODE.
+  //
+  // One room may never hold more than `roomCap`, so `rooms x roomCap` is the
+  // most this envelope can ever hold. Past it `items` is inert -- which is
+  // physics, not a bug -- but a knob that goes dead without saying so is how
+  // `--items 400` came to look like it was doing something. The ceiling is
+  // therefore computed here, carried in the report, and named in the trace
+  // when it is what stopped the placement.
+  const ceiling = rects.length * p.roomCap;
+  const target = Math.min(p.items, ceiling);
+  const quota = allocateQuotas(areaOf, target, p.roomCap);
 
   const state = { placed: 0, models: {}, remaining: () => Math.max(0, p.items - state.placed) };
 
@@ -1830,8 +1939,15 @@ export function generateFloorplan(params = {}, ctx = {}) {
   }
 
   const totalItems = roomsOut.reduce((a, r) => a + r.items.length, 0);
-  if (totalItems < p.items * 0.8) {
-    trace.push(`placed ${totalItems} of the ${p.items} items asked for: the envelope ran out of legal floor`);
+  if (totalItems < p.items) {
+    // NAME THE CEILING THAT BIT. This note used to read "the envelope ran out
+    // of legal floor" for every shortfall, and on the twelve-room preset
+    // asking 220 items that was simply false: `roomCap` stopped it, and the
+    // message sent the reader to look at the walls instead of at the knob.
+    const why = p.items > ceiling
+      ? `one room may not hold more than roomCap ${p.roomCap}, so ${rects.length} rooms hold at most ${ceiling}`
+      : 'the envelope ran out of legal floor';
+    trace.push(`placed ${totalItems} of the ${p.items} items asked for: ${why}`);
   }
 
   /* 5. emit */
@@ -1871,7 +1987,14 @@ export function generateFloorplan(params = {}, ctx = {}) {
       },
       walls: { runs: walls.length, segments: walls.reduce((a, w) => a + Math.round(w.to - w.from), 0) },
       items: {
+        // `wanted` stays the ASK -- the knob's own number -- so that
+        // `placed / wanted` in the console, in the committed log and in the
+        // workbench is always a true statement about delivery. `ceiling` and
+        // `target` ride along so a shortfall can be ATTRIBUTED rather than
+        // blamed on the walls: see allocateQuotas().
         wanted: p.items,
+        ceiling,
+        target,
         placed: totalItems,
         byRole: stats.byRole,
         perRoom: roomsOut.map((r) => ({ id: r.id, role: r.role, got: r.items.length, quota: r.quota })),
