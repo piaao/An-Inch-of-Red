@@ -14,6 +14,12 @@
  * RANGE; the VALUE comes from `DEFAULTS`, so a knob that changes its default in
  * the generator changes here too, and a knob that is added there shows up here
  * as soon as it is named.
+ *
+ * TWO VERDICTS ON SCREEN, in two strips, with two sets of words.
+ * `validateLayout` returns playability (`checks`) and arrangement
+ * (`arrangement`) as separate axes -- see `pipeline.js` for why they are not
+ * merged. This file paints both and never averages them: a floor that is
+ * walkable and uninhabitable must not be able to read as either one alone.
  */
 import { generateFloorplan, DEFAULTS } from './floorplan.js';
 import { validateLayout, PRIZE_COUNT } from './pipeline.js';
@@ -162,6 +168,7 @@ async function generate() {
       v = {
         level: null, nav: null, placement: { prizes: [], report: {} }, detail: {},
         checks: [{ id: 'harness', label: '管线抛出异常', pass: false, detail: String(err && err.message || err) }],
+        arrangement: null,
         genReport: gen.report,
       };
     }
@@ -193,6 +200,33 @@ function paint() {
   banner.textContent = fails.length
     ? fails.length + ' 项未通过 / ' + v.checks.length + ' 项'
     : '全部 ' + v.checks.length + ' 项通过';
+
+  /* the SECOND verdict: is it a place, not merely a maze ------------------ */
+  const arr = v.arrangement;
+  const arrFails = arr ? arr.checks.filter((c) => !c.pass) : [];
+  const arrNa = arr ? arr.checks.filter((c) => c.applicable === false).length : 0;
+  const aban = $('verdict-arr');
+  if (aban) {
+    aban.dataset.state = arr && !arrFails.length ? 'pass' : 'fail';
+    aban.textContent = !arr
+      ? '布置未评估'
+      : (arrFails.length
+        ? '布置 ' + arrFails.length + ' 项未过 / ' + arr.checks.length + ' 项'
+        : '布置 ' + arr.checks.length + ' 项全过' + (arrNa ? '（' + arrNa + ' 项不适用）' : ''));
+  }
+  const ahead = $('arrhead');
+  if (ahead) {
+    // The composition numbers ride along in the heading because they are what
+    // the next stage of this work is measured against, and a number nobody can
+    // see is a number nobody maintains.
+    const t = arr ? arr.readings.totals : null;
+    const meta = arr && t
+      ? '（' + arr.checks.length + ' 项 · 件/组 ' + t.piecesPerGroup.toFixed(2)
+        + ' · 孤立件 ' + Math.round(t.loneShare * 100) + '%'
+        + ' · 空地飘件 ' + t.floating + '）'
+      : '';
+    ahead.innerHTML = '布置合理性 <span class="n">' + meta + '</span>';
+  }
 
   /* readings */
   const r = gen.report;
@@ -239,6 +273,17 @@ function paint() {
     ? '<li class="chk" data-state="bad"><span class="mk">!</span><span class="tx"><b>生成器自述</b><em>'
       + escapeHtml(genProblems.join(' | ')) + '</em></span></li>'
     : '');
+
+  const arrList = $('arrchecks');
+  if (arrList) {
+    arrList.innerHTML = arr ? arr.checks.map((c) => {
+      const state = c.applicable === false ? 'na' : c.pass ? 'ok' : 'bad';
+      return '<li class="chk" data-state="' + state + '"><span class="mk">'
+        + (state === 'na' ? '–' : c.pass ? '✓' : '✗') + '</span><span class="tx"><b>'
+        + escapeHtml(c.label) + '</b><em>' + escapeHtml(c.detail) + '</em></span></li>';
+    }).join('') : '<li class="chk" data-state="bad"><span class="mk">!</span>'
+      + '<span class="tx"><b>无法评估布置</b><em>管线在建立关卡之前就失败了</em></span></li>';
+  }
 
   /* the rejection tally, so "why did it say no" is visible */
   const rej = r.rejected || {};
@@ -339,6 +384,16 @@ function expose() {
       params: last.params,
       checks: last.v.checks.map((c) => ({ id: c.id, pass: c.pass })),
       fails: last.v.checks.filter((c) => !c.pass).length,
+      // The second axis, exposed as its own field so the acceptance run can
+      // assert on it WITHOUT the two axes ever being conflated in one count.
+      arrangement: last.v.arrangement ? {
+        ready: last.v.arrangement.ready,
+        checks: last.v.arrangement.checks.map((c) => ({
+          id: c.id, pass: c.pass, applicable: c.applicable !== false,
+        })),
+        fails: last.v.arrangement.checks.filter((c) => !c.pass).length,
+        readings: last.v.arrangement.readings,
+      } : null,
       rooms: last.v.level ? last.v.level.rooms.length : 0,
       plan: last.v.level ? last.v.level.meta.plan : null,
       solids: last.v.level ? last.v.level.solids.length : 0,

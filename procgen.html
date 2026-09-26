@@ -53,7 +53,7 @@
 
   <!-- ------------------------------------------------------------- preview -->
   <section id="stage">
-    <div id="verdict" data-state="pass">—</div>
+    <div id="verdict" data-state="pass">—</div><div id="verdict-arr" data-state="pass">—</div>
     <div id="readings"></div>
 
     <figure id="planwrap">
@@ -70,6 +70,13 @@
     </figure>
 
     <ul id="checks"></ul>
+
+    <!-- The SECOND verdict, and a separate strip on purpose. "Can you walk it"
+         and "would a person live here" are two questions, and a floor can pass
+         every playability check while opening its front door into a bathroom.
+         See game/procgen/arrangement.js for the six questions and their bounds. -->
+    <h2 id="arrhead">布置合理性 <span class="n"></span></h2>
+    <ul id="arrchecks"></ul>
 
     <details class="log">
       <summary>生成器自述与拒绝原因</summary>

@@ -230,7 +230,8 @@ button:disabled { opacity: .42; cursor: not-allowed; }
 
 #stage { min-width: 0; }
 
-#verdict {
+#verdict,
+#verdict-arr {
   display: inline-block;
   font: 700 13.5px var(--font);
   letter-spacing: .04em;
@@ -238,12 +239,15 @@ button:disabled { opacity: .42; cursor: not-allowed; }
   border-radius: 999px;
   margin-bottom: 14px;
 }
-#verdict[data-state="pass"] {
+#verdict-arr { margin-left: 8px; }
+#verdict[data-state="pass"],
+#verdict-arr[data-state="pass"] {
   color: var(--green);
   background: rgba(127, 201, 138, .12);
   border: 1px solid rgba(127, 201, 138, .4);
 }
-#verdict[data-state="fail"] {
+#verdict[data-state="fail"],
+#verdict-arr[data-state="fail"] {
   color: #ff8a9b;
   background: rgba(200, 16, 46, .14);
   border: 1px solid rgba(200, 16, 46, .5);
@@ -312,7 +316,21 @@ button:disabled { opacity: .42; cursor: not-allowed; }
 
 /* --------------------------------------------------------------- checks */
 
-#checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 7px; }
+#checks, #arrchecks { list-style: none; margin: 0; padding: 0; display: grid; gap: 7px; }
+#arrhead {
+  margin: 22px 0 9px;
+  font: 600 12px var(--font);
+  letter-spacing: .06em;
+  color: var(--ink-faint);
+}
+#arrhead::before {
+  content: '';
+  display: inline-block;
+  width: 14px; height: 2px;
+  margin: 0 8px 3px 0;
+  background: var(--red);
+}
+#arrhead .n { font-weight: 400; }
 .chk {
   display: grid;
   grid-template-columns: 22px 1fr;

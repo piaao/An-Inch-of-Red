@@ -11,6 +11,13 @@ PASS  10x8  6 rooms  60 items
    [ok] A* spawn -> every room centre
    [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 25 anchors scored, rooms used 3/6
    [ok] the outer wall stops the walker (no standable cell in the edge strip)  -- 0/72 sampled edge points standable
+   arrangement (a separate axis) 1/6
+   [XX] entry-public  the front door opens into a shared room, not a bedroom or a bath  -- entered into bedroom (bedroom)
+   [ok] entry-hub  the room you enter is a most-connected room (a hall, not a dead end)  -- entry "bedroom" is a way through to 2 room(s); the busiest room(s) reach 2 (bedroom/kitchen/living/bath)
+   [XX] door-hops  every room is within 3 doorways of the front door  -- furthest room is 4 hop(s) away
+   [XX] bath  the bathroom is one private room, reached without crossing a bedroom  -- bath: 2 door(s) from kitchen+study; reachable from the entry without passing a bedroom: yes
+   [XX] kitchen-dining  the kitchen opens onto the dining room  -- kitchen kitchen->[living,bath]
+   [XX] bedroom-window  every bedroom with an outside wall has a window  -- 1 of 1 bedroom(s) have an outside wall; 1 without a window: bedroom
    .. front door on the south wall at x 8..9
 
 PASS  8x6   4 rooms  40 items
@@ -26,6 +33,13 @@ PASS  8x6   4 rooms  40 items
    [ok] A* spawn -> every room centre
    [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 21 anchors scored, rooms used 3/4
    [ok] the outer wall stops the walker (no standable cell in the edge strip)  -- 0/56 sampled edge points standable
+   arrangement (a separate axis) 3/6, 1 n/a
+   [XX] entry-public  the front door opens into a shared room, not a bedroom or a bath  -- entered into bedroom (bedroom)
+   [XX] entry-hub  the room you enter is a most-connected room (a hall, not a dead end)  -- entry "bedroom" is a way through to 1 room(s); the busiest room(s) reach 2 (bath/living)
+   [ok] door-hops  every room is within 3 doorways of the front door  -- furthest room is 3 hop(s) away
+   [XX] bath  the bathroom is one private room, reached without crossing a bedroom  -- bath: 2 door(s) from bedroom+living; reachable from the entry without passing a bedroom: yes
+   [ok] kitchen-dining  the kitchen opens onto the dining room  -- not applicable  -- not applicable: no dining room in this plan
+   [ok] bedroom-window  every bedroom with an outside wall has a window  -- 1 of 1 bedroom(s) have an outside wall; all of them have one
    .. front door on the south wall at x 3..4
    .. living: seed moved off the room centre (furniture covers it)
 
@@ -42,6 +56,13 @@ PASS  12x9  7 rooms  95 items
    [ok] A* spawn -> every room centre
    [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 45 anchors scored, rooms used 3/7
    [ok] the outer wall stops the walker (no standable cell in the edge strip)  -- 0/84 sampled edge points standable
+   arrangement (a separate axis) 4/6
+   [ok] entry-public  the front door opens into a shared room, not a bedroom or a bath  -- entered into study (study)
+   [XX] entry-hub  the room you enter is a most-connected room (a hall, not a dead end)  -- entry "study" is a way through to 1 room(s); the busiest room(s) reach 4 (kitchen)
+   [ok] door-hops  every room is within 3 doorways of the front door  -- furthest room is 3 hop(s) away
+   [XX] bath  the bathroom is one private room, reached without crossing a bedroom  -- bath: 1 door(s) from bedroom; reachable from the entry without passing a bedroom: NO
+   [ok] kitchen-dining  the kitchen opens onto the dining room  -- kitchen kitchen->[bedroom,dining,bedroom,living]
+   [ok] bedroom-window  every bedroom with an outside wall has a window  -- 2 of 2 bedroom(s) have an outside wall; all of them have one
    .. front door on the south wall at x 10..11
 
 PASS  14x10 9 rooms 130 items
@@ -57,6 +78,13 @@ PASS  14x10 9 rooms 130 items
    [ok] A* spawn -> every room centre
    [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 58 anchors scored, rooms used 3/9
    [ok] the outer wall stops the walker (no standable cell in the edge strip)  -- 0/96 sampled edge points standable
+   arrangement (a separate axis) 2/6
+   [XX] entry-public  the front door opens into a shared room, not a bedroom or a bath  -- entered into bath (bath)
+   [XX] entry-hub  the room you enter is a most-connected room (a hall, not a dead end)  -- entry "bath" is a way through to 2 room(s); the busiest room(s) reach 3 (kitchen/dining/study)
+   [XX] door-hops  every room is within 3 doorways of the front door  -- furthest room is 6 hop(s) away
+   [XX] bath  the bathroom is one private room, reached without crossing a bedroom  -- bath: 2 door(s) from bedroom+study; reachable from the entry without passing a bedroom: yes
+   [ok] kitchen-dining  the kitchen opens onto the dining room  -- kitchen kitchen->[bedroom,dining,study]
+   [ok] bedroom-window  every bedroom with an outside wall has a window  -- 2 of 2 bedroom(s) have an outside wall; all of them have one
    .. front door on the south wall at x 10..11
    .. living: seed moved off the room centre (furniture covers it)
 
@@ -73,6 +101,13 @@ PASS  10x8  3 rooms 100 items
    [ok] A* spawn -> every room centre
    [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 35 anchors scored, rooms used 3/3
    [ok] the outer wall stops the walker (no standable cell in the edge strip)  -- 0/72 sampled edge points standable
+   arrangement (a separate axis) 4/6, 2 n/a
+   [XX] entry-public  the front door opens into a shared room, not a bedroom or a bath  -- entered into bedroom (bedroom)
+   [XX] entry-hub  the room you enter is a most-connected room (a hall, not a dead end)  -- entry "bedroom" is a way through to 1 room(s); the busiest room(s) reach 2 (living)
+   [ok] door-hops  every room is within 3 doorways of the front door  -- furthest room is 2 hop(s) away
+   [ok] bath  the bathroom is one private room, reached without crossing a bedroom  -- not applicable  -- no bathroom in this plan (a small flat does not have one)
+   [ok] kitchen-dining  the kitchen opens onto the dining room  -- not applicable  -- not applicable: no dining room in this plan
+   [ok] bedroom-window  every bedroom with an outside wall has a window  -- 1 of 1 bedroom(s) have an outside wall; all of them have one
    .. front door on the south wall at x 1..2
    .. placed 70 of the 100 items asked for: the envelope ran out of legal floor
 
@@ -89,6 +124,13 @@ PASS  6x6   4 rooms  35 items
    [ok] A* spawn -> every room centre
    [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 16 anchors scored, rooms used 3/4
    [ok] the outer wall stops the walker (no standable cell in the edge strip)  -- 0/48 sampled edge points standable
+   arrangement (a separate axis) 4/6, 1 n/a
+   [XX] entry-public  the front door opens into a shared room, not a bedroom or a bath  -- entered into bedroom (bedroom)
+   [ok] entry-hub  the room you enter is a most-connected room (a hall, not a dead end)  -- entry "bedroom" is a way through to 2 room(s); the busiest room(s) reach 2 (bath/living/bedroom/kitchen)
+   [ok] door-hops  every room is within 3 doorways of the front door  -- furthest room is 2 hop(s) away
+   [XX] bath  the bathroom is one private room, reached without crossing a bedroom  -- bath: 2 door(s) from living+bedroom; reachable from the entry without passing a bedroom: yes
+   [ok] kitchen-dining  the kitchen opens onto the dining room  -- not applicable  -- not applicable: no dining room in this plan
+   [ok] bedroom-window  every bedroom with an outside wall has a window  -- 1 of 1 bedroom(s) have an outside wall; all of them have one
    .. front door on the south wall at x 2..3
    .. living: seed moved off the room centre (furniture covers it)
 
@@ -105,6 +147,13 @@ PASS  20x12 12 rooms 220 items
    [ok] A* spawn -> every room centre
    [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 82 anchors scored, rooms used 3/12
    [ok] the outer wall stops the walker (no standable cell in the edge strip)  -- 0/128 sampled edge points standable
+   arrangement (a separate axis) 1/6
+   [XX] entry-public  the front door opens into a shared room, not a bedroom or a bath  -- entered into bedroom (bedroom2)
+   [XX] entry-hub  the room you enter is a most-connected room (a hall, not a dead end)  -- entry "bedroom2" is a way through to 3 room(s); the busiest room(s) reach 4 (bath)
+   [XX] door-hops  every room is within 3 doorways of the front door  -- furthest room is 4 hop(s) away
+   [XX] bath  the bathroom is one private room, reached without crossing a bedroom  -- bath: 4 door(s) from study+bedroom+study+bedroom; reachable from the entry without passing a bedroom: NO
+   [ok] kitchen-dining  the kitchen opens onto the dining room  -- kitchen kitchen->[dining,living]
+   [XX] bedroom-window  every bedroom with an outside wall has a window  -- 3 of 3 bedroom(s) have an outside wall; 2 without a window: bedroom, bedroom3
    .. front door on the south wall at x 9..10
 
 PASS  16x14 10 rooms 160 items
@@ -120,6 +169,13 @@ PASS  16x14 10 rooms 160 items
    [ok] A* spawn -> every room centre
    [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 76 anchors scored, rooms used 3/10
    [ok] the outer wall stops the walker (no standable cell in the edge strip)  -- 0/120 sampled edge points standable
+   arrangement (a separate axis) 3/6
+   [ok] entry-public  the front door opens into a shared room, not a bedroom or a bath  -- entered into study (study2)
+   [XX] entry-hub  the room you enter is a most-connected room (a hall, not a dead end)  -- entry "study2" is a way through to 1 room(s); the busiest room(s) reach 4 (kitchen)
+   [XX] door-hops  every room is within 3 doorways of the front door  -- furthest room is 4 hop(s) away
+   [XX] bath  the bathroom is one private room, reached without crossing a bedroom  -- bath: 3 door(s) from dining+bedroom+kitchen; reachable from the entry without passing a bedroom: NO
+   [ok] kitchen-dining  the kitchen opens onto the dining room  -- kitchen kitchen->[bedroom,bath,bedroom,dining]
+   [ok] bedroom-window  every bedroom with an outside wall has a window  -- 2 of 3 bedroom(s) have an outside wall; all of them have one
    .. front door on the south wall at x 3..4
 
 PASS  7x5   2 rooms  24 items
@@ -135,6 +191,13 @@ PASS  7x5   2 rooms  24 items
    [ok] A* spawn -> every room centre
    [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 11 anchors scored, rooms used 2/2
    [ok] the outer wall stops the walker (no standable cell in the edge strip)  -- 0/48 sampled edge points standable
+   arrangement (a separate axis) 6/6, 2 n/a
+   [ok] entry-public  the front door opens into a shared room, not a bedroom or a bath  -- entered into living (living)
+   [ok] entry-hub  the room you enter is a most-connected room (a hall, not a dead end)  -- entry "living" is a way through to 1 room(s); the busiest room(s) reach 1 (living/bedroom)
+   [ok] door-hops  every room is within 3 doorways of the front door  -- furthest room is 1 hop(s) away
+   [ok] bath  the bathroom is one private room, reached without crossing a bedroom  -- not applicable  -- no bathroom in this plan (a small flat does not have one)
+   [ok] kitchen-dining  the kitchen opens onto the dining room  -- not applicable  -- not applicable: no kitchen in this plan
+   [ok] bedroom-window  every bedroom with an outside wall has a window  -- 1 of 1 bedroom(s) have an outside wall; all of them have one
    .. front door on the south wall at x 2..3
    .. placed 18 of the 24 items asked for: the envelope ran out of legal floor
 
@@ -151,6 +214,13 @@ PASS  24x16 16 rooms 300 items
    [ok] A* spawn -> every room centre
    [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 124 anchors scored, rooms used 3/16
    [ok] the outer wall stops the walker (no standable cell in the edge strip)  -- 0/160 sampled edge points standable
+   arrangement (a separate axis) 2/6
+   [XX] entry-public  the front door opens into a shared room, not a bedroom or a bath  -- entered into bedroom (bedroom)
+   [XX] entry-hub  the room you enter is a most-connected room (a hall, not a dead end)  -- entry "bedroom" is a way through to 1 room(s); the busiest room(s) reach 4 (bedroom)
+   [XX] door-hops  every room is within 3 doorways of the front door  -- furthest room is 7 hop(s) away
+   [XX] bath  the bathroom is one private room, reached without crossing a bedroom  -- bath: 3 door(s) from bedroom+bedroom+study; reachable from the entry without passing a bedroom: NO
+   [ok] kitchen-dining  the kitchen opens onto the dining room  -- kitchen kitchen->[dining,dining]
+   [ok] bedroom-window  every bedroom with an outside wall has a window  -- 2 of 5 bedroom(s) have an outside wall; all of them have one
    .. front door on the south wall at x 1..2
 
 PASS  9x9   5 rooms  55 items
@@ -166,6 +236,13 @@ PASS  9x9   5 rooms  55 items
    [ok] A* spawn -> every room centre
    [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 32 anchors scored, rooms used 3/5
    [ok] the outer wall stops the walker (no standable cell in the edge strip)  -- 0/72 sampled edge points standable
+   arrangement (a separate axis) 5/6, 1 n/a
+   [ok] entry-public  the front door opens into a shared room, not a bedroom or a bath  -- entered into study (study)
+   [ok] entry-hub  the room you enter is a most-connected room (a hall, not a dead end)  -- entry "study" is a way through to 2 room(s); the busiest room(s) reach 2 (living/bedroom/kitchen/dining/study)
+   [ok] door-hops  every room is within 3 doorways of the front door  -- furthest room is 2 hop(s) away
+   [ok] bath  the bathroom is one private room, reached without crossing a bedroom  -- not applicable  -- no bathroom in this plan (a small flat does not have one)
+   [XX] kitchen-dining  the kitchen opens onto the dining room  -- kitchen kitchen->[bedroom,study]
+   [ok] bedroom-window  every bedroom with an outside wall has a window  -- 1 of 1 bedroom(s) have an outside wall; all of them have one
    .. front door on the south wall at x 6..7
    .. living: seed moved off the room centre (furniture covers it)
 
@@ -182,5 +259,12 @@ PASS  11x7  6 rooms  70 items
    [ok] A* spawn -> every room centre
    [ok] all 6 红包 placed, none on the floor  -- 6/6 placed, 46 anchors scored, rooms used 3/6
    [ok] the outer wall stops the walker (no standable cell in the edge strip)  -- 0/72 sampled edge points standable
+   arrangement (a separate axis) 1/6
+   [ok] entry-public  the front door opens into a shared room, not a bedroom or a bath  -- entered into kitchen (kitchen)
+   [XX] entry-hub  the room you enter is a most-connected room (a hall, not a dead end)  -- entry "kitchen" is a way through to 1 room(s); the busiest room(s) reach 2 (dining/living/bedroom/bath)
+   [XX] door-hops  every room is within 3 doorways of the front door  -- furthest room is 5 hop(s) away
+   [XX] bath  the bathroom is one private room, reached without crossing a bedroom  -- bath: 2 door(s) from dining+study; reachable from the entry without passing a bedroom: NO
+   [XX] kitchen-dining  the kitchen opens onto the dining room  -- kitchen kitchen->[bedroom]
+   [XX] bedroom-window  every bedroom with an outside wall has a window  -- 1 of 1 bedroom(s) have an outside wall; 1 without a window: bedroom
    .. front door on the south wall at x 9..10
    .. living: seed moved off the room centre (furniture covers it)

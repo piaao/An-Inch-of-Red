@@ -68,6 +68,7 @@ CHECKS = [
     ('/css/procgen.css', 'text/css', False),
     ('/game/procgen/playground.js', 'javascript', False),
     ('/game/procgen/pipeline.js', 'javascript', False),
+    ('/game/procgen/arrangement.js', 'javascript', False),
     ('/game/procgen/draw.js', 'javascript', False),
     ('/js/app.js', 'javascript', False),
     ('/js/kit.js', 'javascript', False),

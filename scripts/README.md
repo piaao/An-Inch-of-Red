@@ -46,7 +46,7 @@ node   scripts/verify_play.mjs         # Node 侧：70 条可玩版本验收
 
 | 工具 | 产出 | 干什么 |
 |---|---|---|
-| ★ `procgen.mjs` | `reports/procgen.svg`、`reports/procgen.txt`（`--out-layout` / `--arena` 另写） | `--sweep` 跑 12 组参数，逐组 9 项断言。SVG 按**建好的 `Level`**（游戏眼里的墙 / 门 / 家具）画，不按生成器的意图画 —— 两者不一致时，图会显示不一致 |
+| ★ `procgen.mjs` | `reports/procgen.svg`、`reports/procgen.txt`（`--out-layout` / `--arena` 另写） | `--sweep` 跑 12 组参数，逐组 9 项**可玩性**断言 + 6 项**布置合理性**断言（两条判决轴，见 A2c）。SVG 按**建好的 `Level`**（游戏眼里的墙 / 门 / 家具）画，不按生成器的意图画 —— 两者不一致时，图会显示不一致 |
 
 ```bash
 node scripts/procgen.mjs                    # 一次扫描 + 一张 SVG 平面图
@@ -58,12 +58,12 @@ node scripts/procgen.mjs --out-layout js/layout.gen.js --arena game/arenas/gen.j
 ### A2b · 工作台：在浏览器里调参、生成、预览
 
 `procgen.html` 是**同一个生成器的前端**：左边 13 个旋钮（值直接取自 `floorplan.js` 的
-`DEFAULTS`，不在 HTML 里抄第二份），右边是画好的平面图 + 9 项断言 + 读数。
+`DEFAULTS`，不在 HTML 里抄第二份），右边是画好的平面图 + 9 项**可玩性**断言 + 读数，再往下是第二条轴「布置合理性」的 6 项。
 它调用的是 `game/procgen/{pipeline,draw}.js` —— 也就是 `procgen.mjs` 调用的那两个模块，
 所以「命令行验过的」和「页面上看到的」不是两份实现。抽出来时以
 **`--sweep` 产物逐字节不变**为门禁（`reports/procgen.svg` 323000 B、`procgen.txt` 15305 B，均 IDENTICAL。
 那次抽取的结论不受影响；后来加了第 9 项断言「快照自带这一层的 layout」，
-所以 `procgen.txt` 现在是 **16964 B**，`svg` 仍是 **323000 B**）。
+所以 `procgen.txt` 先是 **16964 B**；**再后来加了第二条判决轴**，`--report` 每组多写 1 行 `arrangement (a separate axis) N/M` 与 6 条 `[ok|XX]`（12 组 × 7 = 84 行、+10540 B），所以它现在是 **27504 B**（sha256 `03f4d83f…`；文件第 2 行的 `params` 自带 seed，这份读数是 `--seed procgen`，换种子数字会变），而 `svg` 仍是 **323000 B**（sha256 `54d710a5…`）——**图一个字节都没动、报告多出 84 行**，这正是「只加断言、不动生成」的形状）。
 
 这条门禁当时只验了「sweep 自己可复现」，**没验「别的脚本别去动它」**：
 `verify_playground.mjs` 的**第二组参数**只带了 `--report`、没带 `--svg`，
@@ -76,7 +76,8 @@ node scripts/procgen.mjs --out-layout js/layout.gen.js --arena game/arenas/gen.j
 
 | 模块 | 是什么 |
 |---|---|
-| `game/procgen/pipeline.js` | 9 项断言的实现（自 `procgen.mjs` 抽出，Node 与浏览器共用） |
+| `game/procgen/pipeline.js` | 9 项**可玩性**断言的实现（自 `procgen.mjs` 抽出，Node 与浏览器共用），并额外返回第二条轴 `arrangement` |
+| `game/procgen/arrangement.js` | 6 项**布置合理性**断言的实现 + 全部读数。零依赖、零 DOM、零 IO，Node 与浏览器共用；每条阈值都注明它从哪里推出来 |
 | `game/procgen/draw.js` | 平面图 SVG 的绘制（同上；一处绘制，两个出口） |
 | `game/procgen/playground.js` | 工作台的界面逻辑，并暴露一个给验收用的 `__procgen` 小接口 |
 
@@ -86,18 +87,44 @@ node scripts/procgen.mjs --out-layout js/layout.gen.js --arena game/arenas/gen.j
 导航时失效，所以必须在本页创建）。找不到快照时**抛错**，不退回上架公寓：
 静默退回正是 `verify_gen_play.mjs` 存在的原因。
 
+### A2c · 第二条判决轴：这是不是一个「地方」
+
+那 9 项问的全是「**能不能走**」——结构、通行、房间、可达、红包、边界。12 组参数全绿，
+而生成出来的楼依然不像人住的：**入户门会开进卫生间**。这不是矛盾，是尺子只量了迷宫、没量住所。
+
+`game/procgen/arrangement.js` 补上 6 条可数问题（屋顶/入户/门序/湿区/厨餐/卧室窗），
+并**刻意不并进那 9 项**，两个理由都是量出来的：
+
+1. `procgen.mjs` 的退出码来自那 9 项，而 `verify_playground` / `verify_live` / `verify_gen_play` / `verify_world` 四套验收都挂在 `1/1 PASS` 上 —— 把一个**故意是红的**轴塞进去，会让四套与「布置好不好」无关的验收因为别的原因集体变红。
+2. 更要紧的是信息：`checks` 是「能不能走」的答案，而「能走但不宜居」必须与「两样都不行」**区分得开**。合成一个布尔值会永久丢掉这件事。
+
+```bash
+node scripts/procgen.mjs --sweep                 # 两条轴各报一行
+node scripts/diag_arrangement.mjs 12            # 人工地图 vs 生成地图，同一张表
+node scripts/verify_arrangement.mjs             # 15 条：验的是尺子，不是户型
+node scripts/procgen.mjs --sweep --strict-arrangement   # 让第二条轴也参与退出码
+```
+
+**每次运行都自校尺子。** `diag_arrangement.mjs` 与 `verify_arrangement.mjs` 都会断言「参照物 `js/layout.js` 必须 6/6 通过」。这条不是形式主义 —— 它已经抓到过两版坏尺子：
+第一版在门两侧 0.35 m 打探针问 `nav.componentAt()`（玩家的问法），而上架公寓卫生间门里 0.29 m 处坐着一个 0.31 m 的垃圾桶，探针落在家具上，于是**把设计稿的卫生间读成「没有门」**；第二版只读 `DOORS`，于是把设计稿的书房读成「没有任何门能到」（它是穿过墙上 1 m 的敞口进去的，那是洞、不是门）。
+两次的征兆一模一样：**参照物被判错**。
+
+**「能红」和「能绿」要同时被断言。** 只证「参照物全绿」会漏掉一条永远不可能失败的检查；
+只证「生成图会红」会漏掉一条永远不可能通过的检查。所以`verify_arrangement.mjs` 两头都钉：参照物 6/6，且在 12 组扫描里**每个问题都至少红过一次**。
+
 ---
 
 ## B · 验收：只判 PASS / FAIL，不改任何东西
 
 | 工具 | 判什么 | 报告 |
 |---|---|---|
-| `smoke_serve.py` | **启动器能不能真的把场景端出去**：状态码 / MIME / 字节数 / 缺文件 404；另加**启动词解析表**（`game` / `viewer` / `workbench` 与端口混写，各自该开哪一页）和工作台三件套的 200 | 直接打印 |
+| `smoke_serve.py` | **启动器能不能真的把场景端出去**：状态码 / MIME / 字节数 / 缺文件 404；另加**启动词解析表**（`game` / `viewer` / `workbench` 与端口混写，各自该开哪一页）和工作台四件套的 200 | 直接打印 |
 | `shoot.js` | 查看器：STATIC（模块完整性）/ RUNTIME（对象计数）/ CLEAN（零异常零 4xx）/ PIXELS（每个机位尺寸互不相同） | `work/verify_report.json` + `renders/` |
 | `verify_game.mjs` | 方案二玩法矩阵：混合可达 / 无不可赢 / 藏点普查 / 分层摆放 / 守卫覆盖 / 预算×配置 | `work/game_eval.json` |
 | ★ `verify_play.mjs` | **70 条**：浏览器里跑的 `game/play/` 与无头矩阵**是同一个游戏**（同 nav、同摆放、同巡逻；两个运行时对到 1e-6） | `work/verify_play.log` |
 | ★ `verify_gen_play.mjs` | **20 条**：**生成出来的**户型能在真浏览器里启动 / 走 / 渲染，且与 Node 逐坐标对账。含一条**负向对照** ——断言这层楼的导航格数与上架公寓不同；没有它，一个静默退回上架层的页面会全绿通过 | `reports/gen_play.txt` |
-| ★ `verify_playground.mjs` | **36 条**：**真实驱动页面 UI**（填参数 → 按「生成」），断言页面与 Node 逐字节相同（交出去的快照 68959 / 68959 字符 `identical`）、**预览跟着旋钮变**（否则屏幕上可能是一张顶着新参数名字的旧图）、**画在平面图上的红包就是游戏会放的六个**（这条是补的：验证器与游戏曾各持一条随机流，17 组参数里 16 组放得不一样，最远差 8.85 m）、以及「走进去玩」落到**当时屏幕上那一层**而不是上架公寓。含一条负向测试：`?arena=session:nope` 必须**响亮地失败**，不许静默退回 | `reports/ui_play.txt` |
+| ★ `verify_playground.mjs` | **39 条**：**真实驱动页面 UI**（填参数 → 按「生成」），断言页面与 Node 逐字节相同（交出去的快照 68959 / 68959 字符 `identical`）、**预览跟着旋钮变**（否则屏幕上可能是一张顶着新参数名字的旧图）、**画在平面图上的红包就是游戏会放的六个**（这条是补的：验证器与游戏曾各持一条随机流，17 组参数里 16 组放得不一样，最远差 8.85 m）、以及「走进去玩」落到**当时屏幕上那一层**而不是上架公寓。含一条负向测试：`?arena=session:nope` 必须**响亮地失败**，不许静默退回。另加三条盯**第二条判决轴**：页面与 Node 的 `arrangement` 判决逐条相同（9 + 6，不许混成一个数），且屏幕上那条横幅与 6 行清单**真的被写出来了**（没被写过的插槽，看起来和「什么都没失败」一模一样） | `reports/ui_play.txt` |
+| ★ `verify_arrangement.mjs` | **15 条**：P0 的验收 —— 六问齐备且有序、**参照物 6/6**、**每个问题都红过**（不可能失败的检查器比没有更坏）、两条轴 id 不重叠、可玩性仍是**恰好 9 项**、「审计路 == 管线路」12/12 逐位一致、以及 CLI 另起一个进程写出的 JSON 与本进程算的完全相同（同一层楼同时是 `playable true` / `arranged false`）。**不需要浏览器**，因为本机无法创建子进程 | 直接打印 |
 | ★ `verify_live.mjs` | **11 条**：对**已经在跑**的服务做同一套对账（`--url` 指哪测哪），起自己的浏览器但**不起服务**。与 `verify_playground` 的分工是「我测过了」和「你眼前这个能用」不是同一句话 | 直接打印 + `renders/ui/02-live-*.png` |
 | ★ `verify_world.mjs` | **25 条**：**看到的房子 == 玩的房子**（世界侧唯一判决）。三栋楼（10×8 六房 / 16×14 十房 / 9×9 五房）逐栋比对场景包围盒、房间 id、地砖·门·家具的 1:1 计数，并从出生点垂直打射线确认**脚下是这栋楼的地板**；含负向对照 —— 把 9×9 那层的 `layout` 字段砍掉，页面必须**报错并点名**而不是照常启动。这条断言曾经不存在，代价是一整层楼被画成上架公寓 | `reports/world.txt` + `renders/world/` |
 | ★ `verify_open.mjs` | **32 条**：**「打开方式」本身**的验收。三个页面各跑两遍 —— `file://` 下必须**看得见**一段说明、点名双击哪个 `.bat`、且页面真实内容为 **0**（控件 / 平面图 / 启动标志）；`http://` 下必须**看不见**那段说明、真实内容 **> 0**。后者是负向对照：没有它，「把警告永远显示着」也能全绿。另加三个 `.bat` 的行尾（CRLF）/ ASCII 体检、两个包装器确实带了关键字，以及**「代码一行都没执行」必须在屏幕上说出来**

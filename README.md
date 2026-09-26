@@ -124,7 +124,7 @@ node scripts/shoot.js
 #       看得见「该双击哪个 .bat」且页面真实内容为 0，http:// 下必须看不见且内容 > 0
 node scripts/verify_open.mjs
 
-# 户型生成器：12 组参数的扫描（每组 9 项管线检查，证据在 reports/procgen.*）
+# 户型生成器：12 组参数的扫描（每组 9 项可玩性 + 6 项布置合理性，证据在 reports/procgen.*）
 node scripts/procgen.mjs --sweep
 
 # 玩法设计：可达性 + 藏点普查 + 预算×配置矩阵
@@ -137,7 +137,10 @@ node scripts/verify_game.mjs 24
 verify_play.mjs     70/70 PASS      红包 6/6 都不在房间地板上，6/6 都够得着，其中 3 个必须爬
 verify_world.mjs    25/25 PASS      三栋楼三个平面：包围盒 == 平面 + 墙厚，房间 id 逐个点名
 verify_name.py      25/25 PASS      代号 寻红 6/6 处点名命中，仓库门面带着名字
-smoke_serve.py      SMOKE PASS      16 个资源 MIME 与字节数全部与磁盘一致，缺失文件 404
+smoke_serve.py      SMOKE PASS      22 个资源（= smoke_serve.py 里 CHECKS 的行数）
+                                    MIME 与字节数全部与磁盘一致，缺失文件 404
+verify_arrangement.mjs 15/15 PASS   第二条判决轴：尺子对参照物 6/6、六个问题各自都红过、
+                                    审计路与管线路 12/12 逐位一致（不需要浏览器，本机可跑）
 ```
 
 快照可从底账重建，而且**逐字节可对账**（改过 `data/` 路径之后实测：与入库版仅差

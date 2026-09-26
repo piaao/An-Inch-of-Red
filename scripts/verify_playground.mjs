@@ -43,6 +43,7 @@ const ROOT = path.resolve(HERE, '..');
 const PORT = 8783;
 const DEBUG = 9228;
 const UI_ARENA = 'work/_ui_arena.json';
+const UI_ARR = 'work/_ui_arr.json';
 const UI_ARENA_Q = 'work/_ui_arena_q.json';
 const SHOTS = path.join(ROOT, 'renders', 'ui');
 const REPORT = path.join(ROOT, 'reports', 'ui_play.txt');
@@ -75,7 +76,7 @@ const gen = spawnSync(process.execPath, [
   'scripts/procgen.mjs', '--w', String(P.w), '--d', String(P.d),
   '--rooms', String(P.rooms), '--items', String(P.items), '--seed', P.seed,
   '--arena', UI_ARENA, '--out-layout', 'work/_ui_layout.js', '--svg', 'work/_ui.svg',
-  '--report', 'work/_ui_procgen.txt',
+  '--report', 'work/_ui_procgen.txt', '--json', UI_ARR,
 ], { cwd: ROOT, encoding: 'utf8' });
 const genOut = (gen.stdout || '') + (gen.stderr || '');
 genOut.trim().split('\n').filter((l) => /PASS|FAIL|wrote|generated/.test(l)).forEach((l) => say('   ' + l));
@@ -246,9 +247,51 @@ async function main() {
     && st.params.w === P.w && st.params.d === P.d && st.params.rooms === P.rooms
     && st.params.items === P.items && st.params.seed === P.seed,
     st ? JSON.stringify(st.params) : 'no state');
-  check('all eight checks pass in the page',
+  check('all nine playability checks pass in the page',
     !!st && st.checks.length === 9 && st.fails === 0,
     st ? `${st.checks.length} checks, ${st.fails} failing` : 'no state');
+
+  /* ------------------------------- 4b. the SECOND verdict, and its strip */
+  // The workbench carries two axes now, and both of them are the kind of thing
+  // that can look right while doing nothing. Three questions, in order: does the
+  // second verdict exist AND stay separate (9 + 6, not 15 shuffled together);
+  // is the page's answer Node's answer for the same parameters; and does the
+  // panel actually SAY so on screen. The last one is not decoration -- a strip
+  // that is never painted, or painted with a stale string, reads exactly like a
+  // strip nothing failed.
+  const nodeArr = JSON.parse(fs.readFileSync(path.join(ROOT, UI_ARR), 'utf8')).rows[0].arrangement;
+  const pageArr = st && st.arrangement
+    ? st.arrangement.checks.map((c) => ({ id: c.id, pass: c.pass, applicable: c.applicable !== false }))
+    : null;
+  const nodeArrCanon = nodeArr
+    ? nodeArr.checks.map((c) => ({ id: c.id, pass: c.pass, applicable: c.applicable !== false }))
+    : null;
+  check('the workbench carries a SECOND verdict, kept separate from playability',
+    !!st && !!st.arrangement && st.checks.length === 9
+      && st.arrangement.checks.length === 6 && st.fails === 0,
+    st ? `${st.checks.length} playability (${st.fails} failing) + `
+      + `${st.arrangement ? st.arrangement.checks.length : 0} arrangement` : 'no state');
+  check('the page\'s arrangement verdict is Node\'s arrangement verdict',
+    !!pageArr && !!nodeArrCanon && JSON.stringify(pageArr) === JSON.stringify(nodeArrCanon),
+    pageArr && nodeArrCanon
+      ? `${pageArr.length} checks; page ${pageArr.filter((c) => c.pass).length} pass `
+        + `vs node ${nodeArrCanon.filter((c) => c.pass).length} pass -- `
+        + (JSON.stringify(pageArr) === JSON.stringify(nodeArrCanon) ? 'identical' : 'DIFFER')
+      : 'missing an arrangement verdict');
+  const arrPanel = await sess.evalJs(`(function () {
+    const strip = document.getElementById('verdict-arr');
+    const items = document.querySelectorAll('#arrchecks .chk');
+    const head = document.getElementById('arrhead');
+    return { text: strip ? strip.textContent : null, items: items.length,
+             head: head ? head.textContent : null };
+  })()`);
+  check('and the arrangement strip on screen says so, with all six listed',
+    !!pageArr && arrPanel
+      && /布置/.test(String(arrPanel.text))
+      && String(arrPanel.text).indexOf(String(pageArr.length) + ' 项') >= 0
+      && arrPanel.items === pageArr.length
+      && /布置合理性/.test(String(arrPanel.head)),
+    arrPanel ? `strip "${arrPanel.text}" / heading "${arrPanel.head}" / ${arrPanel.items} rows` : 'no panel');
   check('the page\'s rooms / solids are Node\'s rooms / solids',
     !!st && st.rooms === nodeLevel.rooms.length && st.solids === nodeLevel.solids.length,
     st ? `${st.rooms}/${nodeLevel.rooms.length} rooms, ${st.solids}/${nodeLevel.solids.length} solids` : 'no state');

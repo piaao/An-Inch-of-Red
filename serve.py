@@ -198,11 +198,12 @@ def main():
     viewer_ok = all(os.path.exists(os.path.join(ROOT, f))
                     for f in ("index.html", "js/app.js"))
 
-    # 工作台的三个模块缺一不可：抽出去的那份管线（pipeline）与绘图（draw）
-    # 就是页面本身，少一个页面会在控制台静默半死。
+    # 工作台的四个模块缺一不可：抽出去的那份管线（pipeline）、绘图（draw）
+    # 与第二条判决轴（arrangement）就是页面本身，少一个页面会在控制台静默半死。
     workbench_ok = all(os.path.exists(os.path.join(ROOT, f))
                        for f in ("procgen.html", "game/procgen/playground.js",
-                                 "game/procgen/pipeline.js", "game/procgen/draw.js"))
+                                 "game/procgen/pipeline.js", "game/procgen/draw.js",
+                                 "game/procgen/arrangement.js"))
 
     if page != "play.html" and not os.path.exists(os.path.join(ROOT, page)):
         sys.stderr.write("  [!] %s 不存在，改开 play.html\n" % page)

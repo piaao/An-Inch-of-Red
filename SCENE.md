@@ -374,6 +374,8 @@ node scripts/procgen.mjs --w 16 --d 14 --rooms 10 --items 160 --seed genA \
 每个房间都能被解析且互不共用 / 从出生点 A* 能到每个房间 / 6 个红包全部放得下 /
 **快照自带这一层的 `layout`**（第 9 项，见下）。
 
+**这只是第一条轴：能不能走。** 另有第二条轴问「这是不是一个地方」——6 条可数问题（入户开向哪个角色 / 入户房间是不是枢纽 / 到最远房间几道门 / 卫生间是不是独立湿区 / 厨房是否通餐厅 / 有外墙的卧室是否有窗），实现放在 `game/procgen/arrangement.js`，与那 9 项**并列而不合并**。今天它的读数是红的，而且**红才是目的**：12 组参数可玩性 12/12，布置轴只有 36/72 条绿、1/12 组全绿。
+
 ### 把生成出来的户型真的走一遍
 
 ```bash
@@ -466,14 +468,17 @@ node scripts/verify_world.mjs      # 三栋楼三个尺寸，逐栋对账世界�
 | `--json P` | 逐组导出机器可读的断言与红包坐标 |
 | `--svg P` / `--scale N` | 平面图的落盘路径与绘图比例。不给 `--svg` 时**跟随 `--report`**（同名的 `.svg`），再缺省才是 `reports/procgen.svg` |
 | `--report P` | 断言日志的落盘路径（默认 `reports/procgen.txt`）。**入库的证据就是这个文件**，所以任何替自己跑生成器的脚本都得重定向它 —— 五套验收脚本现在都指向 `work/`。**平面图跟着它走**：不给 `--svg` 时，图写到 `P` 同名的 `.svg` |
+| `--strict-arrangement` | 让**第二条轴**也参与退出码。不写就只看可玩性（四套验收都挂在 `1/1 PASS` 上，所以这条必须显式启用）。今天它会返回 `2` —— 那正是 P0 的读数 |
 | `--quiet` | 完全静默（连 12/12 那句总结也不打；**但产物照写**，包括 `reports/procgen.txt`） |
 
 退出码可直接接 CI：全组 PASS 为 `0`，任一组 FAIL 为 `2`，参数或素材缺失为 `3`。
+加 `--strict-arrangement` 时第二条轴也参与判决 —— 这是 P1 的验收闸：什么时候 12 组布置轴全绿，什么时候它才可能返回 `0`。
 
 ### 在浏览器里调参：`procgen.html`
 
 不想敲命令就用工作台：左边调参数（尺寸 / 房间数 / 物品数 / 种子，外加 9 个高级旋钮），
-右边立刻画出平面图并列出 9 项断言。
+右边立刻画出平面图并列出 9 项**可玩性**断言；
+再往下是第二条轴「布置合理性」—— 一条自己的横幅 + 6 项断言 + 件/组·孤件·飘件三个读数。
 
 ```bash
 start.bat workbench           # 起本地服务并直接打开工作台
@@ -481,7 +486,9 @@ start-workbench.bat           # 同一件事，双击即可（关键字没法双
 start.bat                     # 只起服务（默认开游戏 play.html）
 # 或手动敲链接：http://127.0.0.1:<端口>/procgen.html
 node scripts/verify_world.mjs        # 世界一致性：看到的房子 == 玩的房子（世界侧唯一判决）
-node scripts/verify_playground.mjs   # 工作台自己的 36 条验收（自起服务，CI 用）
+node scripts/verify_playground.mjs   # 工作台自己的 39 条验收（自起服务，CI 用）
+node scripts/verify_arrangement.mjs  # 第二条判决轴的 15 条验收：验尺子，不验户型（不需要浏览器）
+node scripts/diag_arrangement.mjs    # 人工地图 vs 生成地图并排一张表，每次运行自校「尺子 6/6」
 node scripts/verify_live.mjs         # 对「已经在跑」的服务做同一套对账，--url 指哪测哪
 node scripts/verify_open.mjs         # 打开方式验收：三个页面在 file:// 下必须明说，在 http:// 下必须正常
 node scripts/diag_open.mjs           # 诊断「页面是空壳」：同一个文件两种打开方式逐项对账

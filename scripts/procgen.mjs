@@ -5,6 +5,9 @@
  *     node scripts/procgen.mjs --w 12 --d 9 --rooms 7 --items 90 --seed flatA
  *     node scripts/procgen.mjs --sweep                the full parameter grid
  *     node scripts/procgen.mjs --count 8              eight seeds at the base params
+ *     node scripts/procgen.mjs --sweep --strict-arrangement
+ *                                                     the exit code also refuses a
+ *                                                     playable-but-unarranged flat
  *     node scripts/procgen.mjs --out-layout js/layout.gen.js --arena game/arenas/gen.json
  *
  * `--arena` writes a snapshot that CARRIES the layout it was built from, so
@@ -14,9 +17,20 @@
  *
  * WHAT "TESTED" MEANS HERE. A generated layout is not judged by how it looks.
  * `game/procgen/pipeline.js` runs it through the SAME pipeline the shipped
- * apartment goes through and returns seven countable verdicts -- structural,
- * adapter, walkable, rooms, reachable, prizes, boundary -- and that file is
- * where each one's rationale lives.
+ * apartment goes through and returns nine countable verdicts -- structural,
+ * adapter, walkable, world, rooms, reachable, prizes, boundary -- and that file
+ * is where each one's rationale lives.
+ *
+ * AND A SECOND, SEPARATE VERDICT. Those nine all ask "can this floor be
+ * PLAYED", and twelve of twelve layouts pass every one of them while opening
+ * their front door into a bathroom. `pipeline.js` therefore also returns
+ * `arrangement`: six countable questions about whether the floor is a PLACE,
+ * implemented once in `game/procgen/arrangement.js`. This script prints both,
+ * tallies both, and by default lets only the first one decide the exit code --
+ * four acceptance suites parse this script's output for `1/1 PASS`, and a
+ * second axis that silent-failed them would be a gate that broke its own
+ * harness. `--strict-arrangement` is how the second axis is allowed to gate a
+ * build, and it is what P1's acceptance is measured with.
  *
  * The harness lives THERE rather than here because the browser playground
  * (procgen.html) generates floors too, and there should be exactly one
@@ -160,10 +174,17 @@ function main() {
       v = {
         level: null, nav: null, placement: { prizes: [], report: { roomsUsed: 0, roomsTotal: 0, anchorsScored: 0 } },
         checks: [{ id: 'harness', label: 'pipeline threw', pass: false, detail: String(err && err.message || err) }],
+        arrangement: null,
       };
     }
     const fails = v.checks.filter((c) => !c.pass);
-    results.push({ ...set, ...v, fails, gen });
+    // The second axis, kept in its own variable and its own printed line: a
+    // reader must be able to see that "playable" and "arranged" are two
+    // different answers rather than one answer with fifteen components.
+    const arr = v.arrangement;
+    const aFails = arr ? arr.checks.filter((c) => !c.pass) : [];
+    const aNa = arr ? arr.checks.filter((c) => c.applicable === false).length : 0;
+    results.push({ ...set, ...v, fails, aFails, gen });
     say(`${fails.length ? 'FAIL' : 'PASS'}  ${set.label.padEnd(26)} `
       + `rooms ${String(gen.report.rooms).padStart(2)}  `
       + `items ${String(gen.report.items.placed).padStart(3)}/${gen.report.items.wanted}  `
@@ -171,6 +192,12 @@ function main() {
       + `free ${(gen.report.freeFraction * 100).toFixed(0)}%  `
       + `prizes ${v.placement.prizes.length}/${PRIZE_COUNT}`);
     for (const f of fails) say(`        ! ${f.label}: ${f.detail}`);
+    say(arr
+      ? `        arranged ${arr.checks.length - aFails.length}/${arr.checks.length}`
+        + (aNa ? ` (${aNa} n/a)` : '')
+        + (aFails.length ? `   ${aFails.map((c) => c.id).join(' ')}` : '')
+      : '        arranged n/a (the pipeline threw before a plan existed)');
+    for (const f of aFails) say(`        ~ ${f.id}${f.applicable === false ? ' [n/a]' : ''}: ${f.detail}`);
   }
 
   /* ------------------------------------------------------------- summary */
@@ -179,6 +206,18 @@ function main() {
   say('='.repeat(78));
   say(`generated ${results.length} layouts in ${((Date.now() - t0) / 1000).toFixed(1)} s   `
     + `${pass}/${results.length} PASS`);
+
+  // The SECOND verdict, on its own line and never folded into the first. These
+  // numbers are red today and they are red on purpose: they are the reading
+  // that a floor can be perfectly playable and still not be somewhere a person
+  // would live. See game/procgen/arrangement.js for what each question means.
+  const withArr = results.filter((r) => r.arrangement);
+  const aTotal = withArr.reduce((a, r) => a + r.arrangement.checks.length, 0);
+  const aGreen = withArr.reduce((a, r) => a + r.arrangement.checks.filter((c) => c.pass).length, 0);
+  const aWhole = withArr.filter((r) => r.arrangement.checks.every((c) => c.pass)).length;
+  say(`arranged  ${aGreen}/${aTotal} arrangement checks green`
+    + `   ${aWhole}/${results.length} layouts arranged end to end`
+    + (args['strict-arrangement'] ? '   [--strict-arrangement: these gate the exit code]' : ''));
 
   const allRejected = {};
   for (const r of results) for (const [k, v] of Object.entries(r.gen.report.rejected)) allRejected[k] = (allRejected[k] || 0) + v;
@@ -237,6 +276,12 @@ function main() {
     const rows = results.map((r) => ({
       label: r.label, params: r.gen.params, pass: !r.fails.length,
       checks: r.checks, report: { ...r.gen.report, rects: undefined },
+      arrangement: r.arrangement ? {
+        ready: r.arrangement.ready,
+        pass: r.arrangement.checks.every((c) => c.pass),
+        checks: r.arrangement.checks,
+        readings: r.arrangement.readings,
+      } : null,
       prizes: r.placement.prizes.map((p) => ({ x: +p.x.toFixed(3), z: +p.z.toFixed(3), y: +p.y.toFixed(3), room: p.room, tier: p.tier })),
       prizeReport: { ...r.placement.report, covers: undefined, stats: undefined },
     }));
@@ -256,6 +301,12 @@ function main() {
       + ` *\n * params: ${JSON.stringify(r.gen.params)}\n`
       + ` * ${r.gen.report.rooms} rooms, ${r.gen.report.items.placed} items, `
       + `${r.gen.report.climbTops} climbable tops, ${r.fails.length ? r.fails.length + ' FAILED CHECK(S)' : 'all checks pass'}.\n`
+      + ` * arrangement (a separate axis): ${r.arrangement
+        ? r.arrangement.checks.filter((c) => c.pass).length + '/' + r.arrangement.checks.length + ' green'
+          + (r.arrangement.checks.filter((c) => !c.pass).length
+            ? ' -- ' + r.arrangement.checks.filter((c) => !c.pass).map((c) => c.id).join(', ')
+            : '')
+        : 'not judged'}.\n`
       + ` *\n * Same schema as js/layout.js, so fromLayout.js and the viewer read it unchanged.\n`
       + ` *\n * FOR INSPECTION. The game never loads this file: an arena snapshot carries\n`
       + ` * its own copy of the layout (see game/arena/fromLayout.js), so the floor\n`
@@ -303,6 +354,15 @@ function main() {
     logLines.push(`   items ${r.gen.report.items.placed}/${r.gen.report.items.wanted}  climbTops ${r.gen.report.climbTops}`
       + `  free ${(r.gen.report.freeFraction * 100).toFixed(1)}%  rejections ${JSON.stringify(r.gen.report.rejected)}`);
     for (const c of r.checks) logLines.push(`   [${c.pass ? 'ok' : 'XX'}] ${c.label}${c.detail ? '  -- ' + c.detail : ''}`);
+    if (r.arrangement) {
+      const ac = r.arrangement.checks;
+      logLines.push(`   arrangement (a separate axis) ${ac.filter((c) => c.pass).length}/${ac.length}`
+        + `${ac.filter((c) => c.applicable === false).length ? `, ${ac.filter((c) => c.applicable === false).length} n/a` : ''}`);
+      for (const c of ac) {
+        logLines.push(`   [${c.pass ? 'ok' : 'XX'}] ${c.id}  ${c.label}`
+          + `${c.applicable === false ? '  -- not applicable' : ''}${c.detail ? '  -- ' + c.detail : ''}`);
+      }
+    }
     for (const t of r.gen.report.trace) logLines.push(`   .. ${t}`);
     logLines.push('');
   }
@@ -317,7 +377,20 @@ function main() {
   fs.mkdirSync(path.dirname(reportPath), { recursive: true });
   fs.writeFileSync(reportPath, logLines.join('\n'), 'utf8');
 
-  return pass === results.length ? 0 : 2;
+  // WAS the playability axis alone. `--strict-arrangement` folds the second
+  // axis into the exit code, which is the gate P1 is measured against: the
+  // moment the six questions are green on all twelve parameter sets, a build
+  // can be made to refuse a flat that is playable and uninhabitable. Opt-in,
+  // because four acceptance suites parse this script for `1/1 PASS` and a gate
+  // that flipped a switch they never knew about is a gate that broke them.
+  const strict = !!args['strict-arrangement'];
+  const fullyArranged = results.filter((r) => r.arrangement
+    && r.arrangement.ready && r.arrangement.checks.every((c) => c.pass)).length;
+  if (strict) {
+    say(`strict-arrangement: ${fullyArranged}/${results.length} layouts are arranged end to end`
+      + ` (the exit code needs ${results.length}/${results.length})`);
+  }
+  return (pass === results.length && (!strict || fullyArranged === results.length)) ? 0 : 2;
 }
 
 process.exit(main());

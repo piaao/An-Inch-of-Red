@@ -32,6 +32,26 @@
  * collapsing into one open floor while the picture still looks fine. Check 4
  * catches the other one: a room sealed by the furniture the generator itself
  * just put in it.
+ *
+ * ------------------------------------------------------- AND A SECOND AXIS
+ *
+ * Those nine all ask "can this floor be PLAYED". None of them asks "is this
+ * floor a PLACE", and that gap is not hypothetical: twelve of twelve layouts
+ * pass all nine while opening their front door into a bathroom.
+ *
+ * So `validateLayout` returns a second, equally countable verdict alongside
+ * `checks`: `arrangement`, from `./arrangement.js`. It is deliberately NOT
+ * appended to `checks`, for two measured reasons. First, `scripts/procgen.mjs`
+ * derives its exit code from `checks`, and `verify_playground`,
+ * `verify_live`, `verify_gen_play` and `verify_world` all hang on `1/1 PASS` --
+ * folding a deliberately-red axis in would turn four suites red for reasons
+ * none of them is about. Second, `checks` is the answer to "can you walk it",
+ * and a floor that is playable and badly arranged must stay distinguishable
+ * from a floor that is neither. Two axes, one implementation.
+ *
+ * A layout that cannot be read as a plan at all (`arrangement.ready === false`)
+ * still returns one FAILING arrangement check rather than throwing, so a
+ * caller's verdict stays a list of judgements.
  */
 import { buildLevel } from '../arena/fromLayout.js';
 import { buildWallOpenings, buildDoorStates } from '../arena/openings.js';
@@ -40,14 +60,17 @@ import { resolveRooms, applyRooms } from '../core/regions.js';
 import { validateLevel } from '../core/level.js';
 import { placePrizes, defaultViewpoints, prizeRng } from '../core/place.js';
 import { requiredModels } from './required.js';
+import { auditArrangement } from './arrangement.js';
 
 export const PRIZE_COUNT = 6;
 
 /**
  * Run one generated layout through the real pipeline.
  *
- * @returns { level, nav, placement, checks, detail } -- checks is a list of
- *          { id, label, pass, detail } and NOTHING is inferred from a picture.
+ * @returns { level, nav, placement, checks, arrangement, detail } -- `checks`
+ *          and `arrangement.checks` are both lists of
+ *          { id, label, pass, detail[, applicable] } and NOTHING is inferred
+ *          from a picture.
  */
 export function validateLayout(gen, sizes, surfaces, passages, seed) {
   const { layout, report: genReport } = gen;
@@ -200,8 +223,16 @@ export function validateLayout(gen, sizes, surfaces, passages, seed) {
     leak.n === 0, `${leak.n}/${leak.total} sampled edge points standable`
     + (leak.n ? `: ${leak.samples.slice(0, 3).map((p) => `(${p.x.toFixed(2)},${p.z.toFixed(2)})`).join(' ')}` : ''));
 
+  /* 9. arrangement -- the OTHER axis, and it does not touch `checks` ------ */
+  //
+  // Runs last because it is the only part of this file that reads
+  // `level.rooms[].rect`, and those exist only after `applyRooms` above. The
+  // six questions, their bounds and their derivations live in
+  // `./arrangement.js`; this file only carries the answer.
+  const arrangement = auditArrangement(gen.layout, level, { sizes });
+
   return {
-    level, nav, placement, checks,
+    level, nav, placement, checks, arrangement,
     detail: { openingTable, doorTable, spawn: level.spawn, edgeLeaks: leak },
     genReport,
   };
