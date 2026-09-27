@@ -270,6 +270,7 @@ async function main() {
     const res = await sess.evalJs(`JSON.stringify((() => {
       let total = 0, n = 0;
       const by = {};
+      const urls = [];
       for (const e of performance.getEntriesByType('resource')) {
         const p = new URL(e.name).pathname.replace(/^\\//, '');
         const g = p.startsWith('assets/models/') ? '家具 .glb'
@@ -280,8 +281,12 @@ async function main() {
         (by[g] = by[g] || { n: 0, b: 0 });
         by[g].n++; by[g].b += e.decodedBodySize || 0;
         total += e.decodedBodySize || 0; n++;
+        /* 逐 URL 留档：线上首屏压缩后是多少字节，只能拿这份清单去对
+           （见 scripts/probe/live_payload.py）。不带 URL 的清单只能算本机数字。 */
+        urls.push([p, e.decodedBodySize || 0]);
       }
-      return { total, n, by };
+      urls.sort((a, b) => a[0].localeCompare(b[0]));
+      return { total, n, by, urls };
     })())`);
     const d = sess.diagnostics();
     const exc = d.exceptions.slice(from.e);
