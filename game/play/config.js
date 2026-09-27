@@ -50,7 +50,17 @@ export const MOVE = {
   // constant and re-run the rig -- do not re-quote.
   speed: 1.5,              // m/s -- WALKER.speed, held equal on purpose
   turnRate: 2.6,           // rad/s, now used ONLY by the scripted harness channel
-  mouseSens: 0.0021,       // rad per pixel of pointer-lock movement
+  // rad per pixel of pointer-lock movement. The player's words were "鼠标太灵敏，
+  // 一转就过头" and 0.0021 is a lot at any resolution: a 400 px flick swung the view
+  // 0.84 rad -- 48 degrees -- so aiming at a 0.42 m packet across the room was a
+  // twitch, not a turn. 0.0015 is a 29 % cut (400 px -> 34 deg), which keeps a slow
+  // sweep of the room comfortable while still crossing the flat in one motion.
+  //
+  // THIS IS A RENDERER-ONLY DIAL, and the rule in the header says why it is safe
+  // to move: `mouseSens` is read by `avatar.js` alone, from the pointer-lock delta
+  // -- the headless harness drives `turn` (turnRate) instead, and `stepSim` never
+  // sees it. So no measured win rate moves when this changes; only the hand.
+  mouseSens: 0.0015,       // rad per pixel of pointer-lock movement (was 0.0021)
   pitchLimit: 1.20,        // rad, just under straight up/down
   substep: 0.035,          // m per collision sub-step
   bobHz: 2.35,             // head-bob cycles per metre travelled
@@ -184,7 +194,7 @@ export const DIFFICULTIES = [
     // asked for was "where is it". It is still the quietest thing to walk
     // past on this ladder, which is what keeps the ladder a ladder.
     surveil: 0.80, prizeScale: 1.15,      // packet 13.2 x 8.3 cm
-    blurb: '一名走得慢、看得近的哨兵（扇区收窄至 0.8×）。红包比平时大一圈，先把六个房间走熟。',
+    blurb: '男主人一个人在家，走得慢、看得近（扇区收窄至 0.8×）。红包比平时大一圈，先把六个房间走熟。',
     ai: '⚠ 旧配置（无守卫 / 6 红包 / 16×10 cm）240 s：66.7 %，收集 5.67/6 —— 本档已有守卫，'
       + '且红包尺寸已缩小，此数作废，待按新配置重测（scripts/README「五条教训」1、VERDICT §6.2 REVISION 3）',
   },
@@ -192,7 +202,7 @@ export const DIFFICULTIES = [
     id: 'patrol', name: '标准', budget: 180,
     guard: 'patrol', guards: 1, prizeCount: 6,
     surveil: 1.00, prizeScale: 1.00,      // the measured base. do not move.
-    blurb: '一名巡逻哨。它会绕全屋走，在你附近停下来左右扫视。',
+    blurb: '男主人一个人绕全屋走，在你附近停下来左右扫视。',
     ai: '⚠ 旧配置（1 守卫 / 6 红包 / 16×10 cm）180 s：无守卫 66.7 % → 有巡逻 33.3 %'
       + '（−33.4 pt，被抓 2.08 次；24 种子，§6.2）。红包尺寸已缩小，此数作废，待重测',
   },
@@ -200,7 +210,7 @@ export const DIFFICULTIES = [
     id: 'tight', name: '紧张', budget: 180,
     guard: 'patrol', guards: 2, prizeCount: 12,
     surveil: 1.19, prizeScale: 0.85,      // 74°/4.2 m -> 88°/5.0 m (11.4 -> 19.2 m2)
-    blurb: '两名哨兵分头绕屋，监控扇区也更宽更远；红包十二个，每个都小一圈。',
+    blurb: '男主人与女主人分头绕屋，监控扇区也更宽更远；红包十二个，每个都小一圈。',
     ai: '⚠ 旧配置（1 守卫 / 6 红包 / 16×10 cm）180 s：29.2 % 胜，收集 4.88/6，被抓 1.96 次'
       + '（24 种子，§6.2）。本档现为 2 守卫 / 12 红包，此数作废，待重测',
   },
@@ -208,7 +218,7 @@ export const DIFFICULTIES = [
     id: 'hunter', name: '硬核', budget: 180,
     guard: 'hunter', guards: 2, prizeCount: 24,
     surveil: 1.00, prizeScale: 0.70,      // base 96°/6.0 m, packet 8.1 x 5.0 cm
-    blurb: '两名视野更宽、跑得更快的哨兵；二十四个红包，每个只有一张名片大。',
+    blurb: '男女主人视野更宽、跑得更快；二十四个红包，每个只有一张名片大。',
     ai: '⚠ 旧配置（1 守卫 / 6 红包 / 16×10 cm）180 s：12.5 % 胜，收集 3.54/6，被抓 3.21 次'
       + '（24 种子，§6.2）。本档现为 2 守卫 / 24 红包，此数作废，待重测',
   },
@@ -251,6 +261,220 @@ export const FEEL = {
   lowTime: 30,             // s at which the clock turns red
   toastMs: 1500,
 };
+
+/* --------------------------------------------------------------- actors */
+
+/**
+ * 男女主人：屋里那两个人。
+ *
+ * 素材是 KayKit Adventurers 的 Knight 与 Rogue（CC0），由
+ * `scripts/build_actors.py` 裁成五条剪辑后收进 `assets/actors/`。为什么是这一套、
+ * 裁掉了什么、量出来多少，都在 `game/ACTORS.md` 与 `data/actors.json` 里。
+ *
+ * **这里没有一个是"影响胜率"的旋钮。** 主人走多快、看多远、罚多久，全部由
+ * `GUARD_MODES` 与难度卡决定；下面这些只决定"看起来像不像人"：
+ * 播哪条剪辑、交叉淡入多久、贴多近挥拳。要动真格，请先读 `game/ACTORS.md` §5。
+ */
+export const HOSTS = {
+  enabled: true,
+  manifest: 'data/actors.json',
+
+  // 状态名 -> 源剪辑名。左边是本项目状态机的四个状态（+ 一个受惊过渡），
+  // 右边是素材里量出来的剪辑名（`data/actors.json` 的 `clips`）。
+  clips: {
+    idle: 'idle',        // 待机：站住、扫视
+    walk: 'walk',        // 行动：在巡逻路上走
+    run: 'run',          // 奔跑：追你
+    strike: 'strike',    // 打击：空手挥拳
+    startle: 'startle',  // 受惊：第一次看见你时那一下
+  },
+
+  // 模型局部正面是 +Z（量出来的，见 `scripts/build_actors.py` 的 FRONT_AXIS），
+  // 而 `GuardActor.group` 的约定是"局部正面 = +X"（视锥与聚光灯都照这个摆）。
+  // +pi/2 把模型的 +Z 拧成组内的 +X，于是"哪边是前"仍然只有一个来源。
+  modelYaw: Math.PI / 2,
+
+  fade: 0.16,          // s，状态之间的交叉淡入
+  strikeRange: 0.62,   // m，追击时贴到这个距离就出手（渲染层加注，不改物理）
+  strikeCooldown: 1.4, // s，两次挥拳之间至少隔这么久
+  startleFor: 0.44,    // s，受惊那一下演多久
+  // s，两次"受惊"之间至少隔这么久。**这不是手感调料，是量出来的必需项。**
+  // 核心的 `spot` 事件发的是"视线由断到通"的那一帧，而主人一边走一边被家具挡，
+  // 视线会一闪一灭 —— 实测在 2 m 处吊住玩家，`spot` 会在 240 帧里触发 176 帧的
+  // 受惊（73 %），把待机、行动、奔跑全顶掉，看着像在打摆子。加冷却后同一次
+  // 追捕里只激灵一次，后面的反复"看见"由 alert/run 自己表达。
+  startleCooldown: 2.5,
+  stillAfter: 0.35,    // s，位移小于阈值的沉默超过这么久就算"站着"
+
+  // 一个循环走几个身高（见 `HostBody._cadence` 里写明的取舍）。
+  stridePerHeight: { walk: 0.95, run: 1.60 },
+  maxTimeScale: 1.9,
+  timeScaleCap: { walk: 1.9, run: 1.7 },
+};
+
+/* --------------------------------------------------------------- music */
+
+/**
+ * The music mixer. Seven generated cues (`game/MUSIC.md`, produced by
+ * `scripts/gen_music.py`), routed through ONE bus in `music.js`.
+ *
+ * NOTHING HERE DECIDES WHETHER YOU WIN, so unlike everything above it is free
+ * to be tuned by ear. The two numbers that DO touch play are read from the
+ * state the run already computes -- `dangerM` against the guard's position and
+ * `lowSeconds` against the clock -- and neither feeds back into the sim.
+ *
+ * `lowSeconds` is deliberately `FEEL.lowTime`: the moment the clock turns red
+ * is the same moment the sprint cue comes in. Two definitions of "nearly out
+ * of time" is how a HUD and a soundtrack start telling different stories.
+ *
+ * THE TRACKS ARE OPTIONAL AND THE GAME MUST NOT CARE. They are the only
+ * binaries this repo would ship, so they are generated rather than committed,
+ * and `music.js` loads them ONLY if `assets/audio/manifest.json` is present.
+ * Absent manifest = the mixer stays off and not one mp3 is requested. That
+ * keeps `verify_play.mjs`'s clean-console rule true on a fresh clone.
+ */
+export const MUSIC = {
+  enabled: true,
+  dir: 'assets/audio/',
+  manifest: 'assets/audio/manifest.json',
+
+  // The music bus level. NOT the SFX bus: `audio.js` keeps 0.35 for cues, and
+  // the soundtrack gets its own unity bus (`audio.musicBus`) instead of being
+  // attenuated twice. Measured before the fix: the whole bed landed at an RMS
+  // near 1e-3 -- half of a "there is no sound" bug report. See `unlock()`.
+  master: 1.0,
+  crossfadeS: 1.1,         // s for one bed to replace another
+  duckS: 0.22,             // s for the duck coefficient to reach its target
+
+  // A sting (caught / win / lose) is a one-shot that owns the foreground.
+  stingDuck: 0.34,         // beds fall to this fraction while a sting rings
+  stingDuckS: 1.2,         // how long they stay down
+  stingAttack: 0.06,       // s fade-in on the sting itself
+  stingRelease: 0.70,      // s fade-out at the sting's tail
+
+  pauseDuck: 0.30,         // beds fall to this while paused
+
+  // Danger: the guard is close, or it has already noticed you. 5.0 m is
+  // deliberately ABOVE the base cone's 4.2 m range -- the music should tighten
+  // as the light approaches, before it can actually see you, so it reads as
+  // your nerves rather than as a second detection channel.
+  dangerM: 5.0,
+};
+
+/**
+ * The procedural fallback: the SAME seven cues, synthesised in the browser.
+ *
+ * WHY THIS EXISTS. `fun-music-v1` and `fun-music-preview` are both invitation-
+ * only and the account is in free-tier-only mode, so the generated mp3s cannot
+ * be produced yet (game/MUSIC.md §8). Rather than ship silence, `music.js` now
+ * synthesises the beds and stings itself, on the ONE `AudioContext` that
+ * `audio.js` already owns. Nothing is fetched, so the zero-404 rule is intact
+ * and a fresh clone is still silent-free by construction.
+ *
+ * HOW IT SOUNDS: not a loop of samples but a SCHEDULED ensemble. Each bed is a
+ * chord progression written out as a small table (root semitone + triad quality),
+ * played by three plain oscillators (a mild saw "pad", a triangle "bell" and a
+ * sine "bass") with a per-chord envelope. The lookahead scheduler in `music.js`
+ * queues the next bar ~25 ms ahead of `ctx.currentTime`, which is what keeps it
+ * on the audio clock instead of the frame clock -- a rhythm driven by rAF would
+ * wobble every time a guard update ate a frame.
+ *
+ * NOTHING HERE DECIDES WHETHER YOU WIN. Like `MUSIC` above it is free to be
+ * tuned by ear; the four state signals it reads (phase / danger / low / sting)
+ * all come from the run's own state and only select which bed is playing.
+ *
+ * KEEP `tracks` IN STEP WITH `scripts/gen_music.py`. The stinger/bed split is
+ * the same seven ids the generator and MUSIC.md §3 declare, and
+ * `scripts/verify_music.mjs` A1 still checks those two against each other.
+ * When the mp3s finally exist, `music.js` prefers them and this whole block
+ * becomes a fallback that never runs -- which is the point.
+ */
+export const PROCEDURAL = {
+  enabled: true,
+  master: 1.0,             // this bus's ceiling; the final level is MUSIC.master * this
+
+  // ---- the ensemble -----------------------------------------------------
+  // THESE NUMBERS ARE A LEVEL, NOT A TASTE. A bed is six saw oscillators at
+  // `padGain / 3` each (plus a bell and a bass), so the pad's peak is roughly
+  // its own value, not a third of it. At 0.045 the product of the whole chain
+  // -- pad x track.gain x 6 voices x this bus x MUSIC.master x audio.master --
+  // came to about 4e-3: audible only with the speaker against your ear. Raised
+  // so the bed's RMS sits near 0.02-0.03 with the SFX bus untouched.
+  padGain: 0.20,           // sustained saw, the room's "air"
+  padDetune: 3.0,          // cents between the two pad oscillators (the chorus)
+  bellGain: 0.10,          // triangle that walks the chord
+  bassGain: 0.26,          // sine on the root, one octave down
+  attack: 0.35,            // s, per-voice fade-in
+  release: 0.45,           // s, per-voice fade-out at the tail
+
+  // ---- the scheduler ----------------------------------------------------
+  lookahead: 0.08,         // s of audio queued ahead of now each tick
+  tickHz: 30,              // how often we top the queue up (cheap; not the frame rate)
+
+  // ---- danger tension ---------------------------------------------------
+  tensionDepth: 4.0,       // semitones the "danger" bed leans sharp-ish by
+  lowTempo: 1.12,          // lastcall plays its bar this much faster
+
+  // ---- the stings -------------------------------------------------------
+  // One-shots. `dur` is only a guardrail -- like the mp3 path, the voice list
+  // is what actually ends them.
+  stings: {
+    caught: { dur: 0.75 },
+    win: { dur: 1.6 },
+    lose: { dur: 1.4 },
+  },
+};
+
+/**
+ * The seven cues, as DATA: the id, whether it loops, and the chord table.
+ *
+ * A chord is `[rootSemitoneFromC, quality]` where quality indexes `CHORDS`
+ * below. Reading them as numbers rather than note names is what lets a bed
+ * transpose (menu sits under C4, danger sits on the same shapes a tritone up)
+ * without rewriting the melody as text.
+ *
+ * `menu` is warm and unresolved (a slow I–vi–IV–V that never quite lands on
+ * the tonic for long); `explore` is the same key, moving; `danger` is the
+ * same motion with a low minor-second drone under it; `lastcall` is danger
+ * with the tempo pushed and the bass walking down. The stings are one-liners.
+ */
+const CHORDS = {
+  // semitone offsets within an octave, for the triad
+  maj: [0, 4, 7],
+  min: [0, 3, 7],
+  maj7: [0, 4, 7, 11],
+  min7: [0, 3, 7, 10],
+  sus: [0, 5, 7],
+  dim: [0, 3, 6],
+};
+
+/** Cue table. `root` is a MIDI note; `chords` are [semi, quality] pairs. */
+export const PROCEDURAL_TRACKS = [
+  { id: 'menu', loop: true, root: 60, gain: 0.55, bpm: 76,
+    chords: [[0, 'maj7'], [-3, 'min7'], [5, 'maj'], [7, 'maj']] },
+  { id: 'explore', loop: true, root: 57, gain: 0.48, bpm: 92,
+    chords: [[0, 'min7'], [8, 'maj'], [5, 'min7'], [3, 'maj']] },
+  { id: 'danger', loop: true, root: 55, gain: 0.52, bpm: 104,
+    chords: [[0, 'min'], [-1, 'min'], [0, 'min'], [1, 'min']] },
+  { id: 'lastcall', loop: true, root: 55, gain: 0.55, bpm: 120,
+    chords: [[0, 'min'], [5, 'min'], [3, 'dim'], [-2, 'maj']] },
+  { id: 'caught', loop: false, root: 52, gain: 0.6, bpm: 0,
+    chords: [[0, 'dim'], [-6, 'dim']] },
+  { id: 'win', loop: false, root: 60, gain: 0.6, bpm: 0,
+    chords: [[0, 'maj'], [4, 'maj'], [7, 'maj'], [12, 'maj7']] },
+  { id: 'lose', loop: false, root: 55, gain: 0.6, bpm: 0,
+    chords: [[0, 'min'], [-5, 'maj'], [-7, 'min']] },
+];
+
+/** Semitone offset -> Hz, anchored at A4 = 440 (MIDI 69). */
+export function midiHz(midi, semis = 0) {
+  return 440 * Math.pow(2, (midi + semis - 69) / 12);
+}
+
+/** The triad for a quality name, as semitone offsets. */
+export function chordTones(quality) {
+  return CHORDS[quality] || CHORDS.maj;
+}
 
 /* ------------------------------------------------------- the two dials */
 
@@ -326,7 +550,7 @@ export function difficultySpec(preset, modes, collectible) {
   // between, so they are printed FIRST -- a card whose headline number is the
   // cone area buries the decision under its units.
   const watched = cfg
-    ? `${n} 守卫 · 监控 ${fanArea(cfg.coneDeg, cfg.range).toFixed(1)} m²`
+    ? `${n} 位主人 · 监控 ${fanArea(cfg.coneDeg, cfg.range).toFixed(1)} m²`
       + ` · ${Math.round(cfg.coneDeg)}° × ${cfg.range.toFixed(1)} m`
     : '无监控';
   return `${watched} · 红包 ${prizeCountFor(preset)} 个（${cm(c.size[0])}×${cm(c.size[2])} cm，`

@@ -1,0 +1,64 @@
+cardboardBoxClosed            meshes=1 nodes=1
+    Mesh cardboardBoxClosed    tris=54    size=[0.2125, 0.281, 0.2125]  min=[0, 0, -0.2125] max=[0.2125, 0.281, 0.0]
+    Mesh cardboardBoxClosed    tris=6     size=[0.2125, 0.281, 0.2125]  min=[0, 0, -0.2125] max=[0.2125, 0.281, 0.0]
+    node cardboardBoxClosed(Clone) mesh=0 t=[0, 0, 0]
+
+cardboardBoxOpen              meshes=1 nodes=1
+    Mesh cardboardBoxOpen      tris=54    size=[0.3719, 0.281, 0.2125]  min=[-0.0797, 0, -0.2125] max=[0.2922, 0.281, 0.0]
+    Mesh cardboardBoxOpen      tris=6     size=[0.3719, 0.281, 0.2125]  min=[-0.0797, 0, -0.2125] max=[0.2922, 0.281, 0.0]
+    node cardboardBoxOpen(Clone)  mesh=0 t=[0, 0, 0]
+
+fridge                        ERROR missing file
+fridgeBuiltin                 ERROR missing file
+hoodLarge                     meshes=1 nodes=1
+    Mesh hoodLarge             tris=28    size=[0.43, 0.3695, 0.2849]  min=[-0.0, 0, -0.2849] max=[0.43, 0.3695, 0]
+    Mesh hoodLarge             tris=8     size=[0.43, 0.3695, 0.2849]  min=[-0.0, 0, -0.2849] max=[0.43, 0.3695, 0]
+    node hoodLarge(Clone)         mesh=0 t=[0, 0, 0]
+
+hoodModern                    meshes=1 nodes=1
+    Mesh hoodModern            tris=24    size=[0.43, 0.3995, 0.2849]  min=[-0.0, -0.03, -0.2849] max=[0.43, 0.3695, 0]
+    Mesh hoodModern            tris=4     size=[0.43, 0.3995, 0.2849]  min=[-0.0, -0.03, -0.2849] max=[0.43, 0.3695, 0]
+    node hoodModern(Clone)        mesh=0 t=[0, 0, 0]
+
+washer                        meshes=2 nodes=2
+    Mesh washer                tris=80    size=[0.39, 0.47, 0.35]  min=[0, 0, -0.35] max=[0.39, 0.47, 0]
+    Mesh washer                tris=88    size=[0.39, 0.47, 0.35]  min=[0, 0, -0.35] max=[0.39, 0.47, 0]
+    Mesh washer                tris=4     size=[0.39, 0.47, 0.35]  min=[0, 0, -0.35] max=[0.39, 0.47, 0]
+    Mesh washerDoor            tris=498   size=[0.26, 0.06, 0.26]  min=[0, -0.03, -0.13] max=[0.26, 0.03, 0.13]
+    Mesh washerDoor            tris=46    size=[0.26, 0.06, 0.26]  min=[0, -0.03, -0.13] max=[0.26, 0.03, 0.13]
+    Mesh washerDoor            tris=4     size=[0.26, 0.06, 0.26]  min=[0, -0.03, -0.13] max=[0.26, 0.03, 0.13]
+    node washer(Clone)            mesh=0 t=[0, 0, 0]
+    node washerDoor               mesh=1 t=[0.065, 0.2258, 0.01]
+
+dryer                         meshes=2 nodes=2
+    Mesh dryer                 tris=64    size=[0.39, 0.47, 0.35]  min=[0, 0, -0.35] max=[0.39, 0.47, 0]
+    Mesh dryer                 tris=99    size=[0.39, 0.47, 0.35]  min=[0, 0, -0.35] max=[0.39, 0.47, 0]
+    Mesh dryer                 tris=15    size=[0.39, 0.47, 0.35]  min=[0, 0, -0.35] max=[0.39, 0.47, 0]
+    Mesh dryerDoor             tris=84    size=[0.27, 0.26, 0.07]  min=[0, -0.13, -0.04] max=[0.27, 0.13, 0.03]
+    node dryer(Clone)             mesh=0 t=[0, 0, 0]
+    node dryerDoor                mesh=1 t=[0.065, 0.2258, 0]
+
+sideTableDrawers              meshes=3 nodes=3
+    Mesh sideTableDrawers      tris=148   size=[0.5345, 0.3844, 0.22]  min=[-0.01, 0, -0.21] max=[0.5245, 0.3844, 0.01]
+    Mesh sideTableDrawers      tris=2     size=[0.5345, 0.3844, 0.22]  min=[-0.01, 0, -0.21] max=[0.5245, 0.3844, 0.01]
+    Mesh drawer                tris=34    size=[0.1968, 0.05, 0.1763]  min=[0, 0.0004, -0.0] max=[0.1968, 0.0504, 0.1763]
+    Mesh drawer                tris=10    size=[0.1968, 0.05, 0.1763]  min=[0, 0.0004, -0.0] max=[0.1968, 0.0504, 0.1763]
+    Mesh drawer                tris=34    size=[0.1968, 0.05, 0.1763]  min=[0, 0.0004, -0.0] max=[0.1968, 0.0504, 0.1763]
+    Mesh drawer                tris=10    size=[0.1968, 0.05, 0.1763]  min=[0, 0.0004, -0.0] max=[0.1968, 0.0504, 0.1763]
+    node sideTableDrawers(Clone)  mesh=0 t=[0, 0, 0]
+    node drawerLeft               mesh=1 t=[0.04, 0.274, -0.164]
+    node drawerRight              mesh=1 t=[0.2777, 0.274, -0.164]
+
+sideTable                     meshes=1 nodes=1
+    Mesh sideTable             tris=116   size=[0.5345, 0.3844, 0.22]  min=[-0.01, 0, -0.21] max=[0.5245, 0.3844, 0.01]
+    Mesh sideTable             tris=2     size=[0.5345, 0.3844, 0.22]  min=[-0.01, 0, -0.21] max=[0.5245, 0.3844, 0.01]
+    node sideTable(Clone)         mesh=0 t=[0, 0, 0]
+
+trashcan                      meshes=1 nodes=1
+    Mesh trashcan              tris=22    size=[0.496, 0.9064, 0.44]  min=[-0.2595, -0.0, -0.22] max=[0.2365, 0.9064, 0.22]
+    Mesh trashcan              tris=46    size=[0.496, 0.9064, 0.44]  min=[-0.2595, -0.0, -0.22] max=[0.2365, 0.9064, 0.22]
+    node trashcan(Clone)          mesh=0 t=[0, 0, 0]
+
+coatRackStanding              meshes=1 nodes=1
+    Mesh coatRackStanding      tris=190   size=[0.2728, 0.77, 0.2728]  min=[-0.1364, 0.0, -0.1364] max=[0.1364, 0.77, 0.1364]
+    node coatRackStanding(Clone)  mesh=0 t=[0, 0, 0]

@@ -130,18 +130,102 @@ function buildDoors(kit, L) {
 
 /* --------------------------------------------------------------- furniture */
 
+/**
+ * Which models are HERO PROPS: kept OUT of the per-room merge so the player can
+ * interact with them.
+ *
+ * WHY THIS LIST EXISTS AT ALL. `mergePlaced` collapses a room's furniture into
+ * a handful of meshes by material -- cheap, and it is why the whole flat is a
+ * few dozen draw calls. The cost is that an individual cupboard stops being a
+ * scene object: there is nothing left to rotate, slide or highlight. Opening a
+ * drawer is therefore not "animate a mesh", it is "choose, at BUILD time, the
+ * handful of props worth a draw call each". Everything not listed here keeps
+ * merging exactly as before, so the flat's draw-call budget is untouched.
+ *
+ * WHAT BELONGS HERE: things a person actually opens in a home -- doors with a
+ * leaf (`doorway`, `doorwayFront`), cabinets, bookcases, dressers, drawers,
+ * fridges, and the two containers that read as "search me" (`cardboardBox*`).
+ * WHAT DOES NOT: tables, sofas, rugs, plants -- they are scenery, and a hero
+ * slot spent on a sofa is a draw call that buys nothing.
+ *
+ * THE MODEL NAMES ARE DATA, read from `room.items[].m`; adding one here is the
+ * only change needed to make a new prop interactive -- `buildApartment` splits
+ * them automatically and `play.js` finds them by `userData.prop`.
+ */
+export const HERO_MODELS = new Set([
+  'doorway', 'doorwayFront',
+  'cabinetTelevision', 'cabinetTelevisionDoors',
+  'cabinetBed', 'cabinetBedDrawer', 'cabinetBedDrawerTable',
+  'bookcaseClosed', 'bookcaseClosedDoors', 'bookcaseClosedWide',
+  'bookcaseOpen', 'bookcaseOpenLow',
+  'bathroomCabinet', 'bathroomCabinetDrawer',
+  'kitchenCabinet', 'kitchenCabinetDrawer', 'kitchenCabinetUpper',
+  'kitchenCabinetUpperDouble', 'kitchenCabinetUpperCorner',
+  'cardboardBoxClosed', 'cardboardBoxOpen',
+  'fridge', 'fridgeBuiltin', 'hoodLarge', 'hoodModern',
+  'washer', 'dryer',
+  // The four in the shipped flat that a player will actually walk up to.
+  'sideTableDrawers', 'sideTable', 'trashcan', 'coatRackStanding',
+]);
+
+/**
+ * Build one room's furniture.
+ *
+ * Two passes: hero props become their own group (so a caller can move them),
+ * everything else merges as before. A hero group is placed EXACTLY like a
+ * merged piece -- `place()` is shared -- so whether a model is hero or merged
+ * is invisible to the render until someone touches it.
+ */
 function buildRoom(kit, room) {
   const objs = [];
   const items = [];
+  const heroes = [];
   for (const it of room.items) {
     if (it.skip) continue;
     const g = place(kit, it);
-    objs.push(g);
     items.push(it);
+    if (HERO_MODELS.has(it.m)) {
+      // A copy for the hero slot; the ORIGINAL instance is not reused because
+      // `mergePlaced` bakes geometry in world space and would consume it.
+      g.userData.prop = {
+        model: it.m,
+        room: room.id,
+        kind: propKindOf(it.m),
+        x: it.x, y: it.y || 0, z: it.z, r: it.r || 0, s: it.s || 1,
+        open: 0,                 // 0 shut .. 1 open; driven by the play layer
+        baseYaw: deg(it.r || 0),
+      };
+      heroes.push(g);
+    } else {
+      objs.push(g);
+    }
   }
   const merged = mergePlaced(objs, { name: 'room:' + room.id });
   merged.userData.zone = room.id;
-  return { group: merged, count: objs.length, items };
+  const heroGroup = new THREE.Group();
+  heroGroup.name = 'props:' + room.id;
+  heroGroup.userData.zone = room.id;
+  for (const h of heroes) heroGroup.add(h);
+  return { group: merged, heroGroup, count: objs.length, items, heroes: heroes.length };
+}
+
+/**
+ * What KIND of motion a prop does when opened. Derived from the model name so
+ * the same list drives both the build and the animation -- a drawer slides, a
+ * door swings, a box lifts its lid.
+ *
+ * This is deliberately a LOOKUP, not a per-instance flag: `room.items` is
+ * layout data and has no room for an animation hint, and adding one would mean
+ * touching every generated floor. The name is already there and already
+ * specific (`cabinetBedDrawer` vs `cabinetBed`), so it is used.
+ */
+function propKindOf(model) {
+  const m = model.toLowerCase();
+  if (m.startsWith('doorway')) return 'swing';
+  if (m.includes('drawer')) return 'slide';
+  if (m.includes('box')) return 'lid';
+  if (m.includes('hood')) return 'none';
+  return 'swing';
 }
 
 /* ------------------------------------------------------------------- entry */
@@ -166,16 +250,26 @@ export async function buildApartment(kit, { onProgress, layout } = {}) {
   // --- furniture ---------------------------------------------------------
   const furniture = new THREE.Group();
   furniture.name = 'furniture';
+  // Hero props live in their own group so the play layer can walk them without
+  // touching the merged scenery -- and so hiding/showing props is one toggle.
+  const props = new THREE.Group();
+  props.name = 'props';
   const rooms = [];
+  const heroes = [];
   let furnitureCount = 0;
   for (let i = 0; i < L.ROOMS.length; i++) {
     const r = buildRoom(kit, L.ROOMS[i]);
     furniture.add(r.group);
-    rooms.push({ id: L.ROOMS[i].id, name: L.ROOMS[i].name, group: r.group, items: r.items });
+    props.add(r.heroGroup);
+    for (const h of r.heroGroup.children) heroes.push(h);
+    rooms.push({
+      id: L.ROOMS[i].id, name: L.ROOMS[i].name,
+      group: r.group, items: r.items, heroes: r.heroes,
+    });
     furnitureCount += r.count;
     if (onProgress) onProgress((i + 1) / L.ROOMS.length, L.ROOMS[i].name);
   }
-  root.add(furniture);
+  root.add(furniture, props);
 
   // --- statistics --------------------------------------------------------
   let meshes = 0;
@@ -194,12 +288,13 @@ export async function buildApartment(kit, { onProgress, layout } = {}) {
     corners: corners.count,
     doors: doors.count,
     furniture: furnitureCount,
+    heroProps: heroes.length,
     meshes,
     tris: Math.round(tris),
     buildMs: Math.round(performance.now() - t0),
   };
 
-  return { root, structure, furniture, rooms, stats, floor };
+  return { root, structure, furniture, props, heroes, rooms, stats, floor };
 }
 
 export { place };

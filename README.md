@@ -1,10 +1,12 @@
 # 《一寸红》 · An Inch of Red
 
-> **你是一只 42 cm 高的小东西。红包永远不在低处 —— 而守卫的光永远在地上。**
+> **你是一只 42 cm 高的小东西，溜进别人家里偷红包。红包永远不在低处 —— 而主人的光永远在地上。**
 
-第一人称、限时找齐 **6–24 个红包**（按难度），同时避开 **1–2 名**巡逻守卫。在一间剖开的公寓里，
-红包只出现在桌面、台面、柜顶，或者塞进柜子里、夹在两件东西中间；
-而守卫脚下那片扇形光斑，始终落在地板上。
+第一人称、限时找齐 **6–24 个红包**（按难度），同时避开屋里的 **1–2 位主人**。
+他们不是巡逻的机器，是**一对有骨架的人**：站在那儿扫视、在屋里走动、撒腿就追、追上就打
+（待机 / 行动 / 奔跑 / 打击四态，男女主人各一台状态机 —— 见 [`game/ACTORS.md`](game/ACTORS.md)）。
+在一间剖开的公寓里，红包只出现在桌面、台面、柜顶，或者塞进柜子里、夹在两件东西中间；
+而他们脚下那片扇形光斑，始终落在地板上。
 
 ![游戏开始页](renders/play/00-menu.png)
 
@@ -53,8 +55,9 @@ python serve.py 9000 --no-open   # 换端口、不自动开浏览器
 | `W` `A` `S` `D` | 前后左右（贴墙会滑行，不会卡住） |
 | **鼠标** | **唯一的转向方式**（点画面锁定指针） |
 | `空格` | 跳跃，峰值 0.441 m；**`空格` + `W` 跳上家具**（茶几 / 浴缸 / 沙发 / 书桌 / 台面） |
+| `E` | **与准星所指的道具互动**：**门扇绕合页转** / **抽屉沿柜面滑出** / **箱盖后掀** / 无子部件的整件轻推（见 `game/PROPS.md`）。再按一次 `E` 关上/推回。 |
 | `G` | 红点提示开关（关掉就是硬核模式） |
-| `M` | 静音　`Esc` / `P`：暂停 |
+| `M` | 静音（**同时管音效与音乐**）　`Esc` / `P`：暂停 |
 
 ---
 
@@ -79,9 +82,13 @@ An-Inch-of-Red/            ← 本目录就是仓库根
 │   ├── arenas/            场景快照：room_scene.json（原始公寓 70 KB）+ maps/*.json（五张预制图）
 │   ├── maps/              ★ 六张预制地图：名册 / 平面数据 / 实测清单（菜单读 manifest.json）
 │   ├── procgen/           ★ 参数化户型生成：floorplan / pipeline / draw / playground
-│   └── play/              渲染层：输入→意图、状态→画面、结束判定
+│   ├── play/              渲染层：输入→意图、状态→画面、结束判定
+│   ├── MUSIC.md           配乐设计书：七首曲子 / 触发点 / 混音规则 / 程序化合成（音频是生成物，不入库）
+│   ├── PROPS.md           道具互动设计书：主角道具 / **动子网格不动整件** / "只改渲染不改物理"这条线
+│   └── ACTORS.md          男女主人设计书：KayKit CC0 素材 / 四态状态机 / 同样"只改渲染"这条线
 ├── js/  css/              查看器与 HUD：模型装载 / 布局数据 / 场景图 / 环境 / 打开守卫
-├── assets/models/         140 个 .glb（1.87 MB）
+├── assets/models/         140 个 .glb（1.87 MB，Kenney 家具）
+├── assets/actors/         2 个 .glb（879 KB，KayKit 男女主人；CC0 原文一并存放）
 ├── vendor/                Three.js（模块版 + OrbitControls / GLTFLoader / BufferGeometryUtils）
 ├── data/                  ★ 实测底账：重建场景快照所需的量测数据
 ├── scripts/               ★ 验证 / 诊断 / 派生工具（索引见 scripts/README.md）
@@ -101,10 +108,15 @@ An-Inch-of-Red/            ← 本目录就是仓库根
 整套工具**零第三方依赖**（Node 只用内置 `http` / `fetch` / `WebSocket`）。
 
 ```bash
-# 游戏：70 条断言（同世界 / 碰撞不变量 / 拾取 / 守卫 / 跳跃契约 / 跳上家具 /
+# 游戏：83 条断言（同世界 / 碰撞不变量 / 拾取 / 守卫 / 跳跃契约 / 跳上家具 /
 #       红包要爬上去取 / 红包不在任何地上 / 鼠标是唯一转向 / 每局随机且种子可复现 /
 #       缩略图字号 / 难度双旋钮 / 光的 A/B 像素差 / 开始页确实在屏幕上 / 像素统计）
 node scripts/verify_play.mjs
+
+# 男女主人：59 条断言（真骨架 / 四态状态机 / 朝向 / 像素）。**唯一真正重要的一条**在最后：
+#       同一个种子，step() 与 tick() 跑 600 步后守卫状态必须逐位相同 —— 动画层只要
+#       偷偷喂回模拟，VERDICT 里每个胜率都会作废，而且看不出来
+node scripts/verify_actors.mjs
 
 # 世界一致性：25 条断言 —— 看到的房子 == 玩的房子。三栋楼（10×8 六房 /
 #       16×14 十房 / 9×9 五房）逐栋比对包围盒、房间 id、地砖·门·家具的 1:1 计数，
@@ -140,9 +152,9 @@ node scripts/verify_maps.mjs
 #       （play.js 那一半是静态断言，输出里分开标注）
 node scripts/verify_menus.mjs
 
-# 红包尺寸 / 守备 / 两条巡逻，以及缩略图的迷雾与标识 —— 都不需要浏览器，本机直接跑
-node scripts/verify_packets.mjs
-node scripts/verify_minimap.mjs
+# 配乐：19 条断言 —— 曲目表三方对账（生成器 / 设计书 / 运行时）+ 触发优先级的
+#       行为测试（在 Node 里真跑一遍混音台，零浏览器、零音频文件）
+node scripts/verify_music.mjs
 ```
 
 最近一次读数（GPU = GTX 1660 SUPER）：
@@ -205,7 +217,7 @@ node scripts/snapshot_arena.mjs      # 读 data/ → 写 game/arenas/room_scene.
 
 ## 难度
 
-| 难度 | 预算 | 守卫 | 红包个数 | 红包大小 | 监控区（扇区 = 投光） |
+| 难度 | 预算 | 主人 | 红包个数 | 红包大小 | 监控区（扇区 = 投光） |
 |---|---|---|---|---|---|
 | 见习 `solo` | 240 s | **1**（扇区收窄 0.8×） | 6 | 13.2 × 8.3 cm | 59° × 3.4 m（5.8 m²） |
 | **标准 `patrol`** | 180 s | 1 | 6 | **11.5 × 7.2 cm** | 74° × 4.2 m（11.4 m²） |
@@ -214,8 +226,8 @@ node scripts/snapshot_arena.mjs      # 读 data/ → 写 game/arenas/room_scene.
 
 > ⚠ **这张表里没有胜率，因为现在的读数一个都不能印。** 上一版印过的
 > 66.7 / 33.3 / 29.2 / 12.5 % 取自在「≤1 守卫 / 6 红包 / **16 × 10 cm**」下跑的人格；
-> 本轮红包缩到 11.5 × 7.2 cm（察觉距离 ×0.72）、见习有了一名守卫、
-> 紧张与硬核各两名守卫看 12 / 24 个红包。重测要用 `scripts/measure_surveil.mjs`
+> 本轮红包缩到 11.5 × 7.2 cm（察觉距离 ×0.72）、见习有了一位主人、
+> 紧张与硬核各有两位主人看 12 / 24 个红包。重测要用 `scripts/measure_surveil.mjs`
 > 喂**新配置**，跑出来之前一律不印 —— 旧数字与失效理由都留在
 > [`game/VERDICT.md`](game/VERDICT.md) §6.2 的 REVISION 3 横幅里。
 
@@ -234,7 +246,12 @@ node scripts/snapshot_arena.mjs      # 读 data/ → 写 game/arenas/room_scene.
 
 ## 授权
 
-游戏素材来自 [Kenney Furniture Kit](https://kenney.nl/assets/furniture-kit)，
-**CC0 1.0 公有领域**，可自由用于商业项目，无需署名。
+游戏素材来自两套**CC0 1.0 公有领域**的素材，都可自由用于商业项目、无需署名：
+
+- [Kenney Furniture Kit](https://kenney.nl/assets/furniture-kit) —— 家具（140 个 .glb）；
+- [KayKit Adventurers](https://kaylousberg.com) —— 男女主人（2 个 .glb，取自骑士与盗贼，
+  精简掉手持道具与 71 条用不上的剪辑）。
+
 授权原文一并留档：[`CREDITS.md`](CREDITS.md) ·
-[`assets/LICENSE-kenney.txt`](assets/LICENSE-kenney.txt)。
+[`assets/LICENSE-kenney.txt`](assets/LICENSE-kenney.txt) ·
+[`assets/actors/LICENSE-kaykit.txt`](assets/actors/LICENSE-kaykit.txt)。

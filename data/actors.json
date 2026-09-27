@@ -1,0 +1,186 @@
+{
+ "source": "KayKit Adventurers Character Pack 1.0",
+ "author": "Kay Lousberg",
+ "license": "CC0 1.0 (public domain)",
+ "licenseFile": "assets/actors/LICENSE-kaykit.txt",
+ "why": "同一套 41 骨骨架 + 同一批剪辑名，男女主人可以互换动画；低多边形平面着色，与 Kenney 家具同一路数。",
+ "clips": {
+  "idle": "Idle",
+  "walk": "Walking_A",
+  "run": "Running_A",
+  "strike": "Unarmed_Melee_Attack_Punch_A",
+  "startle": "Hit_A"
+ },
+ "cast": [
+  {
+   "bytes": 453496,
+   "binBytes": 314364,
+   "tris": 4712,
+   "meshes": 8,
+   "materials": 1,
+   "images": 1,
+   "skins": 1,
+   "joints": 41,
+   "jointNames": [
+    "root",
+    "control-toe-roll.l",
+    "control-heel-roll.l",
+    "control-foot-roll.l",
+    "heelIK.l",
+    "IK-foot.l",
+    "IK-toe.l",
+    "control-toe-roll.r",
+    "control-heel-roll.r",
+    "control-foot-roll.r",
+    "heelIK.r",
+    "IK-foot.r",
+    "IK-toe.r",
+    "elbowIK.l",
+    "elbowIK.r",
+    "handIK.l",
+    "handIK.r",
+    "hips",
+    "spine",
+    "chest",
+    "head",
+    "upperarm.l",
+    "lowerarm.l",
+    "wrist.l",
+    "hand.l",
+    "handslot.l",
+    "upperarm.r",
+    "lowerarm.r",
+    "wrist.r",
+    "hand.r",
+    "handslot.r",
+    "upperleg.l",
+    "lowerleg.l",
+    "foot.l",
+    "toes.l",
+    "upperleg.r",
+    "lowerleg.r",
+    "foot.r",
+    "toes.r",
+    "kneeIK.l",
+    "kneeIK.r"
+   ],
+   "clips": {
+    "idle": {
+     "clip": "Idle",
+     "seconds": 1.0417
+    },
+    "walk": {
+     "clip": "Walking_A",
+     "seconds": 1.0417
+    },
+    "run": {
+     "clip": "Running_A",
+     "seconds": 0.7917
+    },
+    "strike": {
+     "clip": "Unarmed_Melee_Attack_Punch_A",
+     "seconds": 1.4583
+    },
+    "startle": {
+     "clip": "Hit_A",
+     "seconds": 0.6667
+    }
+   },
+   "heightM": 2.4666,
+   "front": "+Z",
+   "id": "male",
+   "role": "男主人",
+   "kit": "Knight",
+   "file": "assets/actors/host_male.glb",
+   "source": "KayKit Adventurers 1.0 / Knight.glb",
+   "sourceBytes": 3659532,
+   "neckFrac": 0.5033,
+   "eyeFrac": 0.5455
+  },
+  {
+   "bytes": 425496,
+   "binBytes": 287436,
+   "tris": 4347,
+   "meshes": 7,
+   "materials": 1,
+   "images": 1,
+   "skins": 1,
+   "joints": 41,
+   "jointNames": [
+    "root",
+    "control-toe-roll.l",
+    "control-heel-roll.l",
+    "control-foot-roll.l",
+    "heelIK.l",
+    "IK-foot.l",
+    "IK-toe.l",
+    "control-toe-roll.r",
+    "control-heel-roll.r",
+    "control-foot-roll.r",
+    "heelIK.r",
+    "IK-foot.r",
+    "IK-toe.r",
+    "elbowIK.l",
+    "elbowIK.r",
+    "handIK.l",
+    "handIK.r",
+    "hips",
+    "spine",
+    "chest",
+    "head",
+    "upperarm.l",
+    "lowerarm.l",
+    "wrist.l",
+    "hand.l",
+    "handslot.l",
+    "upperarm.r",
+    "lowerarm.r",
+    "wrist.r",
+    "hand.r",
+    "handslot.r",
+    "upperleg.l",
+    "lowerleg.l",
+    "foot.l",
+    "toes.l",
+    "upperleg.r",
+    "lowerleg.r",
+    "foot.r",
+    "toes.r",
+    "kneeIK.l",
+    "kneeIK.r"
+   ],
+   "clips": {
+    "idle": {
+     "clip": "Idle",
+     "seconds": 1.0417
+    },
+    "walk": {
+     "clip": "Walking_A",
+     "seconds": 1.0417
+    },
+    "run": {
+     "clip": "Running_A",
+     "seconds": 0.7917
+    },
+    "strike": {
+     "clip": "Unarmed_Melee_Attack_Punch_A",
+     "seconds": 1.4583
+    },
+    "startle": {
+     "clip": "Hit_A",
+     "seconds": 0.6667
+    }
+   },
+   "heightM": 2.187,
+   "front": "+Z",
+   "id": "female",
+   "role": "女主人",
+   "kit": "Rogue",
+   "file": "assets/actors/host_female.glb",
+   "source": "KayKit Adventurers 1.0 / Rogue.glb",
+   "sourceBytes": 3616284,
+   "neckFrac": 0.5676,
+   "eyeFrac": 0.5455
+  }
+ ]
+}

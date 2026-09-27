@@ -17,6 +17,7 @@
 <div id="flash"></div>
 
 <div id="crosshair"><i></i><i></i></div>
+<div id="prop-prompt" hidden><b>E</b> <span id="prop-prompt-text">打开</span></div>
 
 <header id="hud">
   <div class="line">
@@ -31,7 +32,7 @@
 <aside id="guardbox">
   <div class="gline">
     <span id="guard-dot" data-mode="patrol"></span>
-    <span id="guard-state">巡逻中</span>
+    <span id="guard-state">巡 逻</span>
   </div>
   <div id="suspbar"><i id="suspfill" data-mode="cool"></i></div>
   <p id="guard-hint">—</p>
@@ -40,7 +41,7 @@
 <div id="toasts"></div>
 <div id="banner"></div>
 
-<p id="hint"><b>WASD</b> 移动 · <b>鼠标</b> 转向 · <b>空格</b> 跳跃（能跳上桌子、浴缸、台面）· <b>G</b> 红点提示 · <b>M</b> 静音 · <b>Esc</b> 暂停</p>
+<p id="hint"><b>WASD</b> 移动 · <b>鼠标</b> 转向 · <b>空格</b> 跳跃（能跳上桌子、浴缸、台面）· <b>E</b> 开门/推柜 · <b>G</b> 红点提示 · <b>M</b> 静音 · <b>Esc</b> 暂停</p>
 
 <!-- ------------------------------------------------------------- loading -->
 <div id="ov-load" class="overlay">
@@ -79,12 +80,12 @@
 
     <button id="start-go" type="button" class="go">开始</button>
     <p class="foot">移动：<b>WASD</b>；<b>转向只靠鼠标</b>（点击画面锁定指针）；<b>空格</b> 跳跃；
-      走到红包上即拾取。左上角是平面缩略图：房间、你的朝向、守卫的朝向；
+      走到红包上即拾取。左上角是平面缩略图：房间、你的朝向、主人的朝向；
       <b>没走过的地方是黑的</b>，走过就会亮起来。
       红包不在明面上：它可能在柜子里，也可能夹在两个高过你的家具之间，往上跳才够得着。
-      每局开始重新藏红包，而且<b>不是每个房间都有</b>。难度越高，守卫越多（1 → 2 名）、
+      每局开始重新藏红包，而且<b>不是每个房间都有</b>。难度越高，主人越多（1 → 2 位）、
       盯住的地面越大、红包越小也越多（6 → 24 个）——
-      地上那片<b>光</b>就是它的监控区，站进去它就会看见你；视线被墙挡住它照样看不见。</p>
+      地上那片<b>光</b>就是主人的监控区，站进去就会被看见；视线被墙挡住他照样看不见。</p>
   </div>
 </div>
 

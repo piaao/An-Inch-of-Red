@@ -37,14 +37,17 @@ import { roomById } from '../core/level.js';
 import { loadArena, buildCore, placementSummary, MAX_GUARDS } from './boot.js';
 import { Avatar } from './avatar.js';
 import { GlintField, PrizeField, GuardActor, makePlayerShadow } from './scene.js';
+import { loadHostCast, HostBody } from './actors.js';
 import { Minimap } from './minimap.js';
 import { Hud, formatClock } from './hud.js';
 import { Audio } from './audio.js';
+import { Music } from './music.js';
+import { Props } from './props.js';
 import {
   DIFFICULTIES, DEFAULT_DIFFICULTY, PRIZE_COUNT,
-  MOVE, VIEW, LOOP, FEEL, CONE_HZ,
+  MOVE, VIEW, LOOP, FEEL, CONE_HZ, MUSIC,
   fanArea, guardCfgFor, collectibleFor, prizeAreaOf, noticeRangeOf, difficultySpec,
-  guardCountFor, prizeCountFor,
+  guardCountFor, prizeCountFor, HOSTS,
 } from './config.js';
 
 // WHICH FLOOR AM I PLAYING? The shipped apartment, unless the page was opened
@@ -305,6 +308,8 @@ const S = {
 
 let hud;
 let audio;
+let music;
+let props;              // 可互动道具（开门 / 推柜）—— 见 game/play/props.js
 let renderer;
 let camera;
 let scene;
@@ -361,6 +366,14 @@ let guardOverride = null;
 let runCollectible = null;
 let guardActors = [];
 let guardActor = null;
+/**
+ * 男女主人的素材：`{ source, cast }`。`source` 只有两个值，而且是给测试看的 ——
+ * 'files' 表示真的加载到了骨骼角色，'none' 表示这一局用的是程序化机器人。
+ * `scripts/verify_actors.mjs` 直接断言这一个字段，而不是去看屏幕上像不像人。
+ */
+let hostCast = { source: 'none', cast: new Map() };
+/** 第 i 个守卫是谁。两个人，按顺序出场：先男主人，再女主人。 */
+const HOST_ORDER = ['male', 'female'];
 let minimap = null;
 let prizeField;
 let glints;
@@ -390,6 +403,16 @@ const stats = { frames: 0, fps: 0, stepMs: 0, censusMs: 0, coneMs: 0 };
 export async function start() {
   hud = new Hud();
   audio = new Audio();
+  music = new Music();
+
+  // The soundtrack is OPTIONAL, and loading it must never be able to fail the
+  // boot: no manifest, and this resolves to `false` and the mixer stays off.
+  // Deliberately NOT awaited before the loading bar can show progress -- it is
+  // one small JSON, but a game that waits on music before it draws its flat has
+  // its priorities upside down. Kicked off here, its result read whenever it
+  // lands.
+  music.load().catch(() => {});
+
   /* --- WHICH FLOOR AM I PLAYING? answered before anything is built ------ */
   //
   // The arena used to be loaded LAST, after the apartment was already standing.
@@ -447,6 +470,20 @@ export async function start() {
   apartment = await buildApartment(kit, { layout: floorLayout });
   scene.add(apartment.root);
 
+  // ---- 可互动道具 --------------------------------------------------------
+  // `apartment.heroes` 是建造时从每屋家具里**单独拆出来**的主角道具（见
+  // `js/build.js` 的 HERO_MODELS）。合并掉的家具只留下一坨几何体，没有东西
+  // 可以开、可以推；这一批是没被合并的那些。
+  //
+  // 互动**只改渲染，不改物理**——所以它不动 VERDICT 里的任何胜率。理由与
+  // 代价写在 `game/play/props.js` 的文件头。
+  props = new Props(scene, apartment.heroes, {
+    reach: 1.25,       // 略大于红包的 0.42 手臂长度：开门比捡红包够得远一点
+    swingDeg: 84,
+    slideM: 0.20,
+    lidDeg: 56,
+  });
+
   // The query string first, so a reload can carry the player's choice across:
   // choosing another map IS a page load, and dropping the difficulty, the seed
   // or the intent to start on the way would make the rail unusable.
@@ -475,6 +512,10 @@ export async function start() {
     guardActors.push(a);
   }
   guardActor = guardActors[0];
+  // THE BODIES GO ON BEFORE THE RUN CAN START, and the failure path is not an
+  // exception: if the cast will not load, every actor keeps the procedural
+  // robot it was built with and the game is bit-for-bit the game it was.
+  await loadHosts();
   prizeField.rebuild(prizes, collectibleFor(preset, level.collectible));
 
   /* --- the thumbnail: a plan of the rooms plus two headings -------------- */
@@ -527,6 +568,50 @@ export async function start() {
   window.__play = api;
   window.__ready = true;
   return api;
+}
+
+/**
+ * 请主人就位。**失败不是异常，是一条降级路径。**
+ *
+ * 三段链和配乐（`music.js`）是同一条规矩：有素材就用真身体，没有就让程序化
+ * 机器人继续走。所以这个函数永远不抛 —— 它只会把 `hostCast.source` 置成
+ * 'none'，而 `verify_actors.mjs` 正是拿这一个字段来回答"到底换上了没有"。
+ *
+ * 素材名单只认 `data/actors.json`（零 404）：manifest 不在，一个 GLB 请求都
+ * 不会发出去。
+ */
+async function loadHosts() {
+  if (!HOSTS.enabled) {
+    hostCast = { source: 'none', cast: new Map(), why: 'HOSTS.enabled = false' };
+    return;
+  }
+  hud.loading('正在请主人就位…', 0.95);
+  await frame();
+  hostCast = await loadHostCast({ url: HOSTS.manifest });
+  if (hostCast.source !== 'files') {
+    console.warn('[hosts] 退回程序化身体：', hostCast.why || '');
+    return;
+  }
+  const ids = [...hostCast.cast.keys()];
+  let attached = 0;
+  for (let i = 0; i < guardActors.length; i++) {
+    // 先按名册发（男主人 -> 女主人），名册上只剩一个就两个人共用一副身体 ——
+    // 少一个人，也比退回两个机器人更像话。
+    const pick = hostCast.cast.get(HOST_ORDER[i % HOST_ORDER.length])
+      || hostCast.cast.get(ids[i % ids.length]);
+    if (!pick) continue;
+    const clips = Object.create(null);
+    for (const [state, name] of Object.entries(HOSTS.clips)) {
+      clips[state] = pick.clips.get(name);
+    }
+    guardActors[i].setBody(new HostBody(
+      pick.def, pick.gltf, level.body, clips, { envIntensity: kit.envIntensity }));
+    attached += 1;
+  }
+  hostCast = { ...hostCast, attached };
+  if (!attached) {
+    hostCast = { ...hostCast, source: 'none', why: 'no actor could be given a body' };
+  }
 }
 
 async function rebuildCore() {
@@ -609,7 +694,7 @@ function openMenu() {
 async function beginRun(id) {
   const p = DIFFICULTIES.find((d) => d.id === id) || DIFFICULTIES[0];
   preset = p;
-  audio.unlock();
+  unlockAudio();
   hud.hideStart();
   hud.hideEnd();
   hud.hidePause();
@@ -647,7 +732,7 @@ async function beginRun(id) {
   resetRun();
   hud.hideLoading();
   S.phase = 'playing';
-  hud.banner(`${p.name} · ${formatClock(p.budget)} · ${guardCountFor(p)} 守卫 · ${prizeCountFor(p)} 红包`, 1600);
+  hud.banner(`${p.name} · ${formatClock(p.budget)} · ${hostLabel(guardCountFor(p))} · ${prizeCountFor(p)} 红包`, 1600);
   const c = document.getElementById('stage');
   if (c.requestPointerLock) {
     try { const r = c.requestPointerLock(); if (r && r.catch) r.catch(() => {}); } catch { /* headless */ }
@@ -674,6 +759,11 @@ function resetRun() {
   clearedList = [];
   glints.hideAll();
   initFog();
+  // Every prop back to shut. A door the LAST run left open is a lie about this
+  // run's flat -- and since props are built once and reused across runs (a
+  // rebuild would mean reloading the kit), resetting them is what makes
+  // "one apartment per page load, many runs" honest.
+  if (props) props.reset();
 
   guards = [];
   const nGuards = guardOverride != null ? guardOverride : guardCountFor(preset);
@@ -715,6 +805,10 @@ function finish(win) {
   });
   hud.grade(win ? 'win' : 'lose');
   if (win) audio.win(); else audio.lose();
+  // The sting is the last word, and it owns the foreground: the beds duck for
+  // `MUSIC.stingDuckS` so the four-note synth cue and the six-second orchestral
+  // one are heard as ONE event rather than as two things happening at once.
+  music.sting(win ? 'win' : 'lose');
 }
 
 /* ----------------------------------------------------------------- step */
@@ -750,8 +844,8 @@ function stepSim(dt) {
   updateFog();
 
   const gp = avatar.pos();
-  for (const g of guards) {
-    for (const ev of g.update(dt, gp)) onGuardEvent(ev);
+  for (let i = 0; i < guards.length; i++) {
+    for (const ev of guards[i].update(dt, gp)) onGuardEvent(ev, i);
   }
 
   const remaining = preset.budget - S.elapsed;
@@ -935,7 +1029,11 @@ function updateFog() {
   }
 }
 
-function onGuardEvent(ev) {
+function onGuardEvent(ev, who) {
+  // The body hears the event TOO, and it is the only thing that listens for a
+  // purely visual reason: `spot` makes the host flinch, `caught` makes it throw
+  // the punch. Nothing here writes back into the sim.
+  if (guardActors[who]) guardActors[who].onEvent(ev);
   if (ev.type === 'caught') {
     S.catches += 1;
     S.penalties += ev.penalty;
@@ -944,6 +1042,7 @@ function onGuardEvent(ev) {
     avatar.stun = MOVE.stunAfterCatch;
     hud.flash('caught');
     audio.caught();
+    music.sting('caught');
     hud.toast(`被发现！罚时 +${ev.penalty}s`, 'bad');
   } else if (ev.type === 'spot') {
     hud.flash('spot');
@@ -976,17 +1075,23 @@ function hudUpdates() {
     ? guards.reduce((a, b) => (dangerRank(b) > dangerRank(a) ? b : a))
     : null;
   if (hot) {
-    const many = guards.length > 1 ? `${guards.length} 名哨兵` : '它';
+    const many = guards.length > 1 ? `${guards.length} 位主人` : '主人';
     hud.guard({
       enabled: true, mode: hot.mode, suspicion: hot.suspicion,
-      hint: hot.mode === 'chase' ? `被${many}追了 —— 绕开它，等它跟丢。`
+      hint: hot.mode === 'chase' ? `${many}在追你 —— 绕开、等它跟丢。`
         : hot.mode === 'alert' ? `${many}里有一个察觉到你了：离开视线，警觉会回落。`
-          : `${many}在巡逻。别站进它们前面的扇区。`,
+          : `${many}在屋里走动。别站进视锥的黄区。`,
     });
   } else {
-    hud.guard({ enabled: false, mode: 'off', suspicion: 0, hint: '没有守卫。把六个房间走熟。' });
+    hud.guard({ enabled: false, mode: 'off', suspicion: 0,
+      hint: '主人不在家。把六个房间走熟。' });
   }
   hud.grade(hot && hot.mode === 'chase' ? 'chase' : (remaining <= FEEL.lowTime ? 'low' : 'none'));
+}
+
+/** 「守卫」在这一局里是**主人** —— 我们才是翻进去的那一个。 */
+function hostLabel(n) {
+  return n <= 0 ? '空屋' : `${n} 位主人`;
 }
 
 function roomName(id) {
@@ -995,6 +1100,17 @@ function roomName(id) {
 }
 
 /* ---------------------------------------------------------------- render */
+
+/**
+ * Put the camera on the avatar's eyes. The ONE place that poses it, shared by
+ * `render()` and by the harness's `aimAt()` -- so "where the camera is" cannot
+ * drift between the draw path and the interaction path.
+ */
+function poseCamera() {
+  const eye = avatar.eye();
+  camera.position.set(eye.x, eye.y, eye.z);
+  camera.rotation.set(avatar.pitch, avatar.yaw, 0);
+}
 
 function render() {
   if (guards.length) {
@@ -1008,9 +1124,7 @@ function render() {
   }
 
   if (!freeCam) {
-    const eye = avatar.eye();
-    camera.position.set(eye.x, eye.y, eye.z);
-    camera.rotation.set(avatar.pitch, avatar.yaw, 0);
+    poseCamera();
   } else {
     camera.position.set(freeCam.x, freeCam.y, freeCam.z);
     camera.lookAt(freeCam.tx, freeCam.ty, freeCam.tz);
@@ -1036,23 +1150,144 @@ function render() {
 
 function resize() {
   const w = window.innerWidth;
-  const h = window.innerHeight;
-  renderer.setSize(w, h, false);
+  const h = window.innerHeight;  renderer.setSize(w, h, false);
   camera.aspect = w / h;
   camera.updateProjectionMatrix();
 }
 
 let last = 0;
+/**
+ * 男女主人的一帧：状态机 + 骨架动画。**与 `propsTick` 同一个位置、同一个理由。**
+ *
+ * 它不画东西，所以 `__play.tick()`（不渲染）也能推进它 —— 否则"状态机永远停在
+ * 待机"就会变成一句关于正常代码的错误结论。
+ */
+function hostsTick(dt) {
+  if (!guards.length) return 0;
+  const p = avatar ? avatar.pos() : null;
+  for (let i = 0; i < guards.length; i++) {
+    if (guardActors[i]) guardActors[i].animTick(dt, guards[i], p);
+  }
+  return guards.length;
+}
+
 function loop(now) {
   requestAnimationFrame(loop);
   const dt = last ? Math.min(LOOP.maxDt, (now - last) / 1000) : 0;
   last = now;
   if (S.phase === 'playing') stepSim(dt);
   else { S.t += dt; coneAcc += dt; }
+  musicTick(dt);
+  propsTick(dt);
+  hostsTick(dt);
   render();
   stats.frames += 1;
   if (stats.frames % 30 === 0 && dt > 0) stats.fps = Math.round(1 / dt);
 }
+
+/**
+ * The one place music learns anything about the run.
+ *
+ * It runs EVERY frame, in every phase, not just while playing -- because the
+ * menu bed, the pause duck and the "which phase am I in now" question all live
+ * outside `stepSim`. Keeping the decision here rather than sprinkling
+ * `setBed('menu')` into `openMenu`, `setBed('explore')` into `beginRun` and so
+ * on means the answer to "why is this song playing?" is a single function that
+ * reads the same `S.phase` the HUD does.
+ *
+ * Both signals are READ, never fed back: `danger` is the guard's own position
+ * and mode, `low` is the same clock the HUD shows. Music cannot change the sim,
+ * which is why a soundtrack may be tuned by ear without invalidating a single
+ * measured win rate.
+ */
+function musicTick(dt) {
+  if (!music || !music.enabled) return;
+  // Read the REAL guard off the sim, not off `guardActor` (which the harness
+  // can drive independently) -- the music must describe the game, not the prop.
+  let danger = false;
+  if (guard && (S.phase === 'playing' || S.phase === 'paused') && avatar) {
+    const g = guard.state();
+    const d = Math.hypot(g.pos.x - avatar.x, g.pos.z - avatar.z);
+    danger = d < MUSIC.dangerM || g.mode !== 'patrol';
+  }
+  const remaining = preset ? preset.budget - S.elapsed : Infinity;
+  music.update(dt, {
+    phase: S.phase,
+    danger,
+    // `FEEL.lowTime`, not a `MUSIC.lowSeconds` that never existed: the config
+    // header promises the sprint cue lands on the same frame the clock turns
+    // red, and the two ends of that promise are `hud.clock(..., FEEL.lowTime)`
+    // just above and this line. `MUSIC.lowSeconds` was reading `undefined`,
+    // so the comparison was always false and the `lastcall` bed could never
+    // play -- a silent bug, because "the music never got tense" is exactly
+    // what a missing cue sounds like.
+    low: S.phase === 'playing' && remaining <= FEEL.lowTime,
+  });
+}
+
+/* ---------------------------------------------------------------- props */
+
+/**
+ * 每帧：更新准星指向的道具，并把当前焦点报给 HUD。
+ *
+ * 射线只在**游玩中**发射，而且只对着 `props.heroes`（几十个对象，不是上千个
+ * 网格）——每帧一次 `intersectObjects` 在这个规模上便宜得可以忽略，但暂停、
+ * 菜单、结算时仍然是零成本。
+ *
+ * **它不改 sim。** 互动（`interact()`）改的是道具自己的 transform，`level.solids`
+ * 一动不动，所以 `stepSim` 与它的确定性契约完全不受影响。
+ */
+function propsTick(dt) {
+  if (!props) return;
+  // 读数只是为了显示，这一步在逻辑上属于渲染；不管什么 phase 都推进动画，
+  // 否则中途暂停会让门停在半开的位置。
+  props.update(dt);
+  if (S.phase !== 'playing' || !avatar || !camera) { hud.propPrompt(null); return; }
+  const eye = avatar.eye();
+  // 相机朝向：`camera` 每帧由 avatar 的 yaw/pitch 摆放，getWorldDirection 拿到的
+  // 就是屏幕正中的那条线，和准星是同一件事。
+  const dir = camera.getWorldDirection(PROP_RAY_DIR);
+  const hit = props.pick(eye, dir);
+  const p = hit && hit.userData.prop;
+  hud.propPrompt(p ? {
+    model: p.model,
+    kind: p.kind,
+    open: p.open > 0.5,
+  } : null);
+}
+
+/** E 键：对当前准星所指的道具做一次互动，并给一句反馈。 */
+function interact() {
+  if (!props) return null;
+  const r = props.activate();
+  if (!r) return null;
+  // 一点声音反馈，让"开了"不止是视觉上的。复用现成的合成音效，不加素材。
+  audio.dismiss();
+  const verb = r.kind === 'slide' ? (r.open ? '拉开' : '推回')
+    : (r.open ? '打开' : '关上');
+  hud.toast(`${verb} · ${propsLabel(r.model)}`, 'info');
+  return r;
+}
+
+/** 模型名 -> 玩家看得懂的词。没有映射的就退回原名（而不是猜）。 */
+function propsLabel(model) {
+  const m = String(model).toLowerCase();
+  if (m.startsWith('doorway')) return '门';
+  if (m.includes('drawer')) return '抽屉';
+  if (m.includes('bookcase')) return '书柜';
+  if (m.includes('cabinet')) return '柜子';
+  if (m.includes('box')) return '箱子';
+  if (m.includes('fridge')) return '冰箱';
+  if (m.includes('washers') || m.includes('washer')) return '洗衣机';
+  if (m.includes('dryer')) return '烘干机';
+  if (m.includes('trashcan')) return '垃圾桶';
+  if (m.includes('coatrack')) return '衣帽架';
+  if (m.includes('sideTable')) return '边桌';
+  return model;
+}
+
+// 一个复用的向量，避免每帧 new（`propsTick` 每帧都跑）。
+const PROP_RAY_DIR = new THREE.Vector3();
 
 /* ----------------------------------------------------------------- input */
 
@@ -1061,7 +1296,15 @@ function bindInput(canvas) {
     if (e.repeat) return;
     keys.add(e.code);
     if (e.code === 'Escape') { togglePause(); return; }
-    if (e.code === 'KeyM') { audio.setMuted(!audio.muted); hud.toast(audio.muted ? '静音' : '开声', 'info'); }
+    if (e.code === 'KeyM') {
+      // One switch for the whole house. Two mute keys would be a trap: the
+      // player would silence the effects, keep the music, and conclude the
+      // music was broken.
+      const v = !audio.muted;
+      audio.setMuted(v);
+      music.setMuted(v);
+      hud.toast(v ? '静音' : '开声', 'info');
+    }
     if (e.code === 'KeyG') {
       markersOn = !markersOn;
       if (!markersOn) glints.hideAll();
@@ -1069,6 +1312,11 @@ function bindInput(canvas) {
       hud.toast(markersOn ? '红点提示：开' : '红点提示：关（硬核）', 'info');
     }
     if (e.code === 'KeyP' && S.phase === 'playing') togglePause();
+    // E is the interact key: open the door / slide the drawer / shift the prop
+    // the crosshair is on. It reads `props.focus`, which `propsTick` refreshed
+    // this frame from a ray out of the eye -- so "what E acts on" and "what the
+    // prompt says you will act on" are the same variable, not two guesses.
+    if (e.code === 'KeyE' && S.phase === 'playing') interact();
     if (['KeyW', 'KeyA', 'KeyS', 'KeyD', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(e.code)) {
       e.preventDefault();
     }
@@ -1086,7 +1334,7 @@ function bindInput(canvas) {
       if (canvas.requestPointerLock) {
         try { const r = canvas.requestPointerLock(); if (r && r.catch) r.catch(() => {}); } catch { /* */ }
       }
-      audio.unlock();
+      unlockAudio();
     }
   });
   // Losing the pointer lock is the conventional pause gesture. Guarded so a
@@ -1100,6 +1348,29 @@ function bindInput(canvas) {
   });
 }
 let hadLock = false;
+
+/**
+ * 开声。**唯一的解锁入口**，所有需要音频的路径都走它。
+ *
+ * 两件事必须一起做，而且顺序不能反：先让 `audio.js` 建出那个全局唯一的
+ * AudioContext（浏览器只允许在用户手势里建），再把同一个 ctx 交给 `music`
+ * 的程序化引擎。少了后半句，没有 mp3 时游戏就是哑的——而这正是当前状态
+ * （game/MUSIC.md §8：音乐模型未开通）。
+ *
+ * 幂等：重复调用只是把已挂起的 ctx resume 一下。
+ */
+export function unlockAudio() {
+  audio.unlock();
+  if (audio.ctx) {
+    // `audio.musicBus` (unity) rather than `audio.master` (0.35, SFX
+    // headroom). Sharing the SFX attenuation put the whole bed at an RMS near
+    // 1e-3 -- see `audio.js` unlock(). The master gain is still downstream, so
+    // M still mutes both; `master` is the fallback for a caller that built an
+    // AudioContext before `musicBus` existed.
+    music.attach(audio.ctx, audio.musicBus || audio.master);
+  }
+  return !!audio.ctx;
+}
 
 export function togglePause() {
   if (S.phase === 'playing') {
@@ -1139,6 +1410,8 @@ function info() {
     markersOn,
     seedPolicy: seedPinned ? 'pinned' : 'random',
     difficulty: difficultyReadout(),
+    music: music ? music.state() : null,
+    props: props ? props.state() : null,
     stats: { ...stats },
   };
 }
@@ -1187,8 +1460,42 @@ const api = {
   get prizeField() { return prizeField; },
   get glints() { return glints; },
   get minimap() { return minimap; },
+  get props() { return props; },
+  /** 男女主人：谁站在场上、正在演哪个状态。`source:'files'` 才算真的换上了骨骼。 */
+  get hosts() {
+    return {
+      source: hostCast.source,
+      why: hostCast.why || null,
+      cast: [...hostCast.cast.keys()],
+      actors: guardActors.slice(0, guards.length).map((a) => a.report()),
+    };
+  },
+  /** The audio graph, for harnesses that need to MEASURE the soundtrack.
+   *  "Which cue is playing" is `music.state()`; "is any sound coming out" can
+   *  only be answered by tapping `audio.musicBus` with an analyser. */
+  get audio() { return audio; },
+  get music() { return music; },
+  /** Start the AudioContext from a harness (the start button does this for a
+   *  player). Without a real gesture the browser leaves it suspended. */
+  unlockAudio: () => unlockAudio(),
   get seed() { return seed; },
   summary: () => placementSummary(level, core),
+
+  /**
+   * Interact with whatever the crosshair is on, exactly as the E key does.
+   * Returns the prop's { model, kind, open } or null. Exposed so a harness can
+   * drive the same path a player's keypress drives -- not a parallel one.
+   */
+  interact: () => interact(),
+
+  /** Point the crosshair at a world spot and refresh `props.focus` this frame. */
+  aimAt(x, y, z) {
+    if (!avatar) return null;
+    avatar.lookAt(x, z, y);
+    poseCamera();
+    propsTick(0);
+    return props ? props.state().focus : null;
+  },
 
   /** Recompute the placement for a new seed / count without restarting. */
   async configure({ seed: s, count, markers, pin, guards: nG } = {}) {
@@ -1236,6 +1543,55 @@ const api = {
   step(dt = 1 / 60, n = 1) {
     for (let i = 0; i < n; i++) { if (S.phase !== 'playing') break; stepSim(dt); }
     return info();
+  },
+
+  /**
+   * Advance ONE WHOLE FRAME, the way `loop()` does -- sim, music, props, no
+   * draw. `step()` deliberately stops at the sim, and that is right for the
+   * collision and patrol assertions (they want the sim and nothing else). But
+   * anything that animates OUTSIDE `stepSim` -- the prop open/close tween is
+   * the only one -- would never advance under `step()`, which made a test read
+   * "the door never moved" about a door that was working.
+   *
+   * Deterministic: fixed dt, no rAF, no wall clock. `render()` is skipped
+   * because drawing is not what these assertions are about; call `renderOnce()`
+   * to force a frame.
+   */
+  tick(dt = 1 / 60, n = 1) {
+    for (let i = 0; i < n; i++) {
+      if (S.phase === 'playing') stepSim(dt);
+      else { S.t += dt; coneAcc += dt; }
+      musicTick(dt);
+      propsTick(dt);
+      hostsTick(dt);
+    }
+    return info();
+  },
+
+  /**
+   * Advance only the prop tweens, leaving the sim frozen at `dt = 0`.
+   *
+   * For a harness that wants to watch a door swing WITHOUT also walking the
+   * guard around (which can end the run mid-measurement). Reads the same
+   * `propsTick` the frame loop does, so it is not a parallel path -- it is the
+   * same code with the clock held still.
+   */
+  animProps(dt = 1 / 60, n = 1) {
+    for (let i = 0; i < n; i++) propsTick(dt);
+    return info();
+  },
+
+  /**
+   * Advance ONLY the hosts' animation, leaving the simulation frozen.
+   *
+   * The twin of `animProps`, for the same reason: driving the state machine by
+   * walking the guard around would ALSO walk it in and out of your view, and a
+   * test that wants "which clip is playing while it chases" must not have to
+   * accept a different chase every time. Returns each actor's `report()`.
+   */
+  animHosts(dt = 1 / 60, n = 1) {
+    for (let i = 0; i < n; i++) hostsTick(dt);
+    return guardActors.slice(0, guards.length).map((a) => a.report());
   },
 
   input(o) { Object.assign(scripted, o); return { ...scripted }; },

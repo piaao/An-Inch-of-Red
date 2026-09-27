@@ -308,11 +308,22 @@ function bangTexture() {
 }
 
 /**
- * The sentry, assembled from the kit's own palette so it does not look bolted
- * on: one wheel skirt, one tapered body, one glass dome, one lens.
+ * The sentry.
+ *
+ * TWO BODIES, ONE ACTOR. The procedural robot below (one wheel skirt, one
+ * tapered body, one glass dome, one lens) is the FALLBACK: if the skeletal
+ * 主人 in `assets/actors/` cannot be loaded, this is what walks the patrol, and
+ * the game is exactly as playable as it ever was. `setBody()` swaps in the real
+ * character (see `actors.js`) and hides the robot.
+ *
+ * WHAT DOES NOT CHANGE WHEN THE BODY DOES: the vision fan, the floor pool, the
+ * lens glare and the "!" sprite. Those are the game's readable difficulty
+ * surface -- `cfg.coneDeg`, `cfg.range` and `suspicion` are drawn from the same
+ * three numbers whatever is standing there -- so they live here and neither
+ * body can disagree with them.
  *
  * `facing` in the core is a plan bearing where 0 means +X (it is built from
- * `Math.atan2(dz, dx)`), so the mesh's local front is +X and the group is
+ * `Math.atan2(dz, dx)`), so the group's local front is +X and the group is
  * rotated by -facing. Getting this backwards makes the guard walk sideways,
  * which is the kind of bug that looks like a pathfinding failure.
  */
@@ -323,6 +334,13 @@ export class GuardActor {
     this.group.name = 'guard';
     scene.add(this.group);
 
+    // The fallback body gets its own child, so swapping in a skeleton is a
+    // `visible = false` and not a surgery on the group's children.
+    this.fallback = new THREE.Group();
+    this.fallback.name = 'guard:procedural';
+    this.group.add(this.fallback);
+    this.host = null;
+
     const dark = new THREE.MeshStandardMaterial({ color: 0x2f3a45, roughness: 0.52, metalness: 0.25, flatShading: true });
     const mid = new THREE.MeshStandardMaterial({ color: 0x59636e, roughness: 0.45, metalness: 0.3, flatShading: true });
     const glassy = new THREE.MeshStandardMaterial({ color: 0x8fb6c9, roughness: 0.15, metalness: 0.1, flatShading: true, transparent: true, opacity: 0.75 });
@@ -332,22 +350,22 @@ export class GuardActor {
 
     const skirt = new THREE.Mesh(new THREE.CylinderGeometry(R, R * 1.06, 0.05, 22), dark);
     skirt.position.y = 0.025;
-    this.group.add(skirt);
+    this.fallback.add(skirt);
 
     const bodyH = H * 0.52;
     const shell = new THREE.Mesh(new THREE.CylinderGeometry(R * 0.78, R * 0.98, bodyH, 22), mid);
     shell.position.y = 0.05 + bodyH / 2;
-    this.group.add(shell);
+    this.fallback.add(shell);
 
     const domeR = R * 0.70;
     const dome = new THREE.Mesh(new THREE.SphereGeometry(domeR, 20, 12), glassy);
     dome.position.y = 0.05 + bodyH + domeR * 0.42;
     dome.scale.y = 0.82;
-    this.group.add(dome);
+    this.fallback.add(dome);
 
     const antenna = new THREE.Mesh(new THREE.CylinderGeometry(0.006, 0.006, 0.06, 6), dark);
     antenna.position.y = H - 0.03;
-    this.group.add(antenna);
+    this.fallback.add(antenna);
 
     // The lens sits at the arena's `guardEye`, on the local +X face.
     this.eyeMat = new THREE.MeshStandardMaterial({
@@ -356,7 +374,7 @@ export class GuardActor {
     });
     const lens = new THREE.Mesh(new THREE.BoxGeometry(0.022, 0.05, 0.085), this.eyeMat);
     lens.position.set(R * 0.94, body.guardEye, 0);
-    this.group.add(lens);
+    this.fallback.add(lens);
 
     for (const o of [skirt, shell, dome, antenna, lens]) {
       o.castShadow = true;
@@ -433,25 +451,36 @@ export class GuardActor {
    *                     runs at CONE_HZ while the body follows the simulation
    *                     every frame -- a guard whose body stutters is far more
    *                     noticeable than a fan that updates 30 times a second.
+   * NOTE that the skeletal BODY is not advanced here. Its state machine and
+   * animation mixer are driven by `animTick()`, which the frame loop calls the
+   * same way it calls `propsTick()` -- see the note on that method for why the
+   * two must not be the same call.
    */
   update(level, guard, rebuildCone, t) {
     const cfg = guard.cfg;
     const mode = MODE_COLOUR[guard.mode] ? guard.mode : 'patrol';
     const col = MODE_COLOUR[mode];
 
-    const bob = Math.sin(t * 9 + guard.index) * 0.004;
+    // The bob is the ROBOT's gait. A body with a skeleton walks with its own
+    // legs, and adding a 4 mm vertical wobble on top of a walk cycle is how you
+    // get a character that looks seasick.
+    const bob = this.host ? 0 : Math.sin(t * 9 + guard.index) * 0.004;
     this.group.position.set(guard.pos.x, bob, guard.pos.z);
     this.group.rotation.y = -guard.facing;
 
     // Suspicion reads on the lens AND on the fan: a guard you cannot read is a
     // guard that feels unfair, and its bar is the one number the player must be
-    // able to see without looking away from the room.
+    // able to see without looking away from the room. With a skeletal body the
+    // lens is hidden with the rest of the robot, so the fan and the floor pool
+    // carry the whole read -- which is why they are the two things that are
+    // NOT allowed to be swapped out.
     const heat = Math.min(1, guard.suspicion);
     this.eyeMat.color.setHex(col.eye);
     this.eyeMat.emissive.setHex(col.eye);
     this.eyeMat.emissiveIntensity = 1.2 + 1.6 * heat;
     this.light.color.setHex(col.eye);
     this.light.intensity = 0.35 + 0.5 * heat;
+
 
     this.coneMat.color.setHex(col.cone);
     this.coneMat.opacity = col.opacity * (1 + 0.85 * heat);
@@ -500,6 +529,53 @@ export class GuardActor {
       p[w++] = rim[k + 1].x; p[w++] = 0.014; p[w++] = rim[k + 1].z;
     }
     this.coneGeo.attributes.position.needsUpdate = true;
+  }
+
+  /**
+   * One animation step for this actor's body.
+   *
+   * WHY THIS IS NOT INSIDE `update()`. `update()` runs in `render()`, and a
+   * harness that wants to watch an animation deliberately does NOT render --
+   * `__play.tick()` and `__play.animHosts()` advance the sim and the prop
+   * tweens without drawing a frame. Hanging the mixer off the draw call would
+   * have made "the state machine never left idle" a true statement about a
+   * host that was working perfectly, which is the exact class of bug
+   * `animProps` was created to kill for the doors.
+   */
+  animTick(dt, guard, player) {
+    if (this.host) this.host.update(dt, guard, player);
+    return this.host ? this.host.state : null;
+  }
+
+  /**
+   * Swap the robot for a real body. Called once per actor, right after the cast
+   * finishes loading, and NOTHING else in this class changes: the fan, the pool,
+   * the light and the "!" keep working because they were never part of the body.
+   *
+   * If `host` is null the robot stays -- which is the whole point of it still
+   * being here.
+   */
+  setBody(host) {
+    if (this.host) this.group.remove(this.host.group);
+    this.host = host || null;
+    this.fallback.visible = !host;
+    if (host) this.group.add(host.group);
+    return this;
+  }
+
+  /** Forward a core guard event to the body (spot -> flinch, caught -> punch). */
+  onEvent(ev) {
+    if (this.host) this.host.onEvent(ev);
+  }
+
+  /** Whatever is standing there, described. Read by `scripts/verify_actors.mjs`. */
+  report() {
+    return {
+      body: this.host ? 'skeletal' : 'procedural',
+      fallbackVisible: this.fallback.visible,
+      actor: this.host ? { ...this.host.group.userData.actor } : null,
+      anim: this.host ? this.host.report() : null,
+    };
   }
 
   hide() {

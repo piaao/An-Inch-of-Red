@@ -1,12 +1,13 @@
 # scripts/ — 工具索引
 
-60 个自检 / 诊断 / 派生工具（不含 `_*` 开头的一次性脚本）。全部**零依赖**：Python 只用标准库，Node 只用内置模块
+本目录放自检 / 诊断 / 派生工具。`_*` 开头的一次性脚本不入库，`probe/` 里是**已归档**的一次性取证脚本（留着不是为了再跑，是为了留下"当时是怎么查的"）。**不在这里写工具总数** —— 那个数字没有任何断言盯着，写上去只会慢慢过期，然后误导人。全部**零依赖**：Python 只用标准库，Node 只用内置模块
 （`node:http` / `node:child_process` / 全局 `fetch` / 全局 `WebSocket`，需 Node 22+）。
 所有路径都是**相对本仓库**的，clone 下来直接能跑，没有一处写死本机目录。
 
 ```bash
 python scripts/verify_name.py          # Python 侧：命名普查
-node   scripts/verify_play.mjs         # Node 侧：70 条可玩版本验收
+node   scripts/verify_play.mjs         # Node 侧：83 条可玩版本验收
+node   scripts/verify_actors.mjs       # Node 侧：59 条男女主人验收（骨骼 / 状态机 / 只改渲染）
 ```
 
 > 这个仓库的一条硬规矩：**先修量具，再解释数字**。
@@ -213,7 +214,8 @@ P3 一列**零超出**，`sum(quota) === ask` 每一行成立；`--items 5` 只�
 | `smoke_serve.py` | **启动器能不能真的把场景端出去**：状态码 / MIME / 字节数 / 缺文件 404；另加**启动词解析表**（`game` / `viewer` / `workbench` 与端口混写，各自该开哪一页）和工作台四件套的 200 | 直接打印 |
 | `shoot.js` | 查看器：STATIC（模块完整性）/ RUNTIME（对象计数）/ CLEAN（零异常零 4xx）/ PIXELS（每个机位尺寸互不相同） | `work/verify_report.json` + `renders/` |
 | `verify_game.mjs` | 方案二玩法矩阵：混合可达 / 无不可赢 / 藏点普查 / 分层摆放 / 守卫覆盖 / 预算×配置 | `work/game_eval.json` |
-| ★ `verify_play.mjs` | **70 条**：浏览器里跑的 `game/play/` 与无头矩阵**是同一个游戏**（同 nav、同摆放、同巡逻；两个运行时对到 1e-6） | `work/verify_play.log` |
+| ★ `verify_play.mjs` | **83 条**：浏览器里跑的 `game/play/` 与无头矩阵**是同一个游戏**（同 nav、同摆放、同巡逻；两个运行时对到 1e-6） | `work/verify_play.log` |
+| ★ `verify_actors.mjs` | **59 条**：换上一对**有骨架的主人**（KayKit，CC0），而玩法一个字没改。素材（每人 41 骨 / 五条剪辑 / **手里的道具一件不剩** / 裁剪 12.1 %，源包字节数**从底账读**）、上场（`hosts.source === 'files'`、一男一女都是 `skeletal`）、尺度与朝向（身高 == `guardHeight`、脚底 0、**模型 +Z 就是守卫朝向，点积 1.0000**、披风在背后）、状态机（待机/行动/奔跑/打击 + 受惊，**受惊占比 < 25 %** —— 那是「同一次追捕只激灵一次」这条冷却的回归哨）、以及**唯一真正重要的一条**：同一种子 `step()` 与 `tick()` 600 步后**逐位相同**（动画层不许喂回模拟，否则 `game/VERDICT.md` 里每个胜率都会作废而看不出来）。含四条「量测自身的坑」的注释（`update()` 挂在 `render()` 上、骨骼网格的节点原点不跟骨头走、站着不动的玩家看不到「奔跑」、腕骨局部旋转是 0°） | `work/verify_actors.log` |
 | ★ `verify_packets.mjs` | **18 条**：红包（6 mm 厚 / 面积掉过半 / 察觉距离跟着掉）、**快照与 `fromLayout.DEFAULTS` 还是不是同一个尺寸**（一份事实两份拷贝，只有这一条能抓住单边改动）、四档守备与红包数、`count=6/12/24` 各自恰好放满且 24 个零落地、两条巡逻真的不同、以及 `patrol[0]` 在有没有 `patrol[1]` 时逐位相同。**不需要浏览器** —— 这些是核心的问题，而核心本来就是可移植的 | `work/verify_packets.log` |
 | ★ `verify_minimap.mjs` | **13 条**：用**记录型 canvas 驱动真的 `minimap.js`**。迷雾（无 fog 时零个雾块 / 未探索全部上黑 / 恰好只见过的格子不上黑）、**迷雾必须画在标识之前**（调用次序断言 —— 挪到之后，暗区里的守卫就从图上消失了，而别的读数一个都不变）、两个三角各描边两次 + 2 个中心点 + **只有守卫有外环**、最宽标识 **10.94 px** 仍在 `blob <= 12` 内、`{guard}` 与 `{guards}` 两种调用都对、以及 `play.js` 真的把 fog / 整支守备交了过去。**不是像素测试**，它记录的是调用 | `work/verify_minimap.log` |
 | ★ `verify_gen_play.mjs` | **20 条**：**生成出来的**户型能在真浏览器里启动 / 走 / 渲染，且与 Node 逐坐标对账。含一条**负向对照** ——断言这层楼的导航格数与上架公寓不同；没有它，一个静默退回上架层的页面会全绿通过 | `reports/gen_play.txt` |
@@ -279,6 +281,12 @@ P3 一列**零超出**，`sum(quota) === ask` 每一行成立；`--items 5` 只�
 | `probe_closeup.js` | 单件特写：**同一个模型渲两遍** —— 一遍是房间合并时烘上去的（在原位），一遍是 `kit.instance()` 扔在楼外空地上。两者不一致则怪合并，一致则怪模型 |
 | `probe_hud.js` | HUD 家具的像素级裁切（`captureScreenshot` 带 clip + 3x 缩放），用来看有没有重影，而不是对着 1080 px 图眯眼 |
 | `measure_surveil.mjs` | 难度阶梯**重测胜率**：24 种子 × 4 配置 × 预算 120/180/240，带两个对照人格 |
+| `probe_parts.py` | 每个 hero 道具的**可动子部件**叫什么、铰链原点在哪（`min.x = 0` 左铰？）—— 纯 stdlib 解 GLB，产出 `data/prop_parts.json` + `reports/prop_parts.txt`。道具互动"动子网格"这一步的地基，见 `game/PROPS.md` §3.1 |
+| `probe/diag_prop_parts.mjs` | 「按 `E` 为什么整件家具消失？」—— 打印每个道具被识别出的 mover 名单与角色，第一批就看出 `Mesh_sideTableDrawers` 被误当抽屉 |
+| `probe/diag_prop_tree.mjs` | 「门怎么裂成两半？」—— 打印 `bookcaseClosedDoors` 的完整节点树，暴露 `Mesh_doorLeft` + `Mesh_doorLeft_1` 这对材质分片 |
+| `probe/diag_prop_frame.mjs` | 「门框到底动没动？」—— 用 `kinOfMover` 视角复核包围盒，证明原读数是**子节点带动的测量假象** |
+| `probe/diag_audio_level.mjs` | 「为什么听不见声音？」—— 逐级记录增益链并在 `OfflineAudioContext` 里渲染真 PCM 数峰值（headless 无声卡，`AnalyserNode` 只会读静音） |
+| `probe/shoot_props.mjs` | 道具开合前后各截一帧（`-a-shut` / `-b-open`），用门板角度与包围盒宽度作为**看得见**的证据。**自带机位自检**：两张图字节相同就说明没拍到动作（连抓三次站错地方：站太近、站进柜子里、躲到墙后） |
 | `time_boot.mjs` | 可玩层的引导有多贵？300 ms 就在加载页里做，30 s 就得预烘进竞技场 —— **猜这件事本身就是这个脚本存在的理由** |
 
 ---

@@ -61,6 +61,8 @@ export class Hud {
       toasts: $('toasts'),
       hint: $('hint'),
       crosshair: $('crosshair'),
+      propPrompt: $('prop-prompt'),
+      propPromptText: $('prop-prompt-text'),
       flash: $('flash'),
       stain: $('stain'),
       load: $('ov-load'),
@@ -152,7 +154,7 @@ export class Hud {
       card.dataset.id = d.id;
       if (d.id === defaultId) card.classList.add('on');
       card.innerHTML = `
-        <span class="card-top"><b>${d.name}</b><em>${formatClock(d.budget)} · ${d.guard ? '有守卫' : '无守卫'}</em></span>
+        <span class="card-top"><b>${d.name}</b><em>${formatClock(d.budget)} · ${d.guard ? '有主人' : '空屋'}</em></span>
         <span class="card-blurb">${d.blurb}</span>
         ${d.spec ? `<span class="card-spec">${d.spec}</span>` : ''}
         <span class="card-ai">${d.ai}</span>`;
@@ -252,8 +254,10 @@ export class Hud {
   guard({ enabled, mode, suspicion, hint }) {
     if (!this.el.guardBox) return;
     this.el.guardBox.classList.toggle('off', !enabled);
-    const label = !enabled ? '无守卫'
-      : mode === 'chase' ? '追 击' : mode === 'alert' ? '察 觉' : '巡逻中';
+    // 「主人」而不是「守卫」：这一局的设定是闯空门，屋里站着的是房主本人。
+    // 空屋（没有主人）也标成「空 屋」，和另外三个两字标签同一个排版节奏。
+    const label = !enabled ? '空 屋'
+      : mode === 'chase' ? '追 击' : mode === 'alert' ? '察 觉' : '巡 逻';
     if (this.el.guardState) this.el.guardState.textContent = label;
     if (this.el.guardDot) {
       this.el.guardDot.dataset.mode = !enabled ? 'off' : mode;
@@ -273,6 +277,33 @@ export class Hud {
     d.textContent = text;
     this.el.toasts.appendChild(d);
     return d;
+  }
+
+  /**
+   * The crosshair hint: what E would do to the thing you are looking at.
+   *
+   * Pass the prop the play layer's ray found, or null. The label comes from the
+   * SAME `kind`/`open` the activation will use, so the prompt cannot promise an
+   * action the key would not take -- a prompt that says "打开" over something E
+   * treats as "关上" is the small lie this repo keeps refusing to ship.
+   *
+   * `state` is deliberately reused as `lastKey` so a no-op frame does not touch
+   * the DOM: this runs 60x a second.
+   */
+  propPrompt(state) {
+    const el = this.el.propPrompt;
+    if (!el) return;
+    if (!state) {
+      if (this._propKey !== '') { el.hidden = true; this._propKey = ''; }
+      return;
+    }
+    const verb = state.kind === 'slide' ? (state.open ? '拉开' : '推回')
+      : (state.open ? '打开' : '关上');
+    const key = verb + '|' + state.model;
+    if (key === this._propKey) return;
+    this._propKey = key;
+    if (this.el.propPromptText) this.el.propPromptText.textContent = verb;
+    el.hidden = false;
   }
 
   flash(kind) {

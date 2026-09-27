@@ -15,6 +15,7 @@ export class Audio {
   constructor() {
     this.ctx = null;
     this.master = null;
+    this.musicBus = null;
     this.muted = false;
   }
 
@@ -29,8 +30,19 @@ export class Audio {
     try {
       this.ctx = new AC();
       this.master = this.ctx.createGain();
+      // 0.35 is the SFX headroom: a cue's own gain (0.4-0.5) times this lands
+      // near 0.15, which is loud without clipping. MUSIC MUST NOT SHARE IT.
+      // The bed is built from six oscillators whose gains multiply down to
+      // ~0.02 each; cutting that by another 0.35 put the whole soundtrack at
+      // an RMS around 1e-3 -- audible only with your ear against the speaker,
+      // which is exactly the "I can't hear any sound" report. So music gets
+      // its own bus at unity, and `master` stays the one mute switch.
       this.master.gain.value = this.muted ? 0 : 0.35;
       this.master.connect(this.ctx.destination);
+
+      this.musicBus = this.ctx.createGain();
+      this.musicBus.gain.value = this.muted ? 0 : 1.0;
+      this.musicBus.connect(this.master);
       return true;
     } catch {
       this.ctx = null;
@@ -41,6 +53,10 @@ export class Audio {
   setMuted(v) {
     this.muted = !!v;
     if (this.master) this.master.gain.value = this.muted ? 0 : 0.35;
+    // `musicBus` is downstream of `master`, so the master gain already silences
+    // it; this is belt-and-braces for the case where a caller muted the music
+    // before `unlock()` ran.
+    if (this.musicBus) this.musicBus.gain.value = this.muted ? 0 : 1.0;
   }
 
   /** One oscillator with an attack-decay envelope, optionally gliding. */

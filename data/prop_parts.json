@@ -1,0 +1,684 @@
+{
+ "cardboardBoxClosed": {
+  "nodes": [
+   {
+    "i": 0,
+    "name": "cardboardBoxClosed(Clone)",
+    "mesh": 0,
+    "t": [
+     0,
+     0,
+     0
+    ],
+    "children": []
+   }
+  ],
+  "parts": [
+   {
+    "mesh": "Mesh cardboardBoxClosed",
+    "prim": 0,
+    "tris": 54,
+    "min": [
+     0,
+     0,
+     -0.2125
+    ],
+    "max": [
+     0.2125,
+     0.281,
+     0.0
+    ]
+   },
+   {
+    "mesh": "Mesh cardboardBoxClosed",
+    "prim": 1,
+    "tris": 6,
+    "min": [
+     0,
+     0,
+     -0.2125
+    ],
+    "max": [
+     0.2125,
+     0.281,
+     0.0
+    ]
+   }
+  ],
+  "meshes": 1,
+  "node_count": 1
+ },
+ "cardboardBoxOpen": {
+  "nodes": [
+   {
+    "i": 0,
+    "name": "cardboardBoxOpen(Clone)",
+    "mesh": 0,
+    "t": [
+     0,
+     0,
+     0
+    ],
+    "children": []
+   }
+  ],
+  "parts": [
+   {
+    "mesh": "Mesh cardboardBoxOpen",
+    "prim": 0,
+    "tris": 54,
+    "min": [
+     -0.0797,
+     0,
+     -0.2125
+    ],
+    "max": [
+     0.2922,
+     0.281,
+     0.0
+    ]
+   },
+   {
+    "mesh": "Mesh cardboardBoxOpen",
+    "prim": 1,
+    "tris": 6,
+    "min": [
+     -0.0797,
+     0,
+     -0.2125
+    ],
+    "max": [
+     0.2922,
+     0.281,
+     0.0
+    ]
+   }
+  ],
+  "meshes": 1,
+  "node_count": 1
+ },
+ "fridge": {
+  "error": "missing file"
+ },
+ "fridgeBuiltin": {
+  "error": "missing file"
+ },
+ "hoodLarge": {
+  "nodes": [
+   {
+    "i": 0,
+    "name": "hoodLarge(Clone)",
+    "mesh": 0,
+    "t": [
+     0,
+     0,
+     0
+    ],
+    "children": []
+   }
+  ],
+  "parts": [
+   {
+    "mesh": "Mesh hoodLarge",
+    "prim": 0,
+    "tris": 28,
+    "min": [
+     -0.0,
+     0,
+     -0.2849
+    ],
+    "max": [
+     0.43,
+     0.3695,
+     0
+    ]
+   },
+   {
+    "mesh": "Mesh hoodLarge",
+    "prim": 1,
+    "tris": 8,
+    "min": [
+     -0.0,
+     0,
+     -0.2849
+    ],
+    "max": [
+     0.43,
+     0.3695,
+     0
+    ]
+   }
+  ],
+  "meshes": 1,
+  "node_count": 1
+ },
+ "hoodModern": {
+  "nodes": [
+   {
+    "i": 0,
+    "name": "hoodModern(Clone)",
+    "mesh": 0,
+    "t": [
+     0,
+     0,
+     0
+    ],
+    "children": []
+   }
+  ],
+  "parts": [
+   {
+    "mesh": "Mesh hoodModern",
+    "prim": 0,
+    "tris": 24,
+    "min": [
+     -0.0,
+     -0.03,
+     -0.2849
+    ],
+    "max": [
+     0.43,
+     0.3695,
+     0
+    ]
+   },
+   {
+    "mesh": "Mesh hoodModern",
+    "prim": 1,
+    "tris": 4,
+    "min": [
+     -0.0,
+     -0.03,
+     -0.2849
+    ],
+    "max": [
+     0.43,
+     0.3695,
+     0
+    ]
+   }
+  ],
+  "meshes": 1,
+  "node_count": 1
+ },
+ "washer": {
+  "nodes": [
+   {
+    "i": 0,
+    "name": "washer(Clone)",
+    "mesh": 0,
+    "t": [
+     0,
+     0,
+     0
+    ],
+    "children": [
+     1
+    ]
+   },
+   {
+    "i": 1,
+    "name": "washerDoor",
+    "mesh": 1,
+    "t": [
+     0.065,
+     0.2258,
+     0.01
+    ],
+    "children": []
+   }
+  ],
+  "parts": [
+   {
+    "mesh": "Mesh washer",
+    "prim": 0,
+    "tris": 80,
+    "min": [
+     0,
+     0,
+     -0.35
+    ],
+    "max": [
+     0.39,
+     0.47,
+     0
+    ]
+   },
+   {
+    "mesh": "Mesh washer",
+    "prim": 1,
+    "tris": 88,
+    "min": [
+     0,
+     0,
+     -0.35
+    ],
+    "max": [
+     0.39,
+     0.47,
+     0
+    ]
+   },
+   {
+    "mesh": "Mesh washer",
+    "prim": 2,
+    "tris": 4,
+    "min": [
+     0,
+     0,
+     -0.35
+    ],
+    "max": [
+     0.39,
+     0.47,
+     0
+    ]
+   },
+   {
+    "mesh": "Mesh washerDoor",
+    "prim": 0,
+    "tris": 498,
+    "min": [
+     0,
+     -0.03,
+     -0.13
+    ],
+    "max": [
+     0.26,
+     0.03,
+     0.13
+    ]
+   },
+   {
+    "mesh": "Mesh washerDoor",
+    "prim": 1,
+    "tris": 46,
+    "min": [
+     0,
+     -0.03,
+     -0.13
+    ],
+    "max": [
+     0.26,
+     0.03,
+     0.13
+    ]
+   },
+   {
+    "mesh": "Mesh washerDoor",
+    "prim": 2,
+    "tris": 4,
+    "min": [
+     0,
+     -0.03,
+     -0.13
+    ],
+    "max": [
+     0.26,
+     0.03,
+     0.13
+    ]
+   }
+  ],
+  "meshes": 2,
+  "node_count": 2
+ },
+ "dryer": {
+  "nodes": [
+   {
+    "i": 0,
+    "name": "dryer(Clone)",
+    "mesh": 0,
+    "t": [
+     0,
+     0,
+     0
+    ],
+    "children": [
+     1
+    ]
+   },
+   {
+    "i": 1,
+    "name": "dryerDoor",
+    "mesh": 1,
+    "t": [
+     0.065,
+     0.2258,
+     0
+    ],
+    "children": []
+   }
+  ],
+  "parts": [
+   {
+    "mesh": "Mesh dryer",
+    "prim": 0,
+    "tris": 64,
+    "min": [
+     0,
+     0,
+     -0.35
+    ],
+    "max": [
+     0.39,
+     0.47,
+     0
+    ]
+   },
+   {
+    "mesh": "Mesh dryer",
+    "prim": 1,
+    "tris": 99,
+    "min": [
+     0,
+     0,
+     -0.35
+    ],
+    "max": [
+     0.39,
+     0.47,
+     0
+    ]
+   },
+   {
+    "mesh": "Mesh dryer",
+    "prim": 2,
+    "tris": 15,
+    "min": [
+     0,
+     0,
+     -0.35
+    ],
+    "max": [
+     0.39,
+     0.47,
+     0
+    ]
+   },
+   {
+    "mesh": "Mesh dryerDoor",
+    "prim": 0,
+    "tris": 84,
+    "min": [
+     0,
+     -0.13,
+     -0.04
+    ],
+    "max": [
+     0.27,
+     0.13,
+     0.03
+    ]
+   }
+  ],
+  "meshes": 2,
+  "node_count": 2
+ },
+ "sideTableDrawers": {
+  "nodes": [
+   {
+    "i": 0,
+    "name": "sideTableDrawers(Clone)",
+    "mesh": 0,
+    "t": [
+     0,
+     0,
+     0
+    ],
+    "children": [
+     1,
+     2
+    ]
+   },
+   {
+    "i": 1,
+    "name": "drawerLeft",
+    "mesh": 1,
+    "t": [
+     0.04,
+     0.274,
+     -0.164
+    ],
+    "children": []
+   },
+   {
+    "i": 2,
+    "name": "drawerRight",
+    "mesh": 1,
+    "t": [
+     0.2777,
+     0.274,
+     -0.164
+    ],
+    "children": []
+   }
+  ],
+  "parts": [
+   {
+    "mesh": "Mesh sideTableDrawers",
+    "prim": 0,
+    "tris": 148,
+    "min": [
+     -0.01,
+     0,
+     -0.21
+    ],
+    "max": [
+     0.5245,
+     0.3844,
+     0.01
+    ]
+   },
+   {
+    "mesh": "Mesh sideTableDrawers",
+    "prim": 1,
+    "tris": 2,
+    "min": [
+     -0.01,
+     0,
+     -0.21
+    ],
+    "max": [
+     0.5245,
+     0.3844,
+     0.01
+    ]
+   },
+   {
+    "mesh": "Mesh drawer",
+    "prim": 0,
+    "tris": 34,
+    "min": [
+     0,
+     0.0004,
+     -0.0
+    ],
+    "max": [
+     0.1968,
+     0.0504,
+     0.1763
+    ]
+   },
+   {
+    "mesh": "Mesh drawer",
+    "prim": 1,
+    "tris": 10,
+    "min": [
+     0,
+     0.0004,
+     -0.0
+    ],
+    "max": [
+     0.1968,
+     0.0504,
+     0.1763
+    ]
+   },
+   {
+    "mesh": "Mesh drawer",
+    "prim": 0,
+    "tris": 34,
+    "min": [
+     0,
+     0.0004,
+     -0.0
+    ],
+    "max": [
+     0.1968,
+     0.0504,
+     0.1763
+    ]
+   },
+   {
+    "mesh": "Mesh drawer",
+    "prim": 1,
+    "tris": 10,
+    "min": [
+     0,
+     0.0004,
+     -0.0
+    ],
+    "max": [
+     0.1968,
+     0.0504,
+     0.1763
+    ]
+   }
+  ],
+  "meshes": 3,
+  "node_count": 3
+ },
+ "sideTable": {
+  "nodes": [
+   {
+    "i": 0,
+    "name": "sideTable(Clone)",
+    "mesh": 0,
+    "t": [
+     0,
+     0,
+     0
+    ],
+    "children": []
+   }
+  ],
+  "parts": [
+   {
+    "mesh": "Mesh sideTable",
+    "prim": 0,
+    "tris": 116,
+    "min": [
+     -0.01,
+     0,
+     -0.21
+    ],
+    "max": [
+     0.5245,
+     0.3844,
+     0.01
+    ]
+   },
+   {
+    "mesh": "Mesh sideTable",
+    "prim": 1,
+    "tris": 2,
+    "min": [
+     -0.01,
+     0,
+     -0.21
+    ],
+    "max": [
+     0.5245,
+     0.3844,
+     0.01
+    ]
+   }
+  ],
+  "meshes": 1,
+  "node_count": 1
+ },
+ "trashcan": {
+  "nodes": [
+   {
+    "i": 0,
+    "name": "trashcan(Clone)",
+    "mesh": 0,
+    "t": [
+     0,
+     0,
+     0
+    ],
+    "children": []
+   }
+  ],
+  "parts": [
+   {
+    "mesh": "Mesh trashcan",
+    "prim": 0,
+    "tris": 22,
+    "min": [
+     -0.2595,
+     -0.0,
+     -0.22
+    ],
+    "max": [
+     0.2365,
+     0.9064,
+     0.22
+    ]
+   },
+   {
+    "mesh": "Mesh trashcan",
+    "prim": 1,
+    "tris": 46,
+    "min": [
+     -0.2595,
+     -0.0,
+     -0.22
+    ],
+    "max": [
+     0.2365,
+     0.9064,
+     0.22
+    ]
+   }
+  ],
+  "meshes": 1,
+  "node_count": 1
+ },
+ "coatRackStanding": {
+  "nodes": [
+   {
+    "i": 0,
+    "name": "coatRackStanding(Clone)",
+    "mesh": 0,
+    "t": [
+     0,
+     0,
+     0
+    ],
+    "children": []
+   }
+  ],
+  "parts": [
+   {
+    "mesh": "Mesh coatRackStanding",
+    "prim": 0,
+    "tris": 190,
+    "min": [
+     -0.1364,
+     0.0,
+     -0.1364
+    ],
+    "max": [
+     0.1364,
+     0.77,
+     0.1364
+    ]
+   }
+  ],
+  "meshes": 1,
+  "node_count": 1
+ }
+}
