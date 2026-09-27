@@ -333,6 +333,130 @@ html, body {
 #hint b { color: var(--ink); }
 #hint.fade { opacity: .28; }
 
+/* ---------------------------------------------------------- touch (P0) */
+/* 触屏控件。整层默认不显示，只在"这台设备有手指 且 正在玩"时由
+   game/play/touch.js 加上 .on。桌面浏览器一进来就多出一层摇杆，
+   比手机上少了摇杆更糟 —— 而且它的判定条件（媒体查询）会撒谎。 */
+
+#touch {
+  position: fixed;
+  inset: 0;
+  z-index: 6;
+  display: none;
+  /* 整层不吃事件：只有两个站区和三个按钮吃。否则它会把画布上的
+     指针锁定点击一起吞掉。 */
+  pointer-events: none;
+  touch-action: none;
+}
+#touch.on { display: block; }
+
+#touch-move,
+#touch-look {
+  position: absolute;
+  bottom: 0;
+  height: 62%;              /* 上面 38% 留给顶栏，手指本来也不会往那儿伸 */
+  pointer-events: auto;
+  touch-action: none;
+}
+#touch-move { left: 0; width: 46%; }
+#touch-look { right: 0; width: 54%; }
+
+/* 浮动原点：圆环出现在手指落下的地方。固定圆盘会让人先找圆心再推，
+   而拇指落点只有它自己知道。直径 = 2 × TOUCH.stickR，改配置要一起改这里。 */
+#stick {
+  position: fixed;
+  width: 108px;
+  height: 108px;
+  transform: translate(-50%, -50%);
+  border: 2px solid rgba(255, 255, 255, .28);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,.08), rgba(255,255,255,.02) 72%);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .35);
+  pointer-events: none;
+}
+#stick-knob {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 46px;
+  height: 46px;
+  margin: -23px 0 0 -23px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .22);
+  border: 1.5px solid rgba(255, 255, 255, .55);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, .40);
+  will-change: transform;
+}
+
+#touch-btns {
+  position: absolute;
+  right: max(14px, env(safe-area-inset-right));
+  bottom: calc(14px + env(safe-area-inset-bottom));
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  pointer-events: none;
+}
+.tbtn {
+  pointer-events: auto;
+  min-width: 64px;
+  min-height: 56px;
+  padding: 0 14px;
+  font: inherit;
+  font-size: 15px;
+  letter-spacing: .08em;
+  color: var(--ink);
+  background: rgba(18, 23, 31, .62);
+  border: 1px solid rgba(255, 255, 255, .22);
+  border-radius: 14px;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .40);
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.tbtn.big {
+  min-width: 76px;
+  min-height: 76px;
+  font-size: 17px;
+  border-radius: 50%;
+  background: rgba(229, 160, 102, .26);
+  border-color: rgba(229, 160, 102, .55);
+}
+.tbtn.small {
+  min-width: 56px;
+  min-height: 44px;
+  font-size: 13px;
+  align-self: flex-start;
+}
+.tbtn:active { filter: brightness(1.25); }
+
+/* 触屏上没有 E 键。只藏键帽，动词照旧 —— 提示说的是"会做什么"，
+   不是"按哪个键"。 */
+#prop-prompt.touch b { display: none; }
+#prop-prompt.touch { padding: 5px 12px; }
+
+/* 小地图的折叠开关。宽屏不显示（260 CSS px 的依据见 minimap.js：
+   「卫生间」三个字要放得下，所以它不能缩，只能收）。 */
+#map-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 7px;
+  padding: 5px 10px;
+  font: inherit;
+  font-size: 11.5px;
+  letter-spacing: .10em;
+  color: var(--ink-dim);
+  background: rgba(255, 255, 255, .05);
+  border: 1px solid var(--panel-line);
+  border-radius: 8px;
+  cursor: pointer;
+}
+#map-toggle:active { background: rgba(255, 255, 255, .12); }
+
 /* -------------------------------------------------------------- overlays */
 
 .overlay {
@@ -389,6 +513,28 @@ html, body {
 }
 .panel .foot { margin: 16px 0 0; color: var(--ink-faint); font-size: 12px; line-height: 1.8; }
 .panel .foot b { color: var(--ink-dim); }
+
+/* 长文案折叠。手机上那段说明要吃掉 1.5 屏，而它回答的问题
+   （"这游戏怎么玩"）在按下开始之后还会再答一次。**默认开着**，
+   只有 `hud.js` 量到窄屏才收起来 —— 收起来是给窄屏的让步，
+   不该顺手也把桌面改掉。 */
+.panel .howto {
+  margin: 16px 0 0;
+  padding-top: 11px;
+  border-top: 1px solid var(--panel-line);
+}
+.panel .howto > summary {
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .16em;
+  color: var(--ink-faint);
+  list-style: none;
+}
+.panel .howto > summary::-webkit-details-marker { display: none; }
+.panel .howto > summary::before { content: '▸ '; }
+.panel .howto[open] > summary::before { content: '▾ '; }
+.panel .howto .foot { margin: 10px 0 0; }
 
 /* loading box */
 .overlay .box {
@@ -564,11 +710,96 @@ html, body {
 .panel button.go:hover { filter: brightness(1.07); }
 #start-go { width: 100%; margin-top: 20px; padding: 14px; font-size: 15px; letter-spacing: .12em; }
 
+/* --------------------------------------------------- 窄屏（P1 重排） */
+/*
+ * 实测（work/probe_mobile_payload.mjs，390 × 844 @dpr3）：
+ *
+ *   开始面板高 2331 px / 视口 844 px   —— 要滚 1.5 屏才够到「开始」
+ *   小地图固定 260 px                  —— 占屏宽 67%，左上角吃掉半个屏
+ *   #hud 与 #guardbox 各占一角          —— 390 px 宽放不下，右上的状态被顶出屏幕
+ *   底部提示折成四行                    —— 正好压在按钮上
+ *
+ * 两处**不能**用"缩小"解决，写在这里免得下一个人再想一遍：
+ *   小地图 260 不是审美，是「卫生间」三个字在 12 px 下要放得进 1.75 m 的卫生间
+ *   （minimap.js 头注）。缩到 200 px 会让那个闸门（`ink + 4 <= w`）静默丢掉一个
+ *   房间名 —— 地图上少一个名字，是好几个人会走错的房间。所以只能**收起来**。
+ *   「开始」按钮不是缩小，是**钉在屏幕底部**（sticky），滚到哪儿都在。
+ */
 @media (max-width: 700px) {
-  #hud { left: 10px; top: 10px; min-width: 0; padding: 9px 12px; }
-  #guardbox { right: 10px; top: 10px; width: 176px; padding: 9px 11px; }
+  /* ---- 顶栏：两块并排会撞在一起，各自瘦身并靠边 ---- */
+  #hud {
+    left: 8px;
+    top: 8px;
+    min-width: 0;
+    max-width: calc(100vw - 124px);
+    padding: 8px 10px;
+  }
+  #objective { font-size: 12px; }
+  #objective b { font-size: 18px; }
+  #roomname { font-size: 11.5px; }
+  #clockbar { margin-top: 6px; }
+  #clocktext { margin-top: 4px; font-size: 16px; }
+
+  /* 小地图默认收起，点「地图」展开 */
+  #minimap { display: none; margin-top: 8px; }
+  #hud.showmap #minimap { display: block; }
+  #map-toggle { display: inline-flex; }
+
+  #guardbox {
+    right: 8px;
+    top: 8px;
+    width: auto;
+    min-width: 104px;
+    max-width: 42vw;
+    padding: 8px 10px;
+  }
   #guard-hint { display: none; }
-  #hint { font-size: 11px; bottom: 12px; }
-  .panel { padding: 22px 18px; }
-  .panel h1 { font-size: 30px; }
+  #guard-state { font-size: 12px; letter-spacing: .10em; }
+
+  /* ---- 底部提示 ----
+     抬到按钮**上面**一条带。量过：390 px 宽时按钮那一排从 x=158 开始，
+     而居中的提示最宽到 280 px —— 放在 bottom:6px 就是直接压在「开门」上，
+     一段说明盖住一个要去点的地方。所以它的下边缘钉在最高那颗按钮
+     （76 px）＋ 14 px 边距 ＋ 14 px 余量之上。 */
+  #hint {
+    font-size: 10.5px;
+    line-height: 1.45;
+    bottom: calc(104px + env(safe-area-inset-bottom));
+    max-width: 46vw;
+    padding: 5px 10px;
+    border-radius: 12px;
+    text-align: center;
+    /* 它只是话，不该吃手指。站区在它上面一层，这里是第二道保险。 */
+    pointer-events: none;
+  }
+  /* 已经淡过一次就整块收掉：半透明的框留在屏幕中间比它提示的东西更碍事。 */
+  #hint.fade { opacity: 0; }
+
+  #banner { font-size: 19px; top: 30%; max-width: 88vw; text-align: center; }
+
+  /* ---- 开始页 ---- */
+  .overlay { align-items: flex-start; padding: 8px 8px 0; }
+  .panel { padding: 18px 14px 14px; border-radius: 14px; }
+  .panel.wide { width: 100%; }
+  .panel h1 { font-size: 26px; letter-spacing: .18em; text-indent: .18em; }
+  .panel h2 { font-size: 20px; }
+  .panel h3 { margin: 16px 0 8px; }
+  .panel .sub { font-size: 12.5px; line-height: 1.65; }
+  #start-cards { grid-template-columns: 1fr; }
+  #start-maps { grid-template-columns: 1fr 1fr; }
+  .mapcard { padding: 9px 10px; gap: 3px; }
+  /* 一屏放不下十个房间名，而它不参与选择（选择看的是尺寸/件数/密度）。 */
+  .map-rooms { display: none; }
+  #start-meta { grid-template-columns: 1fr; gap: 3px 10px; margin-top: 10px; }
+  .seedrow { gap: 10px; }
+  #seed-input { flex: 1 1 100%; min-width: 0; }
+
+  /* 「开始」钉在底部：面板再高，按不到的那个按钮才是真的挡住了游戏。 */
+  #start-go {
+    position: sticky;
+    bottom: 0;
+    z-index: 3;
+    margin-top: 14px;
+    box-shadow: 0 -14px 16px 12px var(--panel-solid);
+  }
 }

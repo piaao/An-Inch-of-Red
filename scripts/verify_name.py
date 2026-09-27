@@ -121,7 +121,7 @@ for dp, dn, fn in os.walk(ROOT):
 # 数量阈值是拟合，点名才是断言：代号必须留在这些「它是测量记录」的地方。
 MUST_KEEP = [
     "game/play/play.js",      # 渲染层
-    "scripts/verify_play.mjs",  # 70 条验收
+    "scripts/verify_play.mjs",  # 83 条验收
     "scripts/verify_game.mjs",  # 玩法矩阵
     "game/NAME.md",           # 命名决定书
     "game/VERDICT.md",        # 验证结论

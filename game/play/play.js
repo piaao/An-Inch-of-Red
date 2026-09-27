@@ -39,6 +39,7 @@ import { Avatar } from './avatar.js';
 import { GlintField, PrizeField, GuardActor, makePlayerShadow } from './scene.js';
 import { loadHostCast, HostBody } from './actors.js';
 import { Minimap } from './minimap.js';
+import { TouchLayer } from './touch.js';
 import { Hud, formatClock } from './hud.js';
 import { Audio } from './audio.js';
 import { Music } from './music.js';
@@ -378,6 +379,12 @@ let minimap = null;
 let prizeField;
 let glints;
 let playerShadow;
+/**
+ * 触屏层（P0）。桌面浏览器上它 `supported === false`，于是 `move()/jump()`
+ * 恒返回 0 和 false —— `stepSim` 组装出的 input 与加它之前**逐位相同**。
+ * 这一条不是推理，是 `scripts/verify_touch.mjs` 用同种子 600 步的状态哈希钉的。
+ */
+let touch = null;
 
 const collectedSet = new Set();
 const clearedReds = new Set();
@@ -526,6 +533,20 @@ export async function start() {
 
   /* --- input ----------------------------------------------------------- */
   bindInput(canvas);
+  // 触屏是**第三个输入源**，不是第三个物理：它只往 `{fwd, side, jump, look}`
+  // 里加数，那几个字段原本就由键盘和鼠标在写。所以它在 `bindInput` 之后、
+  // 在没有任何仿真状态的时候接上，并且除了 `look` 累加器（那是鼠标的去处）
+  // 之外不认识这个文件里的任何东西。
+  touch = new TouchLayer();
+  touch.bind({
+    // 视角直接进鼠标那一个累加器。**没有第二条换算链**：`stepSim` 读的
+    // `look` 和指针锁定写的是同一个对象，所以灵敏度还是 `MOVE.mouseSens`。
+    onLook: (dx, dy) => { look.dx += dx; look.dy += dy; },
+    onUse: () => { if (S.phase === 'playing') interact(); },
+    onPause: () => { if (S.phase === 'playing') togglePause(); },
+    // iOS 只允许在用户手势里建 AudioContext。点屏幕就是那个手势。
+    onUnlock: () => { unlockAudio(); },
+  });
 
   hud.loading('就绪', 1);
   resize();
@@ -733,8 +754,11 @@ async function beginRun(id) {
   hud.hideLoading();
   S.phase = 'playing';
   hud.banner(`${p.name} · ${formatClock(p.budget)} · ${hostLabel(guardCountFor(p))} · ${prizeCountFor(p)} 红包`, 1600);
+  // 有手指的设备不锁指针：指针锁定在手机上没有任何意义，而它换来的
+  // 是拖拽被系统接管、页面被拽走。玩家仍然可以点画面手动锁（桌面上的
+  // 触屏笔记本），那条路留着。
   const c = document.getElementById('stage');
-  if (c.requestPointerLock) {
+  if (c.requestPointerLock && !(touch && touch.supported)) {
     try { const r = c.requestPointerLock(); if (r && r.catch) r.catch(() => {}); } catch { /* headless */ }
   }
 }
@@ -814,6 +838,30 @@ function finish(win) {
 /* ----------------------------------------------------------------- step */
 
 /**
+ * 四个输入源 -> 一个 input。**这是唯一一处定义**。
+ *
+ * 键盘（`keys`）、无头夹具（`scripted`）、指针锁定与触屏（都写进 `look`），
+ * 三个来源在这里合成 `{fwd, side, turn, jump, look}`。验收要断言"摇杆推满
+ * 和按住 W 是同一个数"时，`__play.inputNow()` 调的就是这个函数 —— 而不是在
+ * 验收里再抄一遍加法。抄一遍就是第二份实现，两份一定会漂。
+ *
+ * 触屏那两个加数**在没摸屏幕时是 0**：`move()` 返回常驻的 `{fwd:0, side:0}`，
+ * `jump()` 返回 0。所以桌面那条路径连浮点都没多算一次，同种子 600 步的状态
+ * 与加触屏之前逐位相同（`scripts/verify_touch.mjs` §3）。
+ */
+function assembleInput() {
+  const k = (a, b) => ((keys.has(a) || (b && keys.has(b))) ? 1 : 0);
+  const tm = touch ? touch.move() : null;
+  return {
+    fwd: k('KeyW', 'ArrowUp') - k('KeyS', 'ArrowDown') + scripted.fwd + (tm ? tm.fwd : 0),
+    side: k('KeyD') - k('KeyA') + scripted.side + (tm ? tm.side : 0),
+    turn: scripted.turn,
+    jump: k('Space') + scripted.jump + (touch ? touch.jump() : 0),
+    look,
+  };
+}
+
+/**
  * One simulation step. Pure: `dt` in, state out. No clock, no RNG, no DOM read.
  */
 function stepSim(dt) {
@@ -822,18 +870,11 @@ function stepSim(dt) {
   S.t += dt;
   S.elapsed += dt;
 
-  const k = (a, b) => ((keys.has(a) || (b && keys.has(b))) ? 1 : 0);
   // Steering is the MOUSE and only the mouse. Q/E -- and the left/right arrows,
   // which did the same job -- are deliberately unmapped: two ways to turn means
   // the mouse is never actually in charge of where you walk. `scripted.turn`
   // survives untouched because the headless harness steers with it.
-  const input = {
-    fwd: k('KeyW', 'ArrowUp') - k('KeyS', 'ArrowDown') + scripted.fwd,
-    side: k('KeyD') - k('KeyA') + scripted.side,
-    turn: scripted.turn,
-    jump: k('Space') + scripted.jump,
-    look,
-  };
+  const input = assembleInput();
   look = { dx: 0, dy: 0 };
   avatar.update(dt, input);
 
@@ -1113,6 +1154,12 @@ function poseCamera() {
 }
 
 function render() {
+  // 触屏层的"现在该不该在屏幕上"，**与 `GuardActor.update()` 同一个位置、
+  // 同一个理由**：相位一变就有人管它，而不用在 `beginRun` / `togglePause` /
+  // `finish` / `openMenu` / `resetRun` 五处各记得写一句。相位是**问**出来的
+  // （`() => S.phase`），不是记住的。
+  if (touch) touch.frame(S.phase);
+
   if (guards.length) {
     const doCone = coneAcc >= 1 / CONE_HZ;
     if (doCone) coneAcc = 0;
@@ -1596,6 +1643,26 @@ const api = {
 
   input(o) { Object.assign(scripted, o); return { ...scripted }; },
   release() { scripted.fwd = 0; scripted.side = 0; scripted.turn = 0; scripted.jump = 0; return { ...scripted }; },
+
+  /**
+   * 触屏层的读数。**这是给验收看的量具**，不是一个游戏接口。
+   *
+   * `totalLook` / `taps` 是**单调计数**：`look` 累加器每帧被 `stepSim` 清零，
+   * 只看瞬时值的话，"拖了 300 px" 和"拖了 3 px" 在下一帧长得一模一样。
+   */
+  touchInfo() { return touch ? touch.state() : null; },
+
+  /**
+   * **四个输入源合成出来的 input，就是这一帧 `stepSim` 会交给 avatar 的那一个。**
+   *
+   * 它调的是 `assembleInput()` 本体，不是在这里重算一遍加法 —— 所以
+   * "摇杆推满" 和 "按住 W" 是不是同一个数，是一条**关于生产的断言**，
+   * 而不是两段算式的巧合。验收脚本用它做那个 A/B。
+   */
+  inputNow() {
+    const i = assembleInput();
+    return { ...i, look: { dx: i.look.dx, dy: i.look.dy } };
+  },
 
   /** Push a pointer-lock-style look delta. The harness's way to steer, now
    *  that the mouse is the only steering the player has. */

@@ -121,6 +121,7 @@ const PAGES = [
 ];
 
 const measure = (page) => `(() => ({
+  caseName: globalThis.__openGuardCase || '',
   visible: ${page.visible},
   heading: ${page.heading},
   body: ${page.body},
@@ -220,6 +221,8 @@ async function main() {
     check(`${page.file} file:// — 真实内容确实是 0（空壳）`,
       fm.content === 0 && fm.booted === false,
       `${page.contentName} ${fm.content} · booted ${fm.booted}`);
+    // 说明框印出来了，而且要印的是**这一种**情况那一份。分类错了会全绿。
+    check(`${page.file} file:// — 走的是 file 那一支`, fm.caseName === 'file', `case=${fm.caseName}`);
 
     /* ---- B. the same file, served. The negative control. ---- */
     const ha = await openAs(BASE + '/' + page.file, 7000, { buster: !LIVE });
@@ -233,6 +236,54 @@ async function main() {
     check(`${page.file} http:// — 页面真的跑起来了`,
       hm.content >= page.want && hm.booted === true,
       `${page.contentName} ${hm.content} >= ${page.want} · booted ${hm.booted}`);
+  }
+
+  /* --------------------------------------------- 2.4 三种读者，三份说明 */
+  //
+  // 线上那一份是本轮新增的。它存在的理由很具体：`file://` 那一支要人
+  // 「双击 start.bat」或「运行 python serve.py」——**对本机是对的，对线上访客
+  // 是无法执行的废话**。一段要人执行本机命令的说明，在线上就是"这游戏坏了"
+  // 的另一种写法。主机名在无头浏览器里没法伪造，而这是一条关于**字符串**的
+  // 断言，所以直接把三份字符串读出来逐字检查，比伪造一个环境更诚实。
+  say('');
+  say('-- 2.4 三种情况、三份说明：本机的命令不许漏进线上那一份 -------------');
+  // 先回到 play.html 再读。**说明里的 .bat 名字来自本页的 data-open**，
+  // 而上一轮循环最后停在 index.html（它的 data-open 是 start-viewer.bat）——
+  // 不切回来的话，"点名了 start.bat"会读成一个关于**另一页**的结论（而且失败）。
+  await openAs(BASE + '/play.html', 7000, { buster: !LIVE });
+  const previews = await sess.evalJs(`(() => {
+    const g = globalThis.__openGuardPreview;
+    if (!g) return null;
+    return JSON.stringify({ file: g('file'), local: g('served-local'), remote: g('served-remote') });
+  })()`);
+  if (!previews || typeof previews !== 'string' || previews.startsWith('<<EXC>>')) {
+    check('页面暴露了三种说明的预览（__openGuardPreview）', false, String(previews).slice(0, 80));
+  } else {
+    const pv = JSON.parse(previews);
+    const all = (o) => [o.heading, o.lead, o.tail, o.alt].join('\n');
+
+    check('三种情况的标题互不相同（不是同一段话换个框显示）',
+      new Set([pv.file.heading, pv.local.heading, pv.remote.heading]).size === 3,
+      [pv.file.heading, pv.local.heading, pv.remote.heading].join(' | '));
+
+    const LOCAL_ONLY = ['start.bat', 'serve.py', '127.0.0.1', 'diag_open.mjs', 'start-workbench.bat'];
+    const remote = all(pv.remote);
+    const leaked = LOCAL_ONLY.filter((s) => remote.indexOf(s) >= 0);
+    check('线上那一份不许出现本机才能执行的命令', leaked.length === 0,
+      leaked.length ? '漏了: ' + leaked.join(', ') : LOCAL_ONLY.length + ' 个禁词一个都没有');
+
+    check('线上那一份给的是访客真能做到的事（刷新 / 换网络 / 换浏览器）',
+      remote.indexOf('刷新') >= 0 && remote.indexOf('网络') >= 0 && remote.indexOf('浏览器') >= 0,
+      pv.remote.lead.replace(/<[^>]+>/g, '').slice(0, 76) + '…');
+
+    check('本机那一份仍然点名 start.bat（这条最容易在改线上文案时被顺手删掉）',
+      all(pv.file).indexOf('start.bat') >= 0, 'start.bat');
+    check('本机（已服务）那一份仍然给命令行诊断',
+      all(pv.local).indexOf('diag_open.mjs') >= 0, 'node scripts/diag_open.mjs');
+    check('三种说明都短到能读（≤ 420 字，长说明在手机上是另一堵墙）',
+      [pv.file, pv.local, pv.remote].every((o) => all(o).replace(/<[^>]+>/g, '').length <= 420),
+      [pv.file, pv.local, pv.remote]
+        .map((o) => all(o).replace(/<[^>]+>/g, '').length).join(' / '));
   }
 
   /* ------------------------------------------------------- 3. session-wide */

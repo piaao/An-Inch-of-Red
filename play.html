@@ -2,7 +2,10 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- `viewport-fit=cover` 让页面铺到刘海/圆角下面，再由 CSS 的
+     env(safe-area-inset-*) 把按钮推回安全区。没有它，iPhone 的横屏会把
+     右侧的按钮压在刘海底下 —— 那是"看得见但按不到"，比看不见更糟。 -->
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>一寸红 · An Inch of Red · 剖面公寓</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232b3441'/%3E%3Crect x='8' y='7' width='16' height='20' rx='2.5' fill='%23c8102e'/%3E%3Ccircle cx='16' cy='16' r='4' fill='%23e8c46a'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="css/play.css">
@@ -26,6 +29,10 @@
   </div>
   <div id="clockbar"><i id="clockfill"></i></div>
   <div id="clocktext">3:00</div>
+  <!-- 窄屏的小地图折叠开关。宽屏由 CSS 隐藏（地图直接就在那儿，
+       多一个按钮反而多一次点击）。260 CSS px 的宽度是「卫生间」三个字
+       倒推出来的，所以窄屏只能收，不能缩 —— 见 minimap.js 头注。 -->
+  <button id="map-toggle" type="button" aria-expanded="false">地图</button>
   <canvas id="minimap" width="260" height="211" aria-label="平面缩略图：房间与朝向"></canvas>
 </header>
 
@@ -42,6 +49,24 @@
 <div id="banner"></div>
 
 <p id="hint"><b>WASD</b> 移动 · <b>鼠标</b> 转向 · <b>空格</b> 跳跃（能跳上桌子、浴缸、台面）· <b>E</b> 开门/推柜 · <b>G</b> 红点提示 · <b>M</b> 静音 · <b>Esc</b> 暂停</p>
+
+<!-- ------------------------------------------------------------ touch (P0)
+     触屏层。**默认整层不显示**，只在"这台设备有手指 且 正在玩"时由
+     game/play/touch.js 加上 .on —— 桌面浏览器一进来就多出一层摇杆，比手机上
+     没有摇杆更糟。
+
+     两个站区是**兄弟**关系，不是父子：按在按钮上的手指因此不会被右半屏的
+     拖动接管，靠的是 DOM 的事件路径，而不是在处理器里判断 target。 -->
+<div id="touch">
+  <div id="touch-move"></div>
+  <div id="touch-look"></div>
+  <div id="stick" hidden><i id="stick-knob"></i></div>
+  <div id="touch-btns">
+    <button id="t-pause" type="button" class="tbtn small">暂停</button>
+    <button id="t-use" type="button" class="tbtn">开门</button>
+    <button id="t-jump" type="button" class="tbtn big">跳</button>
+  </div>
+</div>
 
 <!-- ------------------------------------------------------------- loading -->
 <div id="ov-load" class="overlay">
@@ -78,14 +103,22 @@
     <p id="seed-note" class="seednote"></p>
     <div id="start-meta"></div>
 
+    <!-- 「开始」在长文案**之前**，是为了它能在窄屏上 sticky 贴底时不盖住这段话：
+        sticky 元素只会在自己文档位置的下方覆盖内容，把它放最后一段的后面，
+        滚到底就是它骑着那一段。顺序是这里唯一要守的规矩。 -->
     <button id="start-go" type="button" class="go">开始</button>
-    <p class="foot">移动：<b>WASD</b>；<b>转向只靠鼠标</b>（点击画面锁定指针）；<b>空格</b> 跳跃；
-      走到红包上即拾取。左上角是平面缩略图：房间、你的朝向、主人的朝向；
-      <b>没走过的地方是黑的</b>，走过就会亮起来。
-      红包不在明面上：它可能在柜子里，也可能夹在两个高过你的家具之间，往上跳才够得着。
-      每局开始重新藏红包，而且<b>不是每个房间都有</b>。难度越高，主人越多（1 → 2 位）、
-      盯住的地面越大、红包越小也越多（6 → 24 个）——
-      地上那片<b>光</b>就是主人的监控区，站进去就会被看见；视线被墙挡住他照样看不见。</p>
+
+    <details id="start-howto" class="howto" open>
+      <summary>怎么玩</summary>
+      <p class="foot">移动：<b>WASD</b>；<b>转向只靠鼠标</b>（点击画面锁定指针）；<b>空格</b> 跳跃；
+        走到红包上即拾取。左上角是平面缩略图：房间、你的朝向、主人的朝向；
+        <b>没走过的地方是黑的</b>，走过就会亮起来。
+        红包不在明面上：它可能在柜子里，也可能夹在两个高过你的家具之间，往上跳才够得着。
+        每局开始重新藏红包，而且<b>不是每个房间都有</b>。难度越高，主人越多（1 → 2 位）、
+        盯住的地面越大、红包越小也越多（6 → 24 个）——
+        地上那片<b>光</b>就是主人的监控区，站进去就会被看见；视线被墙挡住他照样看不见。
+        手机上：<b>左半屏拖动</b>走路，<b>右半屏拖动</b>转视角，右下角有 跳 / 开门 / 暂停。</p>
+    </details>
   </div>
 </div>
 

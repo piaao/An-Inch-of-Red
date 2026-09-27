@@ -46,6 +46,8 @@ function metaHTML(s) {
 export class Hud {
   constructor() {
     this.el = {
+      hud: $('hud'),
+      mapToggle: $('map-toggle'),
       objective: $('objective-n'),
       objectiveTotal: $('objective-total'),
       room: $('roomname'),
@@ -87,6 +89,33 @@ export class Hud {
     };
     this._room = null;
     this._guardMode = null;
+    this._bindChrome();
+  }
+
+  /**
+   * 两处只关外观、不关规则的接线。**放在 HUD 里而不是 play.js**，
+   * 因为这是"不是房间的每一个像素"那一类东西，和暂停/结束面板同一层。
+   *
+   * 1. 窄屏的小地图折叠开关（宽屏 CSS 把它藏起来，所以这里不会有人点到）。
+   *    地图为什么不能缩而是收，见 minimap.js 头注。
+   * 2. 手机上把「怎么玩」那段长文案收进 <details>。**默认是开着的**，
+   *    只有量到窄屏才收 —— 收起来是给窄屏的让步，不该顺手把桌面也改掉。
+   */
+  _bindChrome() {
+    const hud = this.el.hud;
+    const toggle = this.el.mapToggle;
+    if (hud && toggle && toggle.addEventListener) {
+      toggle.addEventListener('click', () => {
+        const on = !hud.classList.contains('showmap');
+        hud.classList.toggle('showmap', on);
+        // 真 DOM 上有 setAttribute；验收用的桩没有，所以问一句再写。
+        if (toggle.setAttribute) toggle.setAttribute('aria-expanded', on ? 'true' : 'false');
+      });
+    }
+    const howto = $('start-howto');
+    if (howto && typeof window !== 'undefined' && window.matchMedia) {
+      howto.open = !window.matchMedia('(max-width: 700px)').matches;
+    }
   }
 
   /* ------------------------------------------------------------- loading */

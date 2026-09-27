@@ -24,6 +24,16 @@
  * A pristine-looking shell that will never do anything is the worst possible
  * failure mode, so the two cases it names are:
  *
+ * THREE READERS, NOT TWO. The first two below are the local ones. The third
+ * arrived when the game got a public URL: a VISITOR on the deployed page has no
+ * repository, no terminal and no `start.bat`, so telling them to double-click it
+ * is not an explanation, it is a dead end printed in a large font. Serving is
+ * therefore split by host -- loopback gets the developer message, anything else
+ * gets "reload, then try another network or browser" and names no script that
+ * the reader could not possibly run. `scripts/verify_open.mjs` reads all three
+ * message bodies back and fails if a local-only instruction leaks into the
+ * remote one.
+ *
  *   1. opened as file://  -- browsers refuse ES modules and fetch for file://
  *      documents, so nothing on the page will ever run;
  *   2. served over http but the module never ran -- a 404, a syntax error, a
@@ -86,6 +96,10 @@ function installOpenGuard() {
   var firstError = '';
   var shown = false;
   var wasHidden = false;
+  var cfgCase = '';
+
+  // 环回地址 = "这台机器自己在开发"。除此之外全是线上访客。
+  var LOOPBACK = { '127.0.0.1': 1, 'localhost': 1, '::1': 1, '[::1]': 1, '0.0.0.0': 1 };
 
   // Captured with capture=true, because a failed <script src> never reaches
   // window.onerror as a normal error -- it only surfaces as an error event on
@@ -106,53 +120,106 @@ function installOpenGuard() {
     cls.split(/\s+/).forEach(function (c) { if (c) fn(c); });
   };
 
-  function explain() {
+  /** 这一页是在哪儿被打开的？三种情况，三种读者。 */
+  function whereAmI() {
+    if (isFile) return 'file';
+    return LOOPBACK[String(location.hostname || '').toLowerCase()] ? 'served-local' : 'served-remote';
+  }
+
+  /**
+   * 三种情况该显示什么。**纯数据**（`tail` 是延迟求值的"怎么打开它"那一段），
+   * 所以验收可以逐字把它读回来，而不必去伪造一个主机名。
+   *
+   * 线上那一段不许出现 `start.bat` / `serve.py` / `127.0.0.1` / `diag_open.mjs`：
+   * 访客手里一样都没有。这不是措辞问题 —— 一段要人执行本机命令的说明，在
+   * 线上就是"这个游戏坏了"的另一种写法。
+   */
+  function bodies(kind) {
+    if (kind === 'file') {
+      return {
+        heading: '需要通过本地服务器打开',
+        lead: '你是<strong>双击</strong>打开的这个文件。浏览器禁止 <code>file://</code> 下的 '
+          + 'ES 模块与 <code>fetch</code>，所以这一页的代码<strong>一行都没执行</strong> —— '
+          + '界面看着是好的，其实是个空壳。',
+        tail: function () {
+          var url = 'http://127.0.0.1:8777/' + cfg.page;
+          return '在资源管理器里双击本文件旁边的 <code>' + esc(cfg.open) + '</code>，'
+            + '或执行：<br><code>' + esc(cfg.cmd) + '</code><br>然后访问 <code>' + esc(url) + '</code>';
+        },
+        alt: function () {
+          var url = 'http://127.0.0.1:8777/' + cfg.page;
+          return '或者更省事：在资源管理器里双击 <code>' + esc(cfg.open) + '</code>。'
+            + '然后访问 <code>' + esc(url) + '</code>';
+        },
+      };
+    }
+    if (kind === 'served-remote') {
+      return {
+        heading: '页面没能加载',
+        lead: '页面脚本没有加载成功。'
+          + (firstError ? '<br>浏览器给的原因：<code>' + esc(firstError) + '</code>' : '')
+          + '<br>先刷新一次（<b>Ctrl / ⌘ + R</b>）。还是这样的话，'
+          + '多半是网络中断、或者浏览器扩展拦了脚本 —— 换个网络或换一个浏览器再试。',
+      };
+    }
+    return {
+      heading: '页面脚本没有执行',
+      lead: '服务是通的，但这一页的脚本没有加载成功。'
+        + (firstError ? '<br>浏览器给的原因：<code>' + esc(firstError) + '</code>' : '')
+        + '<br>按 <b>F12</b> 看 Console 与 Network；命令行诊断：'
+        + '<code>node scripts/diag_open.mjs</code>',
+    };
+  }
+
+  function explain(kindOverride) {
     var box = byId(cfg.overlay);
     if (!box) return;
+    var kind = kindOverride || whereAmI();
     shown = true;
+    cfgCase = kind;
+    globalThis.__openGuardCase = kind;
     wasHidden = box.classList.contains('hidden');
     each(cfg.reveal, function (c) { box.classList.remove(c); });
     each(cfg.fail, function (c) { box.classList.add(c); });
 
     var head = byId(cfg.title);
     var body = byId(cfg.msg);
-    var url = 'http://127.0.0.1:8777/' + cfg.page;
+    var t = bodies(kind);
+    if (head) head.textContent = t.heading;
+    if (body) body.innerHTML = t.lead;
+    if (!t.tail) return;
 
-    if (isFile) {
-      if (head) head.textContent = '需要通过本地服务器打开';
-      if (body) {
-        body.innerHTML =
-          '你是<strong>双击</strong>打开的这个文件。浏览器禁止 <code>file://</code> 下的 '
-          + 'ES 模块与 <code>fetch</code>，所以这一页的代码<strong>一行都没执行</strong> —— '
-          + '界面看着是好的，其实是个空壳。';
-      }
-      // A page that gave the command its own line gets it there, so the card
-      // reads like a recipe instead of a paragraph. A page whose overlay is a
-      // single message box (play.html, index.html) gets it appended to that box.
-      // Either way all three facts reach the screen: what happened, what to
-      // double-click, and the URL to end up at. Markup that exists and is never
-      // written to renders as an empty bar, which is its own small lie.
-      var cmdEl = byId(cfg.cmdId);
-      var altEl = byId(cfg.altId);
-      if (cmdEl && altEl) {
-        cmdEl.textContent = cfg.cmd;
-        altEl.innerHTML = '或者更省事：在资源管理器里双击 <code>' + esc(cfg.open) + '</code>。'
-          + '然后访问 <code>' + esc(url) + '</code>';
-      } else if (body) {
-        body.innerHTML += '<br>在资源管理器里双击本文件旁边的 <code>' + esc(cfg.open) + '</code>，'
-          + '或执行：<br><code>' + esc(cfg.cmd) + '</code><br>然后访问 <code>' + esc(url) + '</code>';
-      }
-    } else {
-      if (head) head.textContent = '页面脚本没有执行';
-      if (body) {
-        body.innerHTML =
-          '服务是通的，但这一页的脚本没有加载成功。'
-          + (firstError ? '<br>浏览器给的原因：<code>' + esc(firstError) + '</code>' : '')
-          + '<br>按 <b>F12</b> 看 Console 与 Network；命令行诊断：'
-          + '<code>node scripts/diag_open.mjs</code>';
-      }
+    // A page that gave the command its own line gets it there, so the card
+    // reads like a recipe instead of a paragraph. A page whose overlay is a
+    // single message box (play.html, index.html) gets it appended to that box.
+    // Either way all three facts reach the screen: what happened, what to
+    // double-click, and the URL to end up at. Markup that exists and is never
+    // written to renders as an empty bar, which is its own small lie.
+    var cmdEl = byId(cfg.cmdId);
+    var altEl = byId(cfg.altId);
+    if (cmdEl && altEl) {
+      cmdEl.textContent = cfg.cmd;
+      altEl.innerHTML = t.alt();
+    } else if (body) {
+      body.innerHTML = t.lead + '<br>' + t.tail();
     }
   }
+
+  /**
+   * 三种情况会印出来的字，**原样**。给验收用的：主机名没法在无头浏览器里
+   * 伪造，而"线上那一段不许出现 start.bat"是一条关于**字符串**的断言，
+   * 所以直接把字符串读出来比伪造一个环境更诚实。
+   */
+  globalThis.__openGuardPreview = function (kind) {
+    var t = bodies(kind);
+    return {
+      heading: t.heading,
+      lead: t.lead,
+      tail: t.tail ? t.tail() : '',
+      alt: t.alt ? t.alt() : '',
+      case: kind,
+    };
+  };
 
   /** A late boot must erase the alarm, or the box teaches people to ignore it. */
   function withdraw() {

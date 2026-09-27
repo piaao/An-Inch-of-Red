@@ -19,6 +19,7 @@
    PASS  procgen.html file:// — 给了命令行等价物 — serve.py --workbench
    PASS  procgen.html file:// — 说清了「代码一行都没执行」，不是「加载慢」 — 你是双击打开的这个文件。浏览器禁止 file:// 下的 ES 模块与 fetch，所以这一页的代码一行都没执行 —— 
    PASS  procgen.html file:// — 真实内容确实是 0（空壳） — 控件+平面图 0 · booted false
+   PASS  procgen.html file:// — 走的是 file 那一支 — case=file
    http://  http:  说明框 不显示 · 内容(控件+平面图) 15 · booted true
    PASS  procgen.html http:// — 说明框必须消失（否则「永远显示警告」也会全绿） — visible=false
    PASS  procgen.html http:// — 页面真的跑起来了 — 控件+平面图 15 >= 15 · booted true
@@ -35,6 +36,7 @@
    PASS  play.html file:// — 给了命令行等价物 — serve.py
    PASS  play.html file:// — 说清了「代码一行都没执行」，不是「加载慢」 — 你是双击打开的这个文件。浏览器禁止 file:// 下的 ES 模块与 fetch，所以这一页的代码一行都没执行 —— 
    PASS  play.html file:// — 真实内容确实是 0（空壳） — 启动标志 0 · booted false
+   PASS  play.html file:// — 走的是 file 那一支 — case=file
    http://  http:  说明框 不显示 · 内容(启动标志) 1 · booted true
    PASS  play.html http:// — 说明框必须消失（否则「永远显示警告」也会全绿） — visible=false
    PASS  play.html http:// — 页面真的跑起来了 — 启动标志 1 >= 1 · booted true
@@ -51,9 +53,18 @@
    PASS  index.html file:// — 给了命令行等价物 — serve.py --viewer
    PASS  index.html file:// — 说清了「代码一行都没执行」，不是「加载慢」 — 你是双击打开的这个文件。浏览器禁止 file:// 下的 ES 模块与 fetch，所以这一页的代码一行都没执行 —— 
    PASS  index.html file:// — 真实内容确实是 0（空壳） — 启动标志 0 · booted false
+   PASS  index.html file:// — 走的是 file 那一支 — case=file
    http://  http:  说明框 不显示 · 内容(启动标志) 1 · booted true
    PASS  index.html http:// — 说明框必须消失（否则「永远显示警告」也会全绿） — visible=false
    PASS  index.html http:// — 页面真的跑起来了 — 启动标志 1 >= 1 · booted true
+
+-- 2.4 三种情况、三份说明：本机的命令不许漏进线上那一份 -------------
+   PASS  三种情况的标题互不相同（不是同一段话换个框显示） — 需要通过本地服务器打开 | 页面脚本没有执行 | 页面没能加载
+   PASS  线上那一份不许出现本机才能执行的命令 — 5 个禁词一个都没有
+   PASS  线上那一份给的是访客真能做到的事（刷新 / 换网络 / 换浏览器） — 页面脚本没有加载成功。先刷新一次（Ctrl / ⌘ + R）。还是这样的话，多半是网络中断、或者浏览器扩展拦了脚本 —— 换个网络或换一个浏览器再试。…
+   PASS  本机那一份仍然点名 start.bat（这条最容易在改线上文案时被顺手删掉） — start.bat
+   PASS  本机（已服务）那一份仍然给命令行诊断 — node scripts/diag_open.mjs
+   PASS  三种说明都短到能读（≤ 420 字，长说明在手机上是另一堵墙） — 232 / 89 / 84
 
 -- 3. session-wide ------------------------------------------------------
    PASS  file:// 下浏览器确实拒绝加载模块（复现，不是猜测） — 8 条 / 3 页：Access to script at 'file:///G:/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91/% | Failed to load resource: net::ERR_FAILED @ file:///G:/%E6%B8%B8%E6%88%
@@ -61,6 +72,6 @@
    PASS  6 张日志截图都写出来了 — 6/6 -> renders/open/
 
 ==============================================================================
-  32/32 checks passed
+  41/41 checks passed
 ==============================================================================
   VERDICT: PASS
